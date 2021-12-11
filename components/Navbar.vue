@@ -5,6 +5,20 @@
     </div>
     <div class="flex-none hidden px-2 mx-2 lg:flex">
       <div class="flex items-stretch">
+        <nuxt-link
+          v-if="$auth && $auth.loggedIn"
+          to="/profile"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          {{ $auth.user.name }}
+        </nuxt-link>
+        <nuxt-link
+          v-if="$auth && $auth.loggedIn"
+          :to="`/dashboard/${$auth.user.name}/users`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          كل العملاء
+        </nuxt-link>
         <nuxt-link to="/login" class="btn btn-ghost btn-sm rounded-btn">
           تسجيل دخول
         </nuxt-link>

@@ -51,7 +51,8 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true,
     default: 'client'
-  }
+  },
+  storeName: String
 },
   { timestamps: true })
 
@@ -69,6 +70,7 @@ function validate(user) {
     dob: Joi.date(),
     phone: Joi.string().required(),
     password: Joi.string().required(),
+    storeName: Joi.string()
   })
 
   return userSchema.validate(user, { abortEarly: false })

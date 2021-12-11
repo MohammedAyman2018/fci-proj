@@ -4,7 +4,8 @@ export default {
     title: 'fci-proj',
     htmlAttrs: {
       'data-theme': 'light',
-      dir: 'rtl'
+      dir: 'rtl',
+      lang: 'ar'
     },
     meta: [
       { charset: 'utf-8' },
@@ -26,6 +27,7 @@ export default {
   plugins: [
     '~/plugins/vue-notification',
     '~/plugins/vuelidate',
+    '~/plugins/vue-js-modal.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

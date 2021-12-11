@@ -30,6 +30,7 @@
       "@nuxtjs/auth-next",
       "vue-notification",
       "vue-testimonials",
+      "vue-js-modal",
       "@types/node"
     ]
   },

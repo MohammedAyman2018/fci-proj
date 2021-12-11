@@ -1,37 +1,50 @@
 <template>
   <div>
     <div class="container mx-auto">
-      <div class="grid h- justify-center items-center justify-items-center">
-        <div class="pt-16 lg:pt-32">
-          <div class="flex-center flex-col">
-            <img width="150px" src="@/assets/placeholder.png" alt="logo" />
-            <h2 class="text-green-500">سهلة لحد الإتقان</h2>
+      <div class="hero min-h-screen bg-base-200">
+        <div class="flex-col justify-center hero-content lg:flex-row">
+          <div class="text-center lg:text-right">
+            <h1 class="mb-5 text-5xl font-bold">أهلا بيك</h1>
+            <p class="mb-5">
+              لوريم ايبسوم دولار سيت أميت ,كونسيكتيتور أدايبا يسكينج أليايت,سيت
+              دو أيوسمود تيمبور أنكايديديونتيوت لابوري ات دولار ماجنا أليكيوا .
+              يوت
+            </p>
           </div>
-
-          <custom-input
-            :label="'البريد الإلكتروني'"
-            :message="'ادخل بريد الكتروني صحيح'"
-            should-validate
-            is-email
-            :attrs="{ type: 'email', placeholder: 'ادخل البريد الإلكتروني' }"
-            @changed="user.email = $event"
-          />
-          <custom-input
-            :label="'كلمة المرور'"
-            :message="'ادخل كلمة المرور صحيح'"
-            should-validate
-            is-requried
-            :attrs="{ type: 'password', placeholder: 'ادخل كلمة المرور' }"
-            @changed="user.password = $event"
-          />
-
-          <button
-            :class="{ 'btn-disabled': !valid }"
-            class="btn mt-4 btn-success btn-wide"
-            @click="userLogin"
+          <div
+            class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100"
           >
-            تسجيل
-          </button>
+            <div class="card-body">
+              <custom-input
+                :label="'البريد الإلكتروني'"
+                :message="'ادخل بريد الكتروني صحيح'"
+                should-validate
+                is-email
+                :attrs="{
+                  type: 'email',
+                  placeholder: 'ادخل البريد الإلكتروني',
+                }"
+                @changed="user.email = $event"
+              />
+              <custom-input
+                :label="'كلمة المرور'"
+                :message="'ادخل كلمة المرور صحيح'"
+                should-validate
+                is-requried
+                :attrs="{ type: 'password', placeholder: 'ادخل كلمة المرور' }"
+                @changed="user.password = $event"
+              />
+              <div class="form-control mt-6">
+                <button
+                  :class="{ 'btn-disabled': !valid }"
+                  class="btn w-full mt-4 btn-success"
+                  @click="userLogin"
+                >
+                  تسجيل
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -55,7 +68,7 @@ export default Vue.extend({
     }
   },
   computed: {
-    valid() {
+    valid(): Boolean {
       return (
         (!this.$v.user?.email?.$invalid && !this.$v.user?.password?.$invalid) ||
         false
