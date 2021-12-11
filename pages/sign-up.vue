@@ -2,16 +2,17 @@
   <div>
     <div class="container mx-auto">
       <div class="grid lg:grid-cols-2">
-        <div>
+        <div class="h-full flex-center flex-col">
+          <img width="150px" src="@/assets/placeholder.png" alt="logo" />
           <h2 class="text-green-500">سهلة لحد الإتقان</h2>
         </div>
-        <div class="lg:border-r lg:border-gray-400 pr-5">
+        <div class="lg:border-r lg:border-gray-400 px-5">
           <custom-input
-            :label="'اسم التاجر'"
-            :message="'اسم التاجر مطلوب'"
+            :label="'اسم المتجر'"
+            :message="'اسم المتجر مطلوب'"
             should-validate
             is-requried
-            :attrs="{ placeholder: 'ادخل اسم التاجر' }"
+            :attrs="{ placeholder: 'ادخل اسم المتجر' }"
             @changed="user.name = $event"
           />
           <custom-input
@@ -57,14 +58,12 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { validationMixin } from 'vuelidate'
 import CustomInput from '~/components/utils/CustomInput.vue'
 import PhoneInput from '~/components/utils/PhoneInput.vue'
 const { required, email } = require('vuelidate/lib/validators')
 
 export default Vue.extend({
   components: { CustomInput, PhoneInput },
-  mixins: [validationMixin],
   data() {
     return {
       user: {

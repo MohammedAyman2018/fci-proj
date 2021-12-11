@@ -19,11 +19,13 @@ export default {
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [
+    '~/assets/css/main.css'
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/vue-notification'
+    '~/plugins/vue-notification',
+    '~/plugins/vuelidate',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -43,6 +45,7 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/auth-next'
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
@@ -55,6 +58,34 @@ export default {
     manifest: {
       lang: 'ar'
     }
+  },
+
+  auth: {
+    // cookie: {
+    //   options: {
+    //     domain: ''
+    //     secure: 'true'
+    //   }
+    // },
+    redirect: false,
+    strategies: {
+      local: {
+        endpoints: {
+          login: { url: '/users/auth', method: 'post', propertyName: 'token' },
+          logout: false,
+          user: { url: '/users/me', method: 'get', propertyName: 'data' }
+        },
+        token: {
+          required: true,
+          name: 'x-auth-token',
+          type: ''
+        }
+      }
+    },
+    plugins: ['~/plugins/auth.js']
+  },
+  env: {
+    baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
   },
 
   router: {
