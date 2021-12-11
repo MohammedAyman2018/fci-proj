@@ -7,6 +7,7 @@
 </template>
 
 <script>
+import 'remixicon/fonts/remixicon.css'
 import Navbar from '~/components/Navbar.vue'
 export default {
   components: { Navbar },
