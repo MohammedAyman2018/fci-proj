@@ -14,7 +14,7 @@ const {
 
 const router = Router()
 
-router.get('/users/', getAllUsers)
+router.get('/users/', auth, getAllUsers)
 
 router.get('/users/one/:id', auth, getOneUser)
 router.patch('/users/:id', clientAuth, updateUser)

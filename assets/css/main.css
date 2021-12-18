@@ -27,3 +27,9 @@
   background: #68cd86;
   border-left-color: #42a85f;
 }
+
+.vm--modal {
+  left: auto !important;
+  text-align: right;
+  margin: 0 auto;
+}

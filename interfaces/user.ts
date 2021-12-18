@@ -1,4 +1,6 @@
 export default interface IUser {
+  _id: string | null
+  createdAt: Date | null
   name: string
   email: string
   phone: string
