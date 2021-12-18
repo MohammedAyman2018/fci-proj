@@ -1,14 +1,25 @@
 <template>
   <div class="container mx-auto px-2">
-    <h2 class="text-2xl mb-3">كل العملاء</h2>
-    <div v-for="user in displayedUsers" :key="user._id" class="user">
+    <div class="justify-between flex items-center my-3">
+      <h2 class="text-2xl mb-3">كل العملاء</h2>
+      <button
+        class="btn btn-primary btn-sm"
+        @click="
+          edit = false
+          openModal('edit-user', {})
+        "
+      >
+        أضف عميل
+      </button>
+    </div>
+    <div v-for="oneUser in displayedUsers" :key="oneUser._id" class="oneUser">
       <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg">{{ user.name }}</h3>
+        <h3 class="text-lg">{{ oneUser.name }}</h3>
         <div>
           <div data-tip="تعديل" class="tooltip">
             <button
               class="btn btn-warning btn-square btn-xs"
-              @click="openModal('edit-user', user)"
+              @click="openModal('edit-user', oneUser)"
             >
               <i class="ri-pencil-line"></i>
             </button>
@@ -21,7 +32,7 @@
           <div data-tip="حذف" class="tooltip">
             <button
               class="btn btn-error btn-square btn-xs"
-              @click="openModal('delete-user', user)"
+              @click="openModal('delete-user', oneUser)"
             >
               <i class="ri-delete-bin-line"></i>
             </button>
@@ -29,10 +40,10 @@
         </div>
       </div>
       <div class="flex justify-between items-center text-xs">
-        <p>الدولة: {{ user.country.name }}</p>
-        <p>البريد الالكتروني: {{ user.email }}</p>
+        <p>الدولة: {{ oneUser.country.name }}</p>
+        <p>البريد الالكتروني: {{ oneUser.email }}</p>
         <p>
-          رقم الهاتف: <bdi>{{ user.phone }}</bdi>
+          رقم الهاتف: <bdi>{{ oneUser.phone }}</bdi>
         </p>
       </div>
     </div>
@@ -42,55 +53,149 @@
         <p>هل انت واثق انك تريد حذف العميل؟</p>
 
         <div class="mt-5">
-          <button class="btn btn-error" @click="removeUser">نعم</button>
-          <button class="btn btn-error" @click="closeModal('delete-user')">
+          <button class="btn btn-error btn-sm" @click="removeUser">نعم</button>
+          <button
+            class="btn btn-error btn-sm"
+            @click="closeModal('delete-user')"
+          >
             إلغاء
           </button>
         </div>
       </div>
     </modal>
 
-    <modal name="edit-user" adaptive height="auto" scrollable>
+    <modal
+      name="edit-user"
+      adaptive
+      height="auto"
+      scrollable
+      @closed="closeModal('edit-user')"
+    >
       <div class="p-4">
         <h2 class="text-xl font-bold">تعديل العميل</h2>
-        <custom-input
-          :label="'اسم المتجر'"
-          :message="'اسم المتجر مطلوب'"
-          should-validate
-          is-requried
-          :attrs="{ placeholder: 'ادخل اسم المتجر' }"
-          @changed="user.name = $event"
-        />
-        <custom-input
-          :label="'البريد الإلكتروني'"
-          :message="'ادخل بريد الكتروني صحيح'"
-          should-validate
-          is-email
-          :attrs="{
-            type: 'email',
-            placeholder: 'ادخل البريد الإلكتروني',
-          }"
-          @changed="user.email = $event"
-        />
+        <div class="form-control w-50 my-1">
+          <label class="label">
+            <span class="label-text">اسم المتجر</span>
+          </label>
+          <input
+            v-model="user.name"
+            placeholder="ادخل اسم المتجر"
+            class="input input-bordered"
+            :class="{ 'input-error': $v.user.name.$error }"
+          />
+          <label v-if="$v.user.name.$error" class="label">
+            <span class="label-text-alt">اسم المتجر مطلوب</span>
+          </label>
+        </div>
+
+        <div class="form-control w-50 my-1">
+          <label class="label">
+            <span class="label-text">البريد الإلكتروني</span>
+          </label>
+          <input
+            v-model="user.email"
+            placeholder="البريد الإلكتروني"
+            class="input input-bordered"
+            :class="{ 'input-error': $v.user.email.$error }"
+          />
+          <label v-if="$v.user.email.$error" class="label">
+            <span class="label-text-alt">ادخل بريد الكتروني صحيح</span>
+          </label>
+        </div>
+
+        <div class="form-control w-50 my-1">
+          <label class="label">
+            <span class="label-text">كلمة المرور</span>
+          </label>
+          <input
+            v-model="user.password"
+            type="password"
+            placeholder="ادخل كلمة المرور"
+            class="input input-bordered"
+            :class="{ 'input-error': $v.user.password.$error }"
+          />
+          <label v-if="$v.user.password.$error" class="label">
+            <span class="label-text-alt">ادخل كلمة المرور صحيحة</span>
+          </label>
+        </div>
+
         <div class="form-control w-50 my-1">
           <label class="label">
             <span class="label-text">رقم الجوال</span>
           </label>
-          <phone-input
-            @change="
-              user.phone = $event.phone
-              user.country = $event.country
-            "
+          <input
+            v-model="user.phone"
+            type="tel"
+            placeholder="ادخل رقم الجوال"
+            class="input input-bordered"
+            :class="{ 'input-error': $v.user.phone.$error }"
           />
+          <label v-if="$v.user.phone.$error" class="label">
+            <span class="label-text-alt">ادخل رقم الجوال صحيح</span>
+          </label>
         </div>
-        <custom-input
-          :label="'كلمة المرور'"
-          :message="'ادخل كلمة المرور صحيح'"
-          should-validate
-          is-requried
-          :attrs="{ type: 'password', placeholder: 'ادخل كلمة المرور' }"
-          @changed="user.password = $event"
-        />
+
+        <div class="form-control w-50 my-1">
+          <label class="label">
+            <span class="label-text"> الدولة</span>
+          </label>
+          <select
+            v-model="user.country"
+            class="select select-bordered w-full max-w-xs"
+            name="country"
+          >
+            <option disabled="disabled" selected="selected">
+              اختر بلد العميل
+            </option>
+            <option value="مصر">مصر</option>
+            <option value="السعودية">السعودية</option>
+          </select>
+          <label v-if="$v.user.country.$error" class="label">
+            <span class="label-text-alt">اختر دولة</span>
+          </label>
+        </div>
+
+        <div class="form-control w-50 my-1">
+          <label class="label">
+            <span class="label-text">وظيفة العميل</span>
+          </label>
+          <select
+            v-model="user.role"
+            class="select select-bordered w-full max-w-xs"
+            name="role"
+          >
+            <option disabled="disabled" selected="selected">
+              اختر وظيفة العميل
+            </option>
+            <option value="client">عميل</option>
+            <option value="admin">أدمن</option>
+          </select>
+          <label v-if="$v.user.role.$error" class="label">
+            <span class="label-text-alt">اختر وظيفة</span>
+          </label>
+        </div>
+
+        <div class="flex justify-between items-center mt-4">
+          <button
+            v-if="!edit"
+            :disabled="!valid"
+            class="btn btn-success btn-sm"
+            @click="addUser"
+          >
+            أضافة
+          </button>
+          <button
+            v-else
+            :disabled="!valid"
+            class="btn btn-warning btn-sm"
+            @click="editUser"
+          >
+            تعديل
+          </button>
+          <button class="btn btn-ghost btn-sm" @click="closeModal('edit-user')">
+            إلغاء
+          </button>
+        </div>
       </div>
     </modal>
   </div>
@@ -98,18 +203,43 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import { validationMixin } from 'vuelidate'
 import IUser from '@/interfaces/user'
-import CustomInput from '~/components/utils/CustomInput.vue'
-import PhoneInput from '~/components/utils/PhoneInput.vue'
+const { required, email } = require('vuelidate/lib/validators')
 export default Vue.extend({
   name: 'UsersDashBoard',
-  components: { CustomInput, PhoneInput },
+
+  mixins: [validationMixin],
   data() {
     return {
       user: {} as IUser,
+      edit: true,
       users: [] as IUser[],
       displayedUsers: [] as IUser[],
     }
+  },
+  validations(): { [key: string]: any } {
+    return {
+      user: {
+        name: { required },
+        email: { required, email },
+        phone: { required },
+        country: { required },
+        password: { required },
+        role: { required },
+      },
+    }
+  },
+  computed: {
+    valid(): Boolean {
+      return (
+        !!this.user.name &&
+        !!this.user.email &&
+        !!this.user.phone &&
+        !!this.user.password &&
+        !!this.user.role
+      )
+    },
   },
   async mounted() {
     await this.getUsers()
@@ -117,13 +247,15 @@ export default Vue.extend({
   methods: {
     async getUsers() {
       try {
-        this.users = await this.$axios.$get('/users')
+        this.users = await this.$axios.$get(
+          `/users?store=${this.$route.params.storeName}`
+        )
         this.displayedUsers = this.users
       } catch (error: any) {
         this.$notify({
           group: 'foo',
           type: 'error',
-          title: error || '',
+          title: error,
         })
       }
     },
@@ -131,26 +263,69 @@ export default Vue.extend({
       this.user = user
       this.$modal.show(modalName)
     },
-    editUser() {
-      console.log(this.user)
-      this.closeModal('edit-user')
-    },
-    async removeUser() {
+    async addUser() {
       try {
-        const res = await this.$axios.$delete(`/users/${this.user._id}`)
-        console.log(res)
+        await this.$axios.$post('/users', {
+          ...this.user,
+          storeName: this.$route.params.storeName,
+        })
         await this.getUsers()
-        this.closeModal('delete-user')
+        this.closeModal('edit-user')
+        this.$notify({
+          group: 'foo',
+          type: 'success',
+          title: 'تمت إضافة العميل بنجاح',
+        })
       } catch (error: any) {
         this.$notify({
           group: 'foo',
           type: 'error',
-          title: error || '',
+          title: error,
+        })
+      }
+    },
+    async editUser() {
+      try {
+        await this.$axios.$patch(`/users/${this.user._id}`, {
+          oldPassword: this.user.password,
+          ...this.user,
+        })
+        await this.getUsers()
+        this.closeModal('edit-user')
+        this.$notify({
+          group: 'foo',
+          type: 'success',
+          title: 'تم التعديل بنجاح',
+        })
+      } catch (error: any) {
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: error,
+        })
+      }
+    },
+    async removeUser() {
+      try {
+        await this.$axios.$delete(`/users/${this.user._id}`)
+        await this.getUsers()
+        this.closeModal('delete-user')
+        this.$notify({
+          group: 'foo',
+          type: 'success',
+          title: 'تم حذف العميل بنجاح',
+        })
+      } catch (error: any) {
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: error,
         })
       }
     },
     closeModal(modalName) {
       this.user = {} as IUser
+      this.edit = true
       this.$modal.hide(modalName)
     },
   },
@@ -158,7 +333,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.user {
+.oneUser {
   @apply shadow-md p-4 bg-green-100 mb-3;
 }
 </style>

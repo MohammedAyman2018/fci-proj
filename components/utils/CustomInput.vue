@@ -33,15 +33,17 @@ export default Vue.extend({
       required: true,
     },
     classes: { type: Array, default: () => ['input', 'input-bordered'] },
+    initialValue: { type: String, default: () => '' },
     message: { type: String, default: () => '' },
   },
   data() {
     return {
+      changedOnce: 0,
       val: '',
     }
   },
   computed: {
-    classesVal() {
+    classesVal(): any[] {
       return this.shouldValidate && this.$v.val.$error
         ? ['input-error', ...this.classes]
         : this.classes
@@ -60,6 +62,14 @@ export default Vue.extend({
     } else {
       return { val: {} }
     }
+  },
+  watch: {
+    initialValue(val: string) {
+      if (this.changedOnce === 0) {
+        this.val = val
+        this.changedOnce++
+      }
+    },
   },
   methods: {
     handleInput() {

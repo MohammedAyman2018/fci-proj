@@ -8,9 +8,8 @@ require('dotenv').config()
  * @returns { Array } Users
  */
 
-exports.getAllUsers = async (_, res) => {
-  console.log('red')
-  await User.find({}).select('-password')
+exports.getAllUsers = async (req, res) => {
+  await User.find({ storeName: req.query.store }).select('-password')
     .then(users => res.status(200).json(users))
     .catch(err => res.status(400).json({ msg: err.message }))
 }
@@ -122,7 +121,7 @@ exports.authenticate = async (req, res) => {
  * @description Updates User
  */
 exports.updateUser = async (req, res) => {
-  const { user } = req.body
+  const user = req.body
 
   if (user.password) {
     const userInDB = await User.findById(req.params.id)
@@ -133,11 +132,14 @@ exports.updateUser = async (req, res) => {
       user.password = await bcrypt.hash(user.password, salt)
     })
   }
-
-  await User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, user) => {
-    if (err) { res.status(400).json({ msg: err.message }) }
-    res.status(200).json(user)
-  })
+  delete req.body._id
+  delete req.body.createdAt
+  await User.updateOne({ _id: req.params.id }, req.body)
+  res.status(200).json(user)
+  // await User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, user) => {
+  //   if (err) { res.status(400).json({ msg: err.message }) }
+  //   res.status(200).json(user)
+  // })
 }
 
 /**
