@@ -136,10 +136,6 @@ exports.updateUser = async (req, res) => {
   delete req.body.createdAt
   await User.updateOne({ _id: req.params.id }, req.body)
   res.status(200).json(user)
-  // await User.findByIdAndUpdate(req.params.id, { $set: user }, { new: true }, (err, user) => {
-  //   if (err) { res.status(400).json({ msg: err.message }) }
-  //   res.status(200).json(user)
-  // })
 }
 
 /**
