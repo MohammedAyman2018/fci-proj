@@ -21,6 +21,10 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true
   },
+  address: {
+    type: String,
+    required: true
+  },
   dob: Date,
   password: {
     type: String,
@@ -55,6 +59,7 @@ function validate(user) {
     email: Joi.string().email().required(),
     role: Joi.string(),
     country: Joi.string().required(),
+    address: Joi.string().required(),
     dob: Joi.date(),
     phone: Joi.string().required(),
     password: Joi.string().required(),

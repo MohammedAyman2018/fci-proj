@@ -5,6 +5,7 @@ export default interface IUser {
   email: string
   phone: string
   country: string
+  address: string
   dob: Date
   password: string
   fav: string[]

@@ -25,9 +25,12 @@
             </button>
           </div>
           <div data-tip="تفاصيل أكثر" class="tooltip">
-            <a href="#my-modal" class="btn btn-danger btn-square btn-xs">
+            <nuxt-link
+              :to="`${$route.path}/${oneUser._id}`"
+              class="btn btn-danger btn-square btn-xs"
+            >
               <i class="ri-more-line"></i>
-            </a>
+            </nuxt-link>
           </div>
           <div data-tip="حذف" class="tooltip">
             <button
@@ -40,7 +43,7 @@
         </div>
       </div>
       <div class="flex justify-between items-center text-xs">
-        <p>الدولة: {{ oneUser.country.name }}</p>
+        <p>الدولة: {{ oneUser.country }}</p>
         <p>البريد الالكتروني: {{ oneUser.email }}</p>
         <p>
           رقم الهاتف: <bdi>{{ oneUser.phone }}</bdi>
@@ -71,31 +74,61 @@
       scrollable
       @closed="closeModal('edit-user')"
     >
-      <div class="p-4">
+      <div class="p-4 space-y-1">
         <h2 class="text-xl font-bold">تعديل العميل</h2>
-        <div class="form-control w-50 my-1">
+        <div class="form-control">
           <label class="label">
-            <span class="label-text">اسم المتجر</span>
+            <span class="label-text">اسم العميل</span>
           </label>
           <input
             v-model="user.name"
-            placeholder="ادخل اسم المتجر"
-            class="input input-bordered"
+            placeholder="ادخل اسم العميل"
+            class="input input-bordered input-sm"
             :class="{ 'input-error': $v.user.name.$error }"
           />
           <label v-if="$v.user.name.$error" class="label">
-            <span class="label-text-alt">اسم المتجر مطلوب</span>
+            <span class="label-text-alt">اسم العميل مطلوب</span>
           </label>
         </div>
 
-        <div class="form-control w-50 my-1">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">عنوان العميل</span>
+          </label>
+          <input
+            v-model="user.address"
+            placeholder="ادخل عنوان العميل"
+            class="input input-bordered input-sm"
+            :class="{ 'input-error': $v.user.address.$error }"
+          />
+          <label v-if="$v.user.address.$error" class="label">
+            <span class="label-text-alt">عنوان العميل مطلوب</span>
+          </label>
+        </div>
+
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text">تاريخ ميلاد العميل</span>
+          </label>
+          <input
+            v-model="user.dob"
+            type="date"
+            class="input input-bordered input-sm"
+            :class="{ 'input-error': $v.user.dob.$error }"
+          />
+          <label v-if="$v.user.dob.$error" class="label">
+            <span class="label-text-alt">تاريخ ميلاد العميل مطلوب</span>
+          </label>
+        </div>
+
+        <div class="form-control">
           <label class="label">
             <span class="label-text">البريد الإلكتروني</span>
           </label>
           <input
             v-model="user.email"
             placeholder="البريد الإلكتروني"
-            class="input input-bordered"
+            class="input input-bordered input-sm"
             :class="{ 'input-error': $v.user.email.$error }"
           />
           <label v-if="$v.user.email.$error" class="label">
@@ -103,7 +136,7 @@
           </label>
         </div>
 
-        <div class="form-control w-50 my-1">
+        <div class="form-control">
           <label class="label">
             <span class="label-text">كلمة المرور</span>
           </label>
@@ -111,7 +144,7 @@
             v-model="user.password"
             type="password"
             placeholder="ادخل كلمة المرور"
-            class="input input-bordered"
+            class="input input-bordered input-sm"
             :class="{ 'input-error': $v.user.password.$error }"
           />
           <label v-if="$v.user.password.$error" class="label">
@@ -119,7 +152,7 @@
           </label>
         </div>
 
-        <div class="form-control w-50 my-1">
+        <div class="form-control">
           <label class="label">
             <span class="label-text">رقم الجوال</span>
           </label>
@@ -127,7 +160,7 @@
             v-model="user.phone"
             type="tel"
             placeholder="ادخل رقم الجوال"
-            class="input input-bordered"
+            class="input input-bordered input-sm"
             :class="{ 'input-error': $v.user.phone.$error }"
           />
           <label v-if="$v.user.phone.$error" class="label">
@@ -135,13 +168,13 @@
           </label>
         </div>
 
-        <div class="form-control w-50 my-1">
+        <div class="form-control">
           <label class="label">
             <span class="label-text"> الدولة</span>
           </label>
           <select
             v-model="user.country"
-            class="select select-bordered w-full max-w-xs"
+            class="select select-bordered w-full"
             name="country"
           >
             <option disabled="disabled" selected="selected">
@@ -155,13 +188,13 @@
           </label>
         </div>
 
-        <div class="form-control w-50 my-1">
+        <div class="form-control">
           <label class="label">
             <span class="label-text">وظيفة العميل</span>
           </label>
           <select
             v-model="user.role"
-            class="select select-bordered w-full max-w-xs"
+            class="select select-bordered w-full"
             name="role"
           >
             <option disabled="disabled" selected="selected">
@@ -175,7 +208,7 @@
           </label>
         </div>
 
-        <div class="flex justify-between items-center mt-4">
+        <div class="flex justify-between items-center mt-4 mb-12">
           <button
             v-if="!edit"
             :disabled="!valid"
@@ -226,6 +259,8 @@ export default Vue.extend({
         phone: { required },
         country: { required },
         password: { required },
+        address: { required },
+        dob: { required },
         role: { required },
       },
     }
@@ -237,6 +272,8 @@ export default Vue.extend({
         !!this.user.email &&
         !!this.user.phone &&
         !!this.user.password &&
+        !!this.user.address &&
+        !!this.user.dob &&
         !!this.user.role
       )
     },
