@@ -35,12 +35,14 @@ db()
 
 // Require API routes
 const users = require('./Users/routes')
+const categories = require('./Category/routes')
 
 /** Upload Image */
 app.post('/image', auth, multer.single('img'), uploadImage)
 
 // Import API Routes
 app.use(users)
+app.use(categories)
 
 // Export express app
 module.exports = app

@@ -3,24 +3,30 @@ const mongoose = require('mongoose')
 const Joi = require('joi')
 
 const Schema = new mongoose.Schema({
-  title: {
+  name: {
     type: String,
     required: true
   },
-  restaurant: {
-    ref: 'restaurants',
+  subCategory: {
+    type: [{
+      name: String
+    }],
+    default: []
+  },
+  storeName: {
     required: true,
-    type: mongoose.Schema.Types.ObjectId
+    type: String
   }
 },
-{ timestamps: true })
+  { timestamps: true })
 
 const Category = mongoose.model('categories', Schema)
 
-function validate (category) {
+function validate(category) {
   const categorySchema = Joi.object({
-    title: Joi.string().required(),
-    restaurant: Joi.string().required()
+    name: Joi.string().required(),
+    subCategory: Joi.array(),
+    storeName: Joi.string().required()
   })
 
   return categorySchema.validate(category, { abortEarly: false })

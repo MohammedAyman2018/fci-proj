@@ -6,7 +6,6 @@ const {
   addCategory,
   getOneCategory,
   editCategory,
-  getCategoriesForRestaurant,
   deleteCategory
 } = require('./controller')
 
@@ -23,5 +22,4 @@ router
   .patch(auth, editCategory)
   .delete(auth, deleteCategory)
 
-router.get('/categories/filter/:restaurantId', auth, getCategoriesForRestaurant)
 module.exports = router
