@@ -11,4 +11,5 @@ export default interface IUser {
   fav: string[]
   orders: string[]
   role: string
+  storeName: string
 }
