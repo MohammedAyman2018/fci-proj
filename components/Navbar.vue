@@ -19,12 +19,34 @@
         >
           كل العملاء
         </nuxt-link>
-        <nuxt-link to="/login" class="btn btn-ghost btn-sm rounded-btn">
+        <nuxt-link
+          v-if="$auth && $auth.loggedIn"
+          :to="`/dashboard/${$auth.user.name}/categories`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          كل الفئات
+        </nuxt-link>
+        <nuxt-link
+          v-show="!$auth.loggedIn"
+          to="/login"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
           تسجيل دخول
         </nuxt-link>
-        <nuxt-link to="/sign-up" class="btn btn-ghost btn-sm rounded-btn">
+        <nuxt-link
+          v-show="!$auth.loggedIn"
+          to="/sign-up"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
           إنشاء حساب
         </nuxt-link>
+        <button
+          v-show="$auth.loggedIn"
+          class="btn btn-danger btn-sm rounded-btn text-red-500"
+          @click="$auth.logout()"
+        >
+          تسجيل خروج
+        </button>
       </div>
     </div>
     <div class="flex-none">
