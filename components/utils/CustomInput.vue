@@ -6,7 +6,6 @@
     <input
       v-model.trim.lazy="$v.val.$model"
       v-bind="attrs"
-      class="input"
       :class="classesVal"
       @change="handleInput"
     />

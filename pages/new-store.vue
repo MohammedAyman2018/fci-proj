@@ -1,6 +1,15 @@
 <template>
-  <div>
-    <div class="flex items-center min-h-screen bg-gray-50">
+  <div class="banner">
+    <img class="bg" src="@/assets/topography.svg" alt="" />
+
+    <Success v-if="storeSuccess" :store-name="store.title" />
+
+    <p v-if="storeEdit" class="text-2xl text-center my-5">
+      للأسف لم يتم قبول متجرك للسبب التالي: ملف 1 غير صالح. لكن لا تقلق يمكنك
+      دائماً التقديم مرة أخرى
+    </p>
+
+    <div v-if="!storeSuccess" class="flex items-center">
       <div
         class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
       >
@@ -35,85 +44,71 @@
                 </svg>
               </div>
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
-                انشئ حساب
+                انشئ متجرك
               </h1>
-
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text">رقم اسم المتجر</span>
+                  <span class="label-text">اسم المتجر</span>
                 </label>
                 <input
-                  v-model="user.name"
-                  placeholder="ادخل اسم المتجر"
-                  :class="{ 'input-error': $v.user.name.$error }"
+                  v-model="store.title"
+                  placeholder="اسم المتجر"
+                  class="input-sm"
+                  :class="{ 'input-error': $v.store.title.$error }"
                 />
-                <label v-if="$v.user.name.$error" class="label">
-                  <span class="label-text-alt">ادخل اسم المتجر صحيح</span>
+                <label v-if="$v.store.title.$error" class="label">
+                  <span class="label-text-alt">اسم المتجر مطلوب</span>
                 </label>
               </div>
 
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text">رقم البريد الإلكتروني</span>
+                  <span class="label-text">نبذة مختصرة عن المتجر</span>
+                </label>
+                <textarea
+                  v-model="store.desc"
+                  rows="15"
+                  cols="15"
+                  placeholder="نبذة مختصرة عن المتجر"
+                  class="textarea input-bordered h-24"
+                />
+              </div>
+              <div class="form-control">
+                <label class="label">
+                  <span class="label-text">عنوان المتجر</span>
                 </label>
                 <input
-                  v-model="user.email"
-                  type="email"
-                  placeholder="ادخل البريد الإلكتروني"
-                  :class="{ 'input-error': $v.user.email.$error }"
+                  v-model="store.location"
+                  placeholder="عنوان المتجر"
+                  class="input-sm"
+                  :class="{ 'input-error': $v.store.location.$error }"
                 />
-                <label v-if="$v.user.email.$error" class="label">
-                  <span class="label-text-alt">ادخل بريد الكتروني صحيح</span>
+                <label v-if="$v.store.location.$error" class="label">
+                  <span class="label-text-alt">عنوان المتجر مطلوب</span>
                 </label>
               </div>
 
               <div class="form-control">
                 <label class="label">
-                  <span class="label-text">رقم الجوال</span>
+                  <span class="label-text">ملفات إثبات الهوية</span>
                 </label>
+
                 <input
-                  v-model="user.phone"
-                  type="tel"
-                  placeholder="ادخل رقم الجوال"
-                  :class="{ 'input-error': $v.user.phone.$error }"
+                  multiple
+                  type="file"
+                  :class="{ 'input-error': filesError }"
                 />
-                <label v-if="$v.user.phone.$error" class="label">
-                  <span class="label-text-alt">ادخل رقم الجوال صحيح</span>
-                </label>
-              </div>
-
-              <div class="form-control">
                 <label class="label">
-                  <span class="label-text"> الدولة</span>
-                </label>
-                <select
-                  v-model="user.country"
-                  class="select select-bordered w-full"
-                  name="country"
-                >
-                  <option disabled="disabled" selected="selected">
-                    اختر بلد العميل
-                  </option>
-                  <option value="مصر">مصر</option>
-                  <option value="السعودية">السعودية</option>
-                </select>
-                <label v-if="$v.user.country.$error" class="label">
-                  <span class="label-text-alt">اختر دولة</span>
+                  <span class="label-text-alt">
+                    برجاء رفع صور من الملفات الاتية ملف 1, ملف 2 , ملف 3
+                  </span>
                 </label>
               </div>
-              <custom-input
-                :label="'كلمة المرور'"
-                :message="'ادخل كلمة المرور صحيح'"
-                should-validate
-                is-requried
-                :attrs="{ type: 'password', placeholder: 'ادخل كلمة المرور' }"
-                @changed="user.password = $event"
-              />
 
               <button
                 :class="{ 'btn-disabled': !valid }"
-                class="btn mt-4 w-full btn-success btn-wide"
-                @click="createUser"
+                class="btn mt-4 btn-success w-full"
+                @click="createStore"
               >
                 تسجيل
               </button>
@@ -136,36 +131,52 @@
 
 <script lang="ts">
 import Vue from 'vue'
-const { required, email } = require('vuelidate/lib/validators')
+import IStore from '~/interfaces/store'
+import Success from '@/components/NewStore/success.vue'
+const { required } = require('vuelidate/lib/validators')
 
 export default Vue.extend({
+  name: 'CreateStore',
+  components: {
+    Success,
+  },
   data() {
     return {
-      user: {
-        phone: '',
-        country: 'مصر',
-        name: '',
-        email: '',
-        password: '',
-      },
+      store: {} as IStore,
+      storeSuccess: false,
+      storeEdit: false,
     }
   },
   computed: {
     valid() {
       return true
     },
-  },
-  validations: {
-    user: {
-      phone: { required },
-      country: { required },
-      name: { required },
-      email: { required, email },
-      password: { required },
+    filesError() {
+      return false
     },
   },
+  validations: {
+    store: {
+      title: { required },
+      location: { required },
+    },
+  },
+  async mounted() {
+    const validateStore: IStore = await this.$axios.$get(
+      '/stores/check-if-validate'
+    )
+    if (validateStore === null) return
+    if (validateStore.reviewed && validateStore.approved) {
+      // TODO: your app
+      this.store = validateStore
+      this.storeSuccess = true
+    } else if (validateStore.reviewed && !validateStore.approved) {
+      this.store = validateStore
+      this.storeEdit = true
+    }
+  },
   methods: {
-    async createUser() {
+    async createStore() {
       try {
         this.$v.$touch()
         if (this.$v.$anyError) {
@@ -176,7 +187,7 @@ export default Vue.extend({
           })
           return
         }
-        await this.$axios.$post('/users', this.user)
+        await this.$axios.$post('/stores', this.store)
         this.$notify({
           group: 'foo',
           type: 'success',
@@ -195,4 +206,11 @@ export default Vue.extend({
 </script>
 
 <style scoped>
+.banner {
+  @apply relative h-screen;
+}
+.banner img.bg {
+  z-index: -1;
+  @apply w-full h-full absolute top-0 left-0 object-cover opacity-10;
+}
 </style>

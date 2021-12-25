@@ -83,7 +83,7 @@
           <input
             v-model="user.name"
             placeholder="ادخل اسم العميل"
-            class="input input-bordered input-sm"
+            class="input-sm"
             :class="{ 'input-error': $v.user.name.$error }"
           />
           <label v-if="$v.user.name.$error" class="label">
@@ -98,7 +98,7 @@
           <input
             v-model="user.address"
             placeholder="ادخل عنوان العميل"
-            class="input input-bordered input-sm"
+            class="input-sm"
             :class="{ 'input-error': $v.user.address.$error }"
           />
           <label v-if="$v.user.address.$error" class="label">
@@ -113,7 +113,7 @@
           <input
             v-model="user.dob"
             type="date"
-            class="input input-bordered input-sm"
+            class="input-sm"
             :class="{ 'input-error': $v.user.dob.$error }"
           />
           <label v-if="$v.user.dob.$error" class="label">
@@ -128,7 +128,7 @@
           <input
             v-model="user.email"
             placeholder="البريد الإلكتروني"
-            class="input input-bordered input-sm"
+            class="input-sm"
             :class="{ 'input-error': $v.user.email.$error }"
           />
           <label v-if="$v.user.email.$error" class="label">
@@ -144,7 +144,7 @@
             v-model="user.password"
             type="password"
             placeholder="ادخل كلمة المرور"
-            class="input input-bordered input-sm"
+            class="input-sm"
             :class="{ 'input-error': $v.user.password.$error }"
           />
           <label v-if="$v.user.password.$error" class="label">
@@ -160,7 +160,7 @@
             v-model="user.phone"
             type="tel"
             placeholder="ادخل رقم الجوال"
-            class="input input-bordered input-sm"
+            class="input-sm"
             :class="{ 'input-error': $v.user.phone.$error }"
           />
           <label v-if="$v.user.phone.$error" class="label">
@@ -370,7 +370,4 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-.oneUser {
-  @apply shadow-md p-4 bg-green-100 mb-3;
-}
 </style>

@@ -1,13 +1,8 @@
 <template>
-  <div class="navbar shadow-lg bg-neutral text-neutral-content">
-    <div class="flex-1 px-2 mx-2">
-      <span class="text-lg font-bold"> لوجو </span>
-    </div>
-    <div class="flex-none hidden px-2 mx-2 lg:flex">
-      <div class="flex items-stretch">
-        <nuxt-link to="/" class="btn btn-ghost btn-sm rounded-btn">
-          الرئيسية
-        </nuxt-link>
+  <div class="drawer-side">
+    <label for="my-drawer-3" class="drawer-overlay"></label>
+    <ul class="p-4 overflow-y-auto menu w-80 bg-base-100">
+      <li>
         <nuxt-link
           v-if="$auth && $auth.loggedIn"
           to="/profile"
@@ -15,13 +10,17 @@
         >
           {{ $auth.user.name }}
         </nuxt-link>
+      </li>
+      <li>
         <nuxt-link
-          v-if="$auth && $auth.loggedIn"
+          v-if="$auth && $auth.loggedIn && $auth.user.storeName === ''"
           to="/new-store"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           انشئ متجرك
         </nuxt-link>
+      </li>
+      <li>
         <nuxt-link
           v-if="
             $auth &&
@@ -34,6 +33,8 @@
         >
           كل العملاء
         </nuxt-link>
+      </li>
+      <li>
         <nuxt-link
           v-if="
             $auth &&
@@ -46,6 +47,8 @@
         >
           كل الفئات
         </nuxt-link>
+      </li>
+      <li>
         <nuxt-link
           v-show="!$auth.loggedIn"
           to="/login"
@@ -53,6 +56,8 @@
         >
           تسجيل دخول
         </nuxt-link>
+      </li>
+      <li>
         <nuxt-link
           v-show="!$auth.loggedIn"
           to="/sign-up"
@@ -60,6 +65,23 @@
         >
           إنشاء حساب
         </nuxt-link>
+      </li>
+      <li
+        v-if="
+          $auth &&
+          $auth.loggedIn &&
+          $auth.user.storeName &&
+          $auth.user.role === 'admin'
+        "
+      >
+        <nuxt-link
+          class="btn btn-ghost btn-sm rounded-btn"
+          :to="`/dashboard/${$auth.user.storeName}`"
+        >
+          المتجر
+        </nuxt-link>
+      </li>
+      <li>
         <button
           v-show="$auth.loggedIn"
           class="btn btn-danger btn-sm rounded-btn text-red-500"
@@ -67,20 +89,21 @@
         >
           تسجيل خروج
         </button>
-      </div>
-    </div>
-    <div class="flex-none">
-      <label for="my-drawer-3" class="btn btn-square btn-ghost">
-        <i class="ri-menu-line"></i>
-      </label>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 
-export default Vue.extend({})
+export default Vue.extend({
+  computed: {
+    links() {
+      return this.$store.state.links
+    },
+  },
+})
 </script>
 
 <style scoped>

@@ -4,7 +4,6 @@ require('dotenv').config()
 
 export default function AdminAuth(req, res, next) {
   const token = req.header('x-auth-token').split(',')[1]
-  console.log(token)
   if (!token) {
     return res.status(401).send('Access denied. No token provided.')
   }
@@ -23,7 +22,6 @@ export default function AdminAuth(req, res, next) {
 
 export function clientAuth(req, res, next) {
   const token = req.header('x-auth-token').split(',')[1]
-  console.log('dsaasd => ', token)
   if (!token) {
     return res.status(401).send('Access denied. No token provided.')
   }
