@@ -33,16 +33,18 @@ async function db() {
 };
 db()
 
+/** Upload Image */
+app.post('/image', auth, multer.single('img'), uploadImage)
+
 // Require API routes
 const users = require('./Users/routes')
 const categories = require('./Category/routes')
-
-/** Upload Image */
-app.post('/image', auth, multer.single('img'), uploadImage)
+const stores = require('./Store/routes')
 
 // Import API Routes
 app.use(users)
 app.use(categories)
+app.use(stores)
 
 // Export express app
 module.exports = app
