@@ -28,6 +28,7 @@ exports.validateStore = async (req, res) => {
   try {
     const store = await Store.findById(req.params.storeId)
     store.reviewed = true
+    store.rejectMessage = req.body.message
     store.approved = req.body.approved
     await store.save()
     res.status(200).json({ msg: 'تم تفعيل المتجر' })

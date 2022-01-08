@@ -36,6 +36,9 @@ const Schema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
+  rejectMessage: {
+    type: String,
+  },
   reviewed: {
     type: Boolean,
     default: false
