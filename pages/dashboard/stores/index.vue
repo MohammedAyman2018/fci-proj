@@ -1,6 +1,29 @@
 <template>
-  <div>
-    <div v-for="oneUser in stores" :key="oneUser._id" class="oneUser">
+  <div class="container mx-auto px-2">
+    <div class="justify-between flex items-center my-3">
+      <h2 class="text-2xl mb-3">طلبات انشاء متجر</h2>
+      <div class="flex justify-between">
+        <button class="btn mx-1 btn-primary btn-sm" @click="filter('waiting')">
+          في الانتظار
+        </button>
+        <button class="btn mx-1 btn-primary btn-sm" @click="filter('rejected')">
+          المرفوضة
+        </button>
+      </div>
+    </div>
+
+    <p
+      v-if="displayedStores.length === 0"
+      class="text-center text-grey-500 text-xl"
+    >
+      لا يوجد تاجر تحت هذه الفلترة
+    </p>
+    <div
+      v-for="oneUser in displayedStores"
+      v-else
+      :key="oneUser._id"
+      class="oneUser"
+    >
       <div class="flex justify-between items-center mb-4">
         <h3 class="text-lg">{{ oneUser.title }}</h3>
         <div>
@@ -50,6 +73,7 @@ export default Vue.extend({
   data() {
     return {
       stores: [] as IStore[],
+      displayedStores: [] as IStore[],
       store: {} as IStore,
     }
   },
@@ -66,11 +90,25 @@ export default Vue.extend({
         })
       })
       this.stores = res
+      this.filter('waiting')
     },
     async approved(approved) {
+      let message: string | null = ''
+      if (!approved) {
+        while (message === '') {
+          message = prompt('ما هو سبب الرفض؟')
+        }
+      }
       try {
         await this.$axios.$post(`/stores/validate/${this.store._id}`, {
           approved,
+          message,
+        })
+        this.closeModal()
+        this.$notify({
+          group: 'foo',
+          type: 'error',
+          title: 'تم الحذف بنجاح',
         })
       } catch (error: any) {
         this.$notify({
@@ -79,6 +117,13 @@ export default Vue.extend({
           title: error,
         })
       }
+    },
+    filter(type: string): void {
+      if (type === 'waiting') {
+        this.displayedStores = this.stores.filter((store) => !store.reviewed)
+        return
+      }
+      this.displayedStores = this.stores.filter((store) => store.reviewed)
     },
     closeModal() {
       this.store = {} as IStore

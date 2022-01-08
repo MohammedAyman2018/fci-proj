@@ -15,26 +15,33 @@
         <div class="flex flex-wrap -m-2">
           <div class="p-2 w-1/2">
             <div class="relative">
-              <label for="name" class="leading-7 text-sm text-gray-600"
-                >الاسم</label
-              >
-              <input type="text" />
+              <FormulateInput
+                name="اسمك"
+                label="الاسم"
+                placeholder="ادخل اسمك"
+                validation="required"
+              />
             </div>
           </div>
           <div class="p-2 w-1/2">
             <div class="relative">
-              <label for="email" class="leading-7 text-sm text-gray-600"
-                >البريد الالكتروني</label
-              >
-              <input type="email" />
+              <FormulateInput
+                name="البريد الالكتروني"
+                label="البريد الالكتروني"
+                placeholder="ادخل البريد الالكتروني"
+                validation="required|email"
+              />
             </div>
           </div>
           <div class="p-2 w-full">
             <div class="relative">
-              <label for="message" class="leading-7 text-sm text-gray-600"
-                >رسالتك</label
-              >
-              <textarea id="message" />
+              <FormulateInput
+                type="textarea"
+                name="رسالتك"
+                label="رسالتك"
+                placeholder="ادخل رسالتك"
+                validation="required"
+              />
             </div>
           </div>
           <div class="p-2 w-full">

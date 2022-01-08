@@ -26,6 +26,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/vue-notification',
+    { src: '~/plugins/vue-good-table', ssr: false },
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js'
   ],
@@ -39,7 +40,11 @@ export default {
     '@nuxt/typescript-build',
     // https://go.nuxtjs.dev/tailwindcss
     '@nuxtjs/tailwindcss',
+    '@braid/vue-formulate/nuxt',
   ],
+  formulate: {
+    configPath: '~/plugins/formulate.config.js'
+  },
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [

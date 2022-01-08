@@ -75,138 +75,74 @@
       @closed="closeModal('edit-user')"
     >
       <div class="p-4 space-y-1">
-        <h2 class="text-xl font-bold">تعديل العميل</h2>
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">اسم العميل</span>
-          </label>
-          <input
-            v-model="user.name"
-            placeholder="ادخل اسم العميل"
-            class="input-sm"
-            :class="{ 'input-error': $v.user.name.$error }"
-          />
-          <label v-if="$v.user.name.$error" class="label">
-            <span class="label-text-alt">اسم العميل مطلوب</span>
-          </label>
-        </div>
+        <h2 class="text-xl font-bold">{{ edit ? 'تعديل' : 'أضف' }} العميل</h2>
+        <FormulateInput
+          v-model="user.name"
+          name="اسم العميل"
+          label="اسم العميل"
+          placeholder="ادخل اسم العميل"
+          validation="required"
+        />
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">عنوان العميل</span>
-          </label>
-          <input
-            v-model="user.address"
-            placeholder="ادخل عنوان العميل"
-            class="input-sm"
-            :class="{ 'input-error': $v.user.address.$error }"
-          />
-          <label v-if="$v.user.address.$error" class="label">
-            <span class="label-text-alt">عنوان العميل مطلوب</span>
-          </label>
-        </div>
+        <FormulateInput
+          v-model="user.address"
+          name="عنوان العميل"
+          label="عنوان العميل"
+          placeholder="ادخل عنوان العميل"
+          validation="required"
+        />
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">تاريخ ميلاد العميل</span>
-          </label>
-          <input
-            v-model="user.dob"
-            type="date"
-            class="input-sm"
-            :class="{ 'input-error': $v.user.dob.$error }"
-          />
-          <label v-if="$v.user.dob.$error" class="label">
-            <span class="label-text-alt">تاريخ ميلاد العميل مطلوب</span>
-          </label>
-        </div>
+        <FormulateInput
+          v-model="user.dob"
+          type="date"
+          name="تاريخ ميلاد العميل"
+          label="تاريخ ميلاد العميل"
+          validation="required"
+        />
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">البريد الإلكتروني</span>
-          </label>
-          <input
-            v-model="user.email"
-            placeholder="البريد الإلكتروني"
-            class="input-sm"
-            :class="{ 'input-error': $v.user.email.$error }"
-          />
-          <label v-if="$v.user.email.$error" class="label">
-            <span class="label-text-alt">ادخل بريد الكتروني صحيح</span>
-          </label>
-        </div>
+        <FormulateInput
+          v-model="user.email"
+          name="البريد الإلكتروني"
+          placeholder="البريد الإلكتروني"
+          label="البريد الإلكتروني"
+          validation="required|email"
+        />
+        <FormulateInput
+          v-model="user.password"
+          type="password"
+          name="كلمة المرور"
+          placeholder="ادخل كلمة المرور"
+          label="كلمة المرور"
+          validation="required"
+        />
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">كلمة المرور</span>
-          </label>
-          <input
-            v-model="user.password"
-            type="password"
-            placeholder="ادخل كلمة المرور"
-            class="input-sm"
-            :class="{ 'input-error': $v.user.password.$error }"
-          />
-          <label v-if="$v.user.password.$error" class="label">
-            <span class="label-text-alt">ادخل كلمة المرور صحيحة</span>
-          </label>
-        </div>
+        <FormulateInput
+          v-model="user.phone"
+          name="رقم الجوال"
+          type="tel"
+          placeholder="ادخل رقم الجوال"
+          label="رقم الجوال"
+          validation="required"
+        />
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">رقم الجوال</span>
-          </label>
-          <input
-            v-model="user.phone"
-            type="tel"
-            placeholder="ادخل رقم الجوال"
-            class="input-sm"
-            :class="{ 'input-error': $v.user.phone.$error }"
-          />
-          <label v-if="$v.user.phone.$error" class="label">
-            <span class="label-text-alt">ادخل رقم الجوال صحيح</span>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text"> الدولة</span>
-          </label>
-          <select
-            v-model="user.country"
-            class="select select-bordered w-full"
-            name="country"
-          >
-            <option disabled="disabled" selected="selected">
-              اختر بلد العميل
-            </option>
-            <option value="مصر">مصر</option>
-            <option value="السعودية">السعودية</option>
-          </select>
-          <label v-if="$v.user.country.$error" class="label">
-            <span class="label-text-alt">اختر دولة</span>
-          </label>
-        </div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text">وظيفة العميل</span>
-          </label>
-          <select
-            v-model="user.role"
-            class="select select-bordered w-full"
-            name="role"
-          >
-            <option disabled="disabled" selected="selected">
-              اختر وظيفة العميل
-            </option>
-            <option value="client">عميل</option>
-            <option value="admin">أدمن</option>
-          </select>
-          <label v-if="$v.user.role.$error" class="label">
-            <span class="label-text-alt">اختر وظيفة</span>
-          </label>
-        </div>
+        <FormulateInput
+          v-model="user.couuntry"
+          name="الدولة"
+          type="select"
+          placeholder="ادخل الدولة"
+          :options="{ مصر: 'مصر', السعودية: 'السعودية' }"
+          label="الدولة"
+          validation="required"
+        />
+        <FormulateInput
+          v-model="user.role"
+          name="وظيفة العميل"
+          type="select"
+          placeholder="اختر وظيفة العميل"
+          :options="{ client: 'عميل', admin: 'أدمن' }"
+          label="وظيفة العميل"
+          validation="required"
+        />
 
         <div class="flex justify-between items-center mt-4 mb-12">
           <button
@@ -236,33 +172,16 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { validationMixin } from 'vuelidate'
 import IUser from '@/interfaces/user'
-const { required, email } = require('vuelidate/lib/validators')
 export default Vue.extend({
   name: 'UsersDashBoard',
 
-  mixins: [validationMixin],
   data() {
     return {
       user: {} as IUser,
       edit: true,
       users: [] as IUser[],
       displayedUsers: [] as IUser[],
-    }
-  },
-  validations(): { [key: string]: any } {
-    return {
-      user: {
-        name: { required },
-        email: { required, email },
-        phone: { required },
-        country: { required },
-        password: { required },
-        address: { required },
-        dob: { required },
-        role: { required },
-      },
     }
   },
   computed: {

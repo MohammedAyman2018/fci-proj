@@ -37,77 +37,43 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ حساب
               </h1>
+              <FormulateInput
+                v-model="user.name"
+                name="اسم المتجر"
+                label="اسم المتجر"
+                placeholder="اسم المتجر"
+                validation="required"
+              />
+              <FormulateInput
+                v-model="user.email"
+                name="البريد الإلكتروني"
+                label="البريد الإلكتروني"
+                placeholder="البريد الإلكتروني"
+                validation="required|email"
+              />
+              <FormulateInput
+                v-model="user.phone"
+                type="tel"
+                name="رقم الجوال"
+                label="رقم الجوال"
+                placeholder="رقم الجوال"
+                validation="required"
+              />
+              <FormulateInput
+                v-model="user.country"
+                :options="{ مصر: 'مصر', السعودية: 'السعودية' }"
+                type="select"
+                placeholder="اختر دولتك"
+                label="الدولة"
+              />
 
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">رقم اسم المتجر</span>
-                </label>
-                <input
-                  v-model="user.name"
-                  placeholder="ادخل اسم المتجر"
-                  :class="{ 'input-error': $v.user.name.$error }"
-                />
-                <label v-if="$v.user.name.$error" class="label">
-                  <span class="label-text-alt">ادخل اسم المتجر صحيح</span>
-                </label>
-              </div>
-
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">رقم البريد الإلكتروني</span>
-                </label>
-                <input
-                  v-model="user.email"
-                  type="email"
-                  placeholder="ادخل البريد الإلكتروني"
-                  :class="{ 'input-error': $v.user.email.$error }"
-                />
-                <label v-if="$v.user.email.$error" class="label">
-                  <span class="label-text-alt">ادخل بريد الكتروني صحيح</span>
-                </label>
-              </div>
-
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">رقم الجوال</span>
-                </label>
-                <input
-                  v-model="user.phone"
-                  type="tel"
-                  placeholder="ادخل رقم الجوال"
-                  :class="{ 'input-error': $v.user.phone.$error }"
-                />
-                <label v-if="$v.user.phone.$error" class="label">
-                  <span class="label-text-alt">ادخل رقم الجوال صحيح</span>
-                </label>
-              </div>
-
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text"> الدولة</span>
-                </label>
-                <select
-                  v-model="user.country"
-                  class="select select-bordered w-full"
-                  name="country"
-                >
-                  <option disabled="disabled" selected="selected">
-                    اختر بلد العميل
-                  </option>
-                  <option value="مصر">مصر</option>
-                  <option value="السعودية">السعودية</option>
-                </select>
-                <label v-if="$v.user.country.$error" class="label">
-                  <span class="label-text-alt">اختر دولة</span>
-                </label>
-              </div>
-              <custom-input
-                :label="'كلمة المرور'"
-                :message="'ادخل كلمة المرور صحيح'"
-                should-validate
-                is-requried
-                :attrs="{ type: 'password', placeholder: 'ادخل كلمة المرور' }"
-                @changed="user.password = $event"
+              <FormulateInput
+                v-model="user.password"
+                type="password"
+                name="كلمة المرور صحيح"
+                label="كلمة المرور صحيح"
+                placeholder="كلمة المرور صحيح"
+                validation="required"
               />
 
               <button
@@ -136,7 +102,6 @@
 
 <script lang="ts">
 import Vue from 'vue'
-const { required, email } = require('vuelidate/lib/validators')
 
 export default Vue.extend({
   data() {
@@ -153,15 +118,6 @@ export default Vue.extend({
   computed: {
     valid() {
       return true
-    },
-  },
-  validations: {
-    user: {
-      phone: { required },
-      country: { required },
-      name: { required },
-      email: { required, email },
-      password: { required },
     },
   },
   methods: {

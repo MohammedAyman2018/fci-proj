@@ -11,44 +11,117 @@
       >
         أضف فئة
       </button>
-
-      <modal name="delete-category" scrollable height="auto">
-        <div class="p-4">
-          <h2 class="text-xl font-bold">حذف العميل</h2>
-          <p>هل انت واثق انك تريد حذف الفئة؟</p>
-
-          <div class="mt-5">
-            <button class="btn btn-error btn-sm" @click="removeCategory">
-              نعم
-            </button>
-            <button
-              class="btn btn-error btn-sm"
-              @click="closeModal('delete-category')"
-            >
-              إلغاء
-            </button>
-          </div>
-        </div>
-      </modal>
-      <modal name="edit-category" scrollable height="auto">
-        <div class="p-4">
-          <h2 class="text-xl font-bold">حذف العميل</h2>
-          <p>هل انت واثق انك تريد حذف الفئة؟</p>
-
-          <div class="mt-5">
-            <button class="btn btn-error btn-sm" @click="removeCategory">
-              نعم
-            </button>
-            <button
-              class="btn btn-error btn-sm"
-              @click="closeModal('delete-category')"
-            >
-              إلغاء
-            </button>
-          </div>
-        </div>
-      </modal>
     </div>
+    <modal name="delete-category" scrollable height="auto">
+      <div class="p-4">
+        <h2 class="text-xl font-bold">حذف الفئة</h2>
+        <p>هل انت واثق انك تريد حذف الفئة؟</p>
+
+        <div class="mt-5">
+          <button class="btn btn-error btn-sm" @click="removeCategory">
+            نعم
+          </button>
+          <button
+            class="btn btn-error btn-sm"
+            @click="closeModal('delete-category')"
+          >
+            إلغاء
+          </button>
+        </div>
+      </div>
+    </modal>
+    <modal name="edit-category" scrollable height="auto">
+      <div class="p-4">
+        <h2 class="text-xl font-bold">أضف فئة</h2>
+
+        <div class="mt-5">
+          <FormulateInput
+            v-model="category.name"
+            name="اسم الفئة"
+            label="اسم الفئة"
+            placeholder="اسم الفئة"
+            validation="required"
+          />
+
+          <div class="flex justify-between items-center mt-4 mb-12">
+            <button
+              v-if="!edit"
+              :disabled="!valid"
+              class="btn btn-success btn-sm"
+              @click="addCategory"
+            >
+              أضافة
+            </button>
+            <button
+              v-else
+              :disabled="!valid"
+              class="btn btn-warning btn-sm"
+              @click="editCategory"
+            >
+              تعديل
+            </button>
+            <button
+              class="btn btn-ghost btn-sm"
+              @click="closeModal('edit-category')"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+      </div>
+    </modal>
+
+    <vue-good-table
+      :columns="[
+        { label: 'اسم الفئة', field: 'name' },
+        { label: 'الفئات الداخلية', field: 'subCategory' },
+        { label: 'تاريخ الانشاء', field: 'createdAt' },
+        { label: 'العمليات المتاحة', field: 'operations' },
+      ]"
+      :rows="categories"
+      :rtl="true"
+      :search-options="{ enabled: true, placeholder: 'ابحث في الجدول' }"
+      max-height="auto"
+    >
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'createdAt'">
+          <span>{{ props.row.createdAt.substr(0, 10) }}</span>
+        </span>
+        <span v-else-if="props.column.field == 'subCategory'">
+          <span v-if="props.row.subCategory.length === 0">لا يوجد</span>
+          <span
+            v-for="subCate in props.row.subCategory"
+            v-else
+            :key="subCate"
+            class="m-1"
+            v-text="subCate"
+          />
+        </span>
+        <span v-else-if="props.column.field == 'operations'">
+          <div data-tip="تعديل" class="tooltip">
+            <button
+              class="btn btn-warning btn-square btn-xs"
+              @click="openModal('edit-user', oneUser)"
+            >
+              <i class="ri-pencil-line"></i>
+            </button>
+          </div>
+          <div data-tip="حذف" class="tooltip">
+            <button
+              class="btn btn-error btn-square btn-xs"
+              @click="openModal('delete-user', oneUser)"
+            >
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </div>
+        </span>
+        <span v-else>
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
+
+      <div slot="emptystate">لا توجد فئات حتى الآن</div>
+    </vue-good-table>
   </div>
 </template>
 
@@ -57,12 +130,18 @@ import Vue from 'vue'
 import ICategory from '@/interfaces/category'
 
 export default Vue.extend({
+  name: 'CategoryPage',
   data() {
     return {
       categories: [] as ICategory[],
       category: {} as ICategory,
       edit: true,
     }
+  },
+  computed: {
+    valid(): boolean {
+      return !!this.category.name
+    },
   },
   mounted() {
     this.getCategories()
@@ -73,22 +152,22 @@ export default Vue.extend({
         .$get(`/categories?storeName=${this.$route.params.storeName}`)
         .catch((err) => console.log(err))
     },
-    openModal(modalName, user) {
-      this.category = user
+    openModal(modalName, category) {
+      this.category = category
       this.$modal.show(modalName)
     },
-    async addUser() {
+    async addCategory() {
       try {
-        await this.$axios.$post('/users', {
+        await this.$axios.$post('/categories', {
           ...this.category,
           storeName: this.$route.params.storeName,
         })
         await this.getCategories()
-        this.closeModal('edit-user')
+        this.closeModal('edit-category')
         this.$notify({
           group: 'foo',
           type: 'success',
-          title: 'تمت إضافة العميل بنجاح',
+          title: 'تمت إضافة الفئة بنجاح',
         })
       } catch (error: any) {
         this.$notify({
@@ -98,11 +177,14 @@ export default Vue.extend({
         })
       }
     },
-    async editUser() {
+    async editCategory() {
       try {
-        await this.$axios.$patch(`/users/${this.category._id}`, this.category)
+        await this.$axios.$patch(
+          `/categoriess/${this.category._id}`,
+          this.category
+        )
         await this.getCategories()
-        this.closeModal('edit-user')
+        this.closeModal('edit-category')
         this.$notify({
           group: 'foo',
           type: 'success',
@@ -116,15 +198,15 @@ export default Vue.extend({
         })
       }
     },
-    async removeUser() {
+    async removeCategory() {
       try {
-        await this.$axios.$delete(`/users/${this.category._id}`)
+        await this.$axios.$delete(`/categories/${this.category._id}`)
         await this.getCategories()
-        this.closeModal('delete-user')
+        this.closeModal('delete-category')
         this.$notify({
           group: 'foo',
           type: 'success',
-          title: 'تم حذف العميل بنجاح',
+          title: 'تم حذف الفئة بنجاح',
         })
       } catch (error: any) {
         this.$notify({

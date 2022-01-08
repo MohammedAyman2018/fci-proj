@@ -17,11 +17,8 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { validationMixin } from 'vuelidate'
-const { required, email } = require('vuelidate/lib/validators')
 
 export default Vue.extend({
-  mixins: [validationMixin],
   props: {
     isRequried: { type: Boolean, default: () => false },
     isEmail: { type: Boolean, default: () => false },
@@ -47,20 +44,6 @@ export default Vue.extend({
         ? ['input-error', ...this.classes]
         : this.classes
     },
-  },
-  validations(): { [key: string]: any } {
-    if (this.isEmail) {
-      return {
-        val: {
-          required,
-          email,
-        },
-      }
-    } else if (this.isRequried) {
-      return { val: { required } }
-    } else {
-      return { val: {} }
-    }
   },
   watch: {
     initialValue(val: string) {

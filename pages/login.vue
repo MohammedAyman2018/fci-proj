@@ -15,36 +15,24 @@
             class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100"
           >
             <div class="card-body">
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">البريد الإلكتروني</span>
-                </label>
-                <input
-                  v-model="user.email"
-                  placeholder="البريد الإلكتروني"
-                  class="input-sm"
-                  :class="{ 'input-error': $v.user.email.$error }"
-                />
-                <label v-if="$v.user.email.$error" class="label">
-                  <span class="label-text-alt">ادخل بريد الكتروني صحيح</span>
-                </label>
-              </div>
+              <FormulateInput
+                v-model="user.email"
+                type="email"
+                name="email"
+                label="البريد الإلكتروني"
+                placeholder="البريد الإلكتروني"
+                validation="required|email"
+              />
 
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">كلمة المرور</span>
-                </label>
-                <input
-                  v-model="user.password"
-                  type="password"
-                  placeholder="ادخل كلمة المرور"
-                  class="input-sm"
-                  :class="{ 'input-error': $v.user.password.$error }"
-                />
-                <label v-if="$v.user.password.$error" class="label">
-                  <span class="label-text-alt">يحب ادخال كلمة المرور</span>
-                </label>
-              </div>
+              <FormulateInput
+                v-model="user.password"
+                type="password"
+                name="password"
+                label="كلمة المرور"
+                placeholder="كلمة المرور"
+                validation="required"
+              />
+
               <div class="form-control mt-6">
                 <button
                   :class="{ 'btn-disabled': !valid }"
@@ -64,12 +52,9 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import { validationMixin } from 'vuelidate'
-const { required, email } = require('vuelidate/lib/validators')
 
 export default Vue.extend({
   name: 'LoginPage',
-  mixins: [validationMixin],
 
   data() {
     return {
@@ -79,34 +64,14 @@ export default Vue.extend({
       },
     }
   },
-  validations(): { [key: string]: any } {
-    return {
-      user: {
-        email: { required, email },
-        password: { required },
-      },
-    }
-  },
   computed: {
     valid(): Boolean {
-      return (
-        (!this.$v.user?.email?.$invalid && !this.$v.user?.password?.$invalid) ||
-        false
-      )
+      return !!this.user.email && !!this.user.password
     },
   },
   methods: {
     async userLogin() {
       try {
-        this.$v.$touch()
-        if (this.$v.$anyError) {
-          this.$notify({
-            group: 'foo',
-            type: 'error',
-            title: 'تأكد من إكمال البيانات',
-          })
-          return
-        }
         await this.$auth.loginWith('local', { data: this.user })
         this.$router.push('/')
         this.$notify({

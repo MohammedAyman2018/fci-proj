@@ -5,8 +5,8 @@
     <Success v-if="storeSuccess" :store-name="store.title" />
 
     <p v-if="storeEdit" class="text-2xl text-center my-5">
-      للأسف لم يتم قبول متجرك للسبب التالي: ملف 1 غير صالح. لكن لا تقلق يمكنك
-      دائماً التقديم مرة أخرى
+      للأسف لم يتم قبول متجرك للسبب التالي: {{ store.rejectMessage }}. لكن لا
+      تقلق يمكنك دائماً التقديم مرة أخرى
     </p>
 
     <div v-if="!storeSuccess" class="flex items-center">
@@ -46,64 +46,36 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ متجرك
               </h1>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">اسم المتجر</span>
-                </label>
-                <input
-                  v-model="store.title"
-                  placeholder="اسم المتجر"
-                  class="input-sm"
-                  :class="{ 'input-error': $v.store.title.$error }"
-                />
-                <label v-if="$v.store.title.$error" class="label">
-                  <span class="label-text-alt">اسم المتجر مطلوب</span>
-                </label>
-              </div>
+              <FormulateInput
+                v-model="store.title"
+                name="اسم المتجر"
+                label="اسم المتجر"
+                placeholder="اسم المتجر"
+                validation="required"
+              />
 
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">نبذة مختصرة عن المتجر</span>
-                </label>
-                <textarea
-                  v-model="store.desc"
-                  rows="15"
-                  cols="15"
-                  placeholder="نبذة مختصرة عن المتجر"
-                  class="textarea input-bordered h-24"
-                />
-              </div>
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">عنوان المتجر</span>
-                </label>
-                <input
-                  v-model="store.location"
-                  placeholder="عنوان المتجر"
-                  class="input-sm"
-                  :class="{ 'input-error': $v.store.location.$error }"
-                />
-                <label v-if="$v.store.location.$error" class="label">
-                  <span class="label-text-alt">عنوان المتجر مطلوب</span>
-                </label>
-              </div>
+              <FormulateInput
+                v-model="store.desc"
+                type="textarea"
+                name="نبذة مختصرة عن المتجر"
+                label="نبذة مختصرة عن المتجر"
+              />
+              <FormulateInput
+                v-model="store.location"
+                name="عنوان المتجر"
+                label="عنوان المتجر"
+                placeholder="عنوان المتجر"
+                validation="required"
+              />
 
-              <div class="form-control">
-                <label class="label">
-                  <span class="label-text">ملفات إثبات الهوية</span>
-                </label>
-
-                <input
-                  multiple
-                  type="file"
-                  :class="{ 'input-error': filesError }"
-                />
-                <label class="label">
-                  <span class="label-text-alt">
-                    برجاء رفع صور من الملفات الاتية ملف 1, ملف 2 , ملف 3
-                  </span>
-                </label>
-              </div>
+              <FormulateInput
+                type="image"
+                name="identy"
+                label="ملفات إثبات الهوية"
+                help="برجاء رفع صور من الملفات الاتية ملف 1, ملف 2 , ملف 3"
+                validation="mime:image/jpeg,image/png,image/gif"
+                multiple
+              />
 
               <button
                 :class="{ 'btn-disabled': !valid }"
@@ -133,7 +105,6 @@
 import Vue from 'vue'
 import IStore from '~/interfaces/store'
 import Success from '@/components/NewStore/success.vue'
-const { required } = require('vuelidate/lib/validators')
 
 export default Vue.extend({
   name: 'CreateStore',
@@ -153,12 +124,6 @@ export default Vue.extend({
     },
     filesError() {
       return false
-    },
-  },
-  validations: {
-    store: {
-      title: { required },
-      location: { required },
     },
   },
   async mounted() {
