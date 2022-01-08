@@ -6,7 +6,7 @@
         class="btn btn-primary btn-sm"
         @click="
           edit = false
-          openModal('edit-category', {})
+          openModal('edit-category', { subCategory: [] })
         "
       >
         أضف فئة
@@ -42,6 +42,43 @@
             placeholder="اسم الفئة"
             validation="required"
           />
+
+          <div>
+            <ul>
+              <li
+                v-for="cat in category.subCategory"
+                :key="'subcategory input' + cat.name"
+                class="inline-block"
+              >
+                {{ cat.name }},
+              </li>
+            </ul>
+          </div>
+          <button class="btn btn-success btn-sm" @click="addSubCategory">
+            أضف فئة فرعية
+          </button>
+
+          <div
+            v-for="(subCat, idx) in category.subCategory"
+            :key="'subcategory input' + idx"
+            class="flex justify-between items-center"
+          >
+            <FormulateInput
+              v-model="category.subCategory[idx].name"
+              name="اسم الفئة"
+              label="اسم الفئة"
+              class="flex-1"
+              placeholder="اسم الفئة"
+              validation="required"
+            />
+
+            <button
+              class="btn btn-error btn-square btn-xs"
+              @click="removeSubCategory(idx)"
+            >
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </div>
 
           <div class="flex justify-between items-center mt-4 mb-12">
             <button
@@ -94,14 +131,14 @@
             v-else
             :key="subCate"
             class="m-1"
-            v-text="subCate"
+            v-text="subCate.name"
           />
         </span>
         <span v-else-if="props.column.field == 'operations'">
           <div data-tip="تعديل" class="tooltip">
             <button
               class="btn btn-warning btn-square btn-xs"
-              @click="openModal('edit-user', oneUser)"
+              @click="openModal('edit-category', props.row)"
             >
               <i class="ri-pencil-line"></i>
             </button>
@@ -109,7 +146,7 @@
           <div data-tip="حذف" class="tooltip">
             <button
               class="btn btn-error btn-square btn-xs"
-              @click="openModal('delete-user', oneUser)"
+              @click="openModal('delete-category', props.row)"
             >
               <i class="ri-delete-bin-line"></i>
             </button>
@@ -134,7 +171,9 @@ export default Vue.extend({
   data() {
     return {
       categories: [] as ICategory[],
-      category: {} as ICategory,
+      category: {
+        subCategory: [] as { name: string }[],
+      } as ICategory,
       edit: true,
     }
   },
@@ -150,11 +189,23 @@ export default Vue.extend({
     async getCategories() {
       this.categories = await this.$axios
         .$get(`/categories?storeName=${this.$route.params.storeName}`)
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          this.$notify({
+            group: 'foo',
+            type: 'success',
+            title: err,
+          })
+        })
     },
     openModal(modalName, category) {
       this.category = category
       this.$modal.show(modalName)
+    },
+    addSubCategory() {
+      this.category.subCategory.push({ name: '' })
+    },
+    removeSubCategory(idx) {
+      this.category.subCategory.splice(idx, 1)
     },
     async addCategory() {
       try {
@@ -180,7 +231,7 @@ export default Vue.extend({
     async editCategory() {
       try {
         await this.$axios.$patch(
-          `/categoriess/${this.category._id}`,
+          `/categories/${this.category._id}`,
           this.category
         )
         await this.getCategories()

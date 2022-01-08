@@ -2,7 +2,7 @@ const { Category, validate } = require('./model')
 
 export const getAllCategories = async (req, res) => {
   try {
-    const categories = await Category.find({ storeName: req.query.store })
+    const categories = await Category.find({ storeName: req.query.storeName })
     res.status(200).json(categories)
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -33,8 +33,8 @@ export const getOneCategory = async (req, res) => {
 export const editCategory = async (req, res) => {
   delete req.body._id
   delete req.body.createdAt
-  await Category.updateOne({ _id: req.params.id }, req.body)
-  return res.status(200).json(user)
+  const category = await Category.updateOne({ _id: req.params.id }, req.body)
+  return res.status(200).json(category)
 }
 
 export const deleteCategory = async (req, res) => {
