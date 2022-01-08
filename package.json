@@ -16,6 +16,7 @@
     "@nuxtjs/axios": "^5.13.6",
     "@nuxtjs/pwa": "^3.3.5",
     "@tailwindcss/typography": "^0.4.1",
+    "@trevoreyre/autocomplete-vue": "^2.2.0",
     "bcryptjs": "^2.4.3",
     "cloudinary": "^1.27.1",
     "core-js": "^3.15.1",

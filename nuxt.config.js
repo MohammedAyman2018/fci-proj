@@ -27,6 +27,7 @@ export default {
   plugins: [
     '~/plugins/vue-notification',
     { src: '~/plugins/vue-good-table', ssr: false },
+    '~/plugins/Autocomplete',
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js'
   ],

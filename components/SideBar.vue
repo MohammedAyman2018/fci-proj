@@ -28,10 +28,38 @@
             $auth.user.storeName &&
             $auth.user.role === 'admin'
           "
+          :to="`/dashboard/stores/`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          المتاجر
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
+            $auth.user.role === 'admin'
+          "
           :to="`/dashboard/${$auth.user.name}/users`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          كل العملاء
+          العملاء
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
+            $auth.user.role === 'admin'
+          "
+          :to="`/dashboard/${$auth.user.name}/products`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          المنتجات
         </nuxt-link>
       </li>
       <li>
@@ -45,7 +73,7 @@
           :to="`/dashboard/${$auth.user.name}/categories`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          كل الفئات
+          الفئات
         </nuxt-link>
       </li>
       <li>
