@@ -40,11 +40,13 @@ app.post('/image', auth, multer.single('img'), uploadImage)
 const users = require('./Users/routes')
 const categories = require('./Category/routes')
 const stores = require('./Store/routes')
+const products = require('./Product/routes')
 
 // Import API Routes
 app.use(users)
 app.use(categories)
 app.use(stores)
+app.use(products)
 
 // Export express app
 module.exports = app
