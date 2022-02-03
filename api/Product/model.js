@@ -21,6 +21,10 @@ const Schema = new mongoose.Schema({
     type: Number,
     required: true
   },
+  desc: {
+    type: String,
+    required: true
+  },
   category: {
     type: [{
       ref: 'categories',
@@ -72,8 +76,9 @@ function validate(product) {
   const productSchema = Joi.object({
     name: Joi.string().required(),
     images: Joi.array().min(1).max(6).required(),
-    price: Joi.number().required(),
     category: Joi.array().min(1).required(),
+    price: Joi.number().required(),
+    desc: Joi.string().required(),
     amount: {
       amountType: Joi.string(),
       available: Joi.number(),

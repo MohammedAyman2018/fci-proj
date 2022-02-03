@@ -6,7 +6,9 @@ const {
   addProduct,
   getOneProduct,
   editProduct,
-  deleteProduct
+  deleteProduct,
+  searchProductsName,
+  getProductsByCategory
 } = require('./controller')
 
 const router = Router()
@@ -21,5 +23,8 @@ router
   .get(clientAuth, getOneProduct)
   .patch(auth, editProduct)
   .delete(auth, deleteProduct)
+
+router.get('/products/filter/category', getProductsByCategory)
+router.get('/products/filter/name', searchProductsName)
 
 module.exports = router
