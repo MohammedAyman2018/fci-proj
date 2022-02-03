@@ -19,6 +19,7 @@ const Schema = new mongoose.Schema({
   },
   country: {
     type: String,
+    enum: ['مصر', 'السعودية'],
     required: true
   },
   address: {
