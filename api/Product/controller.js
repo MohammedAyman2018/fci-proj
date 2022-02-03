@@ -45,3 +45,27 @@ export const deleteProduct = async (req, res) => {
     res.status(400).json({ msg: err.message })
   }
 }
+
+export const getProductsByCategory = async (req, res) => {
+  try {
+    const products = await Product.find({ category: req.query.categoryId })
+    res.status(200).json({ products })
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
+
+export const searchProductsName = async (req, res) => {
+  try {
+    const text = req.query.text.replace(/-/g, ' ')
+    const products = await Product.find({
+      $or: [
+        { 'title': { $regex: text, $options: 'i' } },
+        { 'desc': { $regex: text, $options: 'i' } },
+      ]
+    })
+    res.status(200).json({ products })
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}

@@ -24,6 +24,14 @@
         />
 
         <FormulateInput
+          name="desc"
+          type="textarea"
+          label="وصف المنتج"
+          placeholder="وصف المننج"
+          validation="required"
+        />
+
+        <FormulateInput
           name="price"
           type="number"
           label="سعر المننج"
