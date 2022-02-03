@@ -2,8 +2,10 @@
   <div class="container mx-auto">
     <h2 class="text-2xl">أضف منتج</h2>
 
+    <input id="images" name="img[]" type="file" multiple accept="images/*" />
+
     <FormulateForm v-model="formValues" class="login-form">
-      <div class="grid grid-cols-1 md:grid-cols-3">
+      <div class="grid grid-cols-1 lg:grid-cols-3">
         <FormulateInput
           name="name"
           type="text"
@@ -88,20 +90,19 @@
         </div>
         <div>
           <h4 class="text-md my-3">أين تريد أن يظهر هذا المنتج؟</h4>
-          <div class="flex">
-            <FormulateInput
-              name="visibleStore"
-              type="checkbox"
-              label="الموقع"
-            />
-            <FormulateInput
-              name="visibleStore"
-              type="checkbox"
-              label="تطبيق الهاتف"
-            />
-          </div>
+          <FormulateInput
+            name="visible[website]"
+            type="checkbox"
+            label="الموقع"
+          />
+          <FormulateInput
+            name="visible[app]"
+            type="checkbox"
+            label="تطبيق الهاتف"
+          />
         </div>
       </div>
+      <button class="btn btn-primary btn-sm" @click="addProduct">أضف</button>
     </FormulateForm>
 
     {{ formValues }}
@@ -117,25 +118,58 @@ export default Vue.extend({
   name: 'AddProductForm',
   data() {
     return {
+      images: [] as string[],
       product: {} as IProduct,
-      formValues: {},
+      formValues: {} as any,
       categories: [] as ICategory[],
       selectedCategories: [] as ICategory[],
+      productImages: '',
     }
   },
   mounted() {
     this.getCategories()
   },
   methods: {
+    async uploadFile() {
+      try {
+        const input: HTMLElement | null = document.getElementById('images')
+        if (input) {
+          for (let i = 0; i < input.files!.length; i++) {
+            const formData = new FormData()
+            formData.append('img', input.files[i])
+            const result = await this.$axios.post('/image', formData)
+            this.images.push(result.data)
+          }
+        }
+      } catch (err) {
+        console.log('Unable to upload file')
+      }
+    },
     reset() {
       this.product = {} as IProduct
     },
     async addProduct() {
       try {
-        await this.$axios.$post('/categories', {
-          ...this.product,
+        await this.uploadFile()
+        const product = {
+          images: this.images,
+          name: this.formValues.name,
+          price: this.formValues.price,
+          category: this.selectedCategories.map((cat) => cat._id),
+          amount: {
+            amountType: this.formValues.amountType,
+            available: this.formValues.available,
+            alarm: this.formValues.alarm,
+            alarmAmount: this.formValues.alarmAmount,
+          },
+          url: this.formValues.url,
+          visible: {
+            store: this.formValues['visible[website]'],
+            app: this.formValues['visible[app]'],
+          },
           storeName: this.$route.params.storeName,
-        })
+        }
+        await this.$axios.$post('/products', product)
         this.reset()
         this.$notify({
           group: 'foo',

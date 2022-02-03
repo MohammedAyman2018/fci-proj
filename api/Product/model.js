@@ -41,8 +41,7 @@ const Schema = new mongoose.Schema({
       required: true
     },
     available: {
-      type: Number,
-      required: true
+      type: Number
     },
     alarm: {
       type: Boolean,

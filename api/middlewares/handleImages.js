@@ -10,19 +10,19 @@ cloudinary.config({
 })
 
 const storage = multer.diskStorage({
-  destination (req, file, cb) {
+  destination(_req, _file, cb) {
     cb(null, path.join(__dirname, '../uploads'))
   },
-  filename (req, file, cb) {
+  filename(_req, file, cb) {
     cb(null, file.originalname + '-' + Date.now() + '.jpg')
   }
 })
 
 const upload = multer({ storage })
 
-async function uploadImage (req, res) {
+async function uploadImage(req, res) {
   await cloudinary.uploader.upload(req.file.path,
-    { resource_type: 'auto', folder: 'phill burger' },
+    { resource_type: 'auto', folder: 'fci' },
     function (error, result) {
       if (error) { return res.status(400).json(error) }
       return res.status(200).json(result.secure_url)
