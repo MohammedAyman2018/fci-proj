@@ -9,6 +9,7 @@ const {
   addProductToFav,
   deleteUser,
   getOneUser,
+  getUserFav,
   updateUser
 } = require('./controller')
 
@@ -22,7 +23,7 @@ router.delete('/users/:id', auth, deleteUser)
 router.post('/users/', addUser)
 
 router.post('/users/fav/:id', clientAuth, addProductToFav)
-
+router.get('/users/all/fav', clientAuth, getUserFav)
 // For Authentication
 router.get('/users/me', clientAuth, getUser)
 router.post('/users/auth', authenticate)

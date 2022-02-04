@@ -140,9 +140,9 @@ export default Vue.extend({
   methods: {
     async uploadFile() {
       try {
-        const input: HTMLElement | null = document.getElementById('images')
-        if (input) {
-          for (let i = 0; i < input.files!.length; i++) {
+        const input = document.getElementById('images') as HTMLInputElement
+        if (input && input.files) {
+          for (let i = 0; i < input.files.length; i++) {
             const formData = new FormData()
             formData.append('img', input.files[i])
             const result = await this.$axios.post('/image', formData)
@@ -162,6 +162,7 @@ export default Vue.extend({
         const product = {
           images: this.images,
           name: this.formValues.name,
+          desc: this.formValues.desc,
           price: this.formValues.price,
           category: this.selectedCategories.map((cat) => cat._id),
           amount: {

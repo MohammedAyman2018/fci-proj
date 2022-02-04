@@ -150,3 +150,13 @@ exports.deleteUser = async (req, res) => {
     res.status(400).json({ msg: err.message })
   }
 }
+
+
+exports.getUserFav = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id, { password: 0 }).populate('fav')
+    res.status(200).json(user)
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
