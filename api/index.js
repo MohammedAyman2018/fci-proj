@@ -41,12 +41,14 @@ const users = require('./Users/routes')
 const categories = require('./Category/routes')
 const stores = require('./Store/routes')
 const products = require('./Product/routes')
+const orders = require('./Orders/routes')
 
 // Import API Routes
 app.use(users)
 app.use(categories)
 app.use(stores)
 app.use(products)
+app.use(orders)
 
 // Export express app
 module.exports = app
