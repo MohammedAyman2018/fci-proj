@@ -13,7 +13,7 @@ const router = Router()
 
 router
   .route('/categories')
-  .get(auth, getAllCategories)
+  .get(getAllCategories)
   .post(auth, addCategory)
 
 router
