@@ -15,6 +15,7 @@ const Schema = new mongoose.Schema({
       'مسترجع',
       'قيد الاسترجاع',
     ],
+    type: String,
     default: 'بانتظار المراجعة'
   },
   items: {
@@ -35,16 +36,29 @@ const Schema = new mongoose.Schema({
 },
   { timestamps: true })
 
-const User = mongoose.model('users', Schema)
+const Order = mongoose.model('orders', Schema)
 
-function validate(user) {
-  const userSchema = Joi.object({
+function validate(order) {
+  const orderSchema = Joi.object({
+    state: Joi.string(),
+    items: {
+      name: Joi.string(),
+      amount: Joi.number(),
+      price: Joi.number(),
+      img: Joi.string(),
+    },
+    user: {
+      name: Joi.string(),
+      tel: Joi.string(),
+      address: Joi.string(),
+      payment: Joi.string(),
+    },
     storeName: Joi.string()
   })
 
-  return userSchema.validate(user, { abortEarly: false })
+  return orderSchema.validate(order, { abortEarly: false })
 };
 
-module.exports.userSchema = Schema
-module.exports.User = User
+module.exports.orderSchema = Schema
+module.exports.Order = Order
 module.exports.validate = validate
