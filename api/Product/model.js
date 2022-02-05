@@ -63,7 +63,7 @@ const Schema = new mongoose.Schema({
     app: { type: Boolean, default: true }
   },
   rating: {
-    type: [{ userId: string, rate: Number }],
+    type: [{ userId: String, rate: Number }],
   },
   ordered: {
     type: Number,
