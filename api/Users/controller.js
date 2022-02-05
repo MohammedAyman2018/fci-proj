@@ -160,3 +160,12 @@ exports.getUserFav = async (req, res) => {
     res.status(400).json({ msg: err.message })
   }
 }
+
+exports.getUserOrders = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id, { password: 0 }).populate('orders')
+    res.status(200).json(user)
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
