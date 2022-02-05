@@ -76,7 +76,13 @@ export const rateProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
     if (product) {
-      product.rating.push(req.body.rate)
+      let userRatedBefore = product.rating.find(rate => rate.userId === req.body.userId)
+      if (userRatedBefore) {
+        userRatedBefore.rate = req.body.rate
+      } else {
+        userRatedBefore = req.body
+      }
+      product.rating.push(userRatedBefore)
       await product.save()
       const rateSum = product.rating.reduce((a, b) => a + b, 0)
       res.status(200).json({ rate: rateSum / product.rating.length })

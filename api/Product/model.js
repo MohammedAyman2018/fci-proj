@@ -63,8 +63,7 @@ const Schema = new mongoose.Schema({
     app: { type: Boolean, default: true }
   },
   rating: {
-    type: [Number],
-    default: 0
+    type: [{ userId: string, rate: Number }],
   },
   ordered: {
     type: Number,
@@ -86,6 +85,8 @@ function validate(product) {
     category: Joi.array().min(1).required(),
     price: Joi.number().required(),
     desc: Joi.string().required(),
+    rating: { userId: Joi.string(), rate: Joi.number() },
+    ordered: Joi.number(),
     amount: {
       amountType: Joi.string(),
       available: Joi.number(),
