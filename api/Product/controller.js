@@ -23,7 +23,7 @@ export const addProduct = async (req, res) => {
 
 export const getOneProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id)
+    const product = await Product.findById(req.params.id).populate('category')
     product.views++
     await product.save()
     res.status(200).json(product)
