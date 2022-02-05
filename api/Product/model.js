@@ -62,7 +62,14 @@ const Schema = new mongoose.Schema({
     store: { type: Boolean, default: true },
     app: { type: Boolean, default: true }
   },
-
+  rating: {
+    type: [Number],
+    default: 0
+  },
+  ordered: {
+    type: Number,
+    default: 0
+  },
   storeName: {
     required: true,
     type: String

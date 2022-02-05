@@ -24,6 +24,8 @@ export const addProduct = async (req, res) => {
 export const getOneProduct = async (req, res) => {
   try {
     const product = await Product.findById(req.params.id)
+    product.views++
+    await product.save()
     res.status(200).json(product)
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -66,6 +68,20 @@ export const searchProductsName = async (req, res) => {
     })
     res.status(200).json({ products })
   } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
+
+export const rateProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id)
+    if (product) {
+      product.rating.push(req.body.rate)
+      await product.save()
+      const rateSum = product.rating.reduce((a, b) => a + b, 0)
+      res.status(200).json({ rate: rateSum / product.rating.length })
+    }
+  } catch (error) {
     res.status(400).json({ msg: err.message })
   }
 }
