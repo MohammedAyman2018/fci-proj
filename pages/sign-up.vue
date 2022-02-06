@@ -39,9 +39,9 @@
               </h1>
               <FormulateInput
                 v-model="user.name"
-                name="اسم المتجر"
-                label="اسم المتجر"
-                placeholder="اسم المتجر"
+                name="اسمك"
+                label="اسمك"
+                placeholder="اسمك"
                 validation="required"
               />
               <FormulateInput
@@ -70,9 +70,9 @@
               <FormulateInput
                 v-model="user.password"
                 type="password"
-                name="كلمة المرور صحيح"
-                label="كلمة المرور صحيح"
-                placeholder="كلمة المرور صحيح"
+                name="كلمة المرور"
+                label="كلمة المرور"
+                placeholder="كلمة المرور"
                 validation="required"
               />
 
@@ -123,16 +123,8 @@ export default Vue.extend({
   methods: {
     async createUser() {
       try {
-        this.$v.$touch()
-        if (this.$v.$anyError) {
-          this.$notify({
-            group: 'foo',
-            type: 'error',
-            title: 'تأكد من إكمال البيانات',
-          })
-          return
-        }
         await this.$axios.$post('/users', this.user)
+        this.$router.push('/login')
         this.$notify({
           group: 'foo',
           type: 'success',
@@ -142,7 +134,7 @@ export default Vue.extend({
         this.$notify({
           group: 'foo',
           title: 'حدث خطأ ما',
-          text: err.response.data.msg,
+          text: err,
         })
       }
     },
