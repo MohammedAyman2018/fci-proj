@@ -86,6 +86,7 @@ function validate(store) {
       apple: Joi.string()
     },
     files: Joi.array(),
+    owener: Joi.string()
   })
 
   return storeSchema.validate(store, { abortEarly: false })

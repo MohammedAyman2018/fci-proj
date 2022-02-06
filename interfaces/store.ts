@@ -3,7 +3,7 @@ export default interface IStore {
   title: string
   logo: string | null
   desc: string | null
-  location: { lng: string; lat: string } | null
+  location: string | null
   contacts: {
     tel: string
     whats: string
