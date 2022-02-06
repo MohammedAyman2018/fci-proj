@@ -1,79 +1,81 @@
 <template>
   <div class="container mx-auto px-2">
     <div class="justify-between flex items-center my-3">
-      <h2 class="text-2xl mb-3">طلبات انشاء متجر</h2>
-      <div class="flex justify-between">
-        <button class="btn mx-1 btn-primary btn-sm" @click="filter('waiting')">
-          في الانتظار
-        </button>
-        <button class="btn mx-1 btn-primary btn-sm" @click="filter('rejected')">
-          المرفوضة
-        </button>
-      </div>
+      <h2 class="text-2xl mb-3">كل الفئات</h2>
+      <button
+        class="btn btn-primary btn-sm"
+        @click="$router.push('/dashboard/stores/requests')"
+      >
+        طلبات انشاء متجر
+      </button>
     </div>
-
-    <p
-      v-if="displayedStores.length === 0"
-      class="text-center text-grey-500 text-xl"
-    >
-      لا يوجد تاجر تحت هذه الفلترة
-    </p>
-    <div
-      v-for="oneUser in displayedStores"
-      v-else
-      :key="oneUser._id"
-      class="oneUser"
-    >
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg">{{ oneUser.title }}</h3>
-        <div>
-          <button
-            class="btn btn-primary btn-sm"
-            @click="openModal('validate-store', oneUser)"
-          >
-            إظهار التفاصيل
-          </button>
-        </div>
-      </div>
-      <div class="flex justify-between items-center text-xs">
-        <p>العنوان: {{ oneUser.location }}</p>
-      </div>
-    </div>
-
-    <modal name="validate-store" scrollable height="auto">
+    <modal name="delete-store" scrollable height="auto">
       <div class="p-4">
-        <h2 class="text-xl font-bold">ملفات المتجر</h2>
-        <div class="h-12 w-12 bg-gray-400 inline-block mx-2"></div>
-        <div class="h-12 w-12 bg-gray-400 inline-block mx-2"></div>
-        <div class="h-12 w-12 bg-gray-400 inline-block mx-2"></div>
-        <div class="h-12 w-12 bg-gray-400 inline-block mx-2"></div>
+        <h2 class="text-xl font-bold">حذف المتجر</h2>
+        <p>هل انت واثق انك تريد حذف المتجر؟</p>
+
         <div class="mt-5">
-          <button class="btn btn-error btn-sm" @click="approved(true)">
-            تفعيل
-          </button>
-          <button class="btn btn-error btn-sm" @click="approved(false)">
-            حذف
-          </button>
+          <button class="btn btn-error btn-sm" @click="removeStore">نعم</button>
           <button
             class="btn btn-error btn-sm"
-            @click="closeModal('validate-store')"
+            @click="closeModal('delete-store')"
           >
             إلغاء
           </button>
         </div>
       </div>
     </modal>
+
+    <vue-good-table
+      :columns="[
+        { label: 'اسم المتجر', field: 'title' },
+        { label: 'تاريخ الانشاء', field: 'createdAt' },
+        { label: 'العمليات المتاحة', field: 'operations' },
+      ]"
+      :rows="stores"
+      :rtl="true"
+      :search-options="{ enabled: true, placeholder: 'ابحث في الجدول' }"
+      max-height="auto"
+    >
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'createdAt'">
+          <span>{{ props.row.createdAt.substr(0, 10) }}</span>
+        </span>
+
+        <span v-else-if="props.column.field == 'operations'">
+          <div data-tip="تعديل" class="tooltip">
+            <button class="btn btn-warning btn-square btn-xs">
+              <i class="ri-pencil-line"></i>
+            </button>
+          </div>
+          <div data-tip="حذف" class="tooltip">
+            <button
+              class="btn btn-error btn-square btn-xs"
+              @click="openModal('delete-store', props.row)"
+            >
+              <i class="ri-delete-bin-line"></i>
+            </button>
+          </div>
+        </span>
+        <span v-else>
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
+
+      <div slot="emptystate">لا توجد فئات حتى الآن</div>
+    </vue-good-table>
   </div>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import IStore from '@/interfaces/store'
+
 export default Vue.extend({
+  name: 'StorePage',
   data() {
     return {
       stores: [] as IStore[],
-      displayedStores: [] as IStore[],
       store: {} as IStore,
     }
   },
@@ -82,33 +84,27 @@ export default Vue.extend({
   },
   methods: {
     async getStores() {
-      const res = await this.$axios.$get('/stores').catch((error: any) => {
+      this.stores = await this.$axios.$get('/stores').catch((err) => {
         this.$notify({
           group: 'foo',
-          type: 'error',
-          title: error,
+          type: 'success',
+          title: err,
         })
       })
-      this.stores = res
-      this.filter('waiting')
     },
-    async approved(approved) {
-      let message: string | null = ''
-      if (!approved) {
-        while (message === '') {
-          message = prompt('ما هو سبب الرفض؟')
-        }
-      }
+    openModal(modalName, store) {
+      this.store = store
+      this.$modal.show(modalName)
+    },
+    async removeStore() {
       try {
-        await this.$axios.$post(`/stores/validate/${this.store._id}`, {
-          approved,
-          message,
-        })
-        this.closeModal()
+        await this.$axios.$delete(`/stores/${this.store._id}`)
+        await this.getStores()
+        this.closeModal('delete-store')
         this.$notify({
           group: 'foo',
-          type: 'error',
-          title: 'تم الحذف بنجاح',
+          type: 'success',
+          title: 'تم حذف الفئة بنجاح',
         })
       } catch (error: any) {
         this.$notify({
@@ -118,24 +114,14 @@ export default Vue.extend({
         })
       }
     },
-    filter(type: string): void {
-      if (type === 'waiting') {
-        this.displayedStores = this.stores.filter((store) => !store.reviewed)
-        return
-      }
-      this.displayedStores = this.stores.filter((store) => store.reviewed)
-    },
-    closeModal() {
+
+    closeModal(modalName) {
       this.store = {} as IStore
-      this.$modal.hide('validate-store')
-    },
-    openModal(modalName, store) {
-      this.store = store
-      this.$modal.show(modalName)
+      this.$modal.hide(modalName)
     },
   },
 })
 </script>
 
-<style scoped>
+<style>
 </style>
