@@ -6,7 +6,7 @@ const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
 const swaggerUi = require('swagger-ui-express');
-const { default: auth } = require('./middlewares/auth')
+const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
 const swaggerDocument = require('./swagger.json');
 
@@ -34,7 +34,7 @@ async function db() {
 db()
 
 /** Upload Image */
-app.post('/image', auth, multer.single('img'), uploadImage)
+app.post('/image', clientAuth, multer.single('file'), uploadImage)
 
 // Require API routes
 const users = require('./Users/routes')

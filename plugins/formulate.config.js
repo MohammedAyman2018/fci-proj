@@ -3,6 +3,7 @@ import '../node_modules/@braid/vue-formulate/dist/snow.min.css';
 
 export default {
   plugins: [ar],
+  uploadUrl: '/image',
   locale: 'ar'
 }
 

@@ -46,45 +46,39 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ متجرك
               </h1>
-              <FormulateInput
-                v-model="store.title"
-                name="اسم المتجر"
-                label="اسم المتجر"
-                placeholder="اسم المتجر"
-                validation="required"
-              />
+              <FormulateForm v-model="store" @submit="createStore">
+                <FormulateInput
+                  name="title"
+                  label="اسم المتجر"
+                  placeholder="اسم المتجر"
+                  validation="required"
+                />
 
-              <FormulateInput
-                v-model="store.desc"
-                type="textarea"
-                name="نبذة مختصرة عن المتجر"
-                label="نبذة مختصرة عن المتجر"
-              />
-              <FormulateInput
-                v-model="store.location"
-                name="عنوان المتجر"
-                label="عنوان المتجر"
-                placeholder="عنوان المتجر"
-                validation="required"
-              />
+                <FormulateInput
+                  type="textarea"
+                  name="desc"
+                  label="نبذة مختصرة عن المتجر"
+                />
+                <FormulateInput
+                  name="location"
+                  label="عنوان المتجر"
+                  placeholder="عنوان المتجر"
+                  validation="required"
+                />
 
-              <FormulateInput
-                type="image"
-                name="identy"
-                label="ملفات إثبات الهوية"
-                help="برجاء رفع صور من الملفات الاتية ملف 1, ملف 2 , ملف 3"
-                validation="mime:image/jpeg,image/png,image/gif"
-                multiple
-              />
-
-              <button
-                :class="{ 'btn-disabled': !valid }"
-                class="btn mt-4 btn-success w-full"
-                @click="createStore"
-              >
-                تسجيل
-              </button>
-
+                <FormulateInput
+                  type="image"
+                  name="files"
+                  label="ملفات إثبات الهوية"
+                  help="برجاء رفع صور من الملفات الاتية ملف 1, ملف 2 , ملف 3"
+                  validation="mime:image/jpeg,image/png,image/gif"
+                  multiple
+                  :uploader="uploader"
+                  upload-behavior="delayed"
+                />
+                <FormulateInput type="submit" label="تسجيل" />
+                <!-- class="btn mt-4 btn-success w-full" -->
+              </FormulateForm>
               <div class="mt-4 text-center">
                 <p class="text-sm">
                   لديك حساب بالفعل?
@@ -113,7 +107,12 @@ export default Vue.extend({
   },
   data() {
     return {
-      store: {} as IStore,
+      store: {
+        title: '',
+        desc: '',
+        location: '',
+        files: [],
+      } as IStore,
       storeSuccess: false,
       storeEdit: false,
     }
@@ -141,18 +140,27 @@ export default Vue.extend({
     }
   },
   methods: {
-    async createStore() {
+    async uploader(file, progress, error, options) {
       try {
-        this.$v.$touch()
-        if (this.$v.$anyError) {
-          this.$notify({
-            group: 'foo',
-            type: 'error',
-            title: 'تأكد من إكمال البيانات',
-          })
-          return
-        }
-        await this.$axios.$post('/stores', this.store)
+        const formData = new FormData()
+        formData.append('file', file)
+        const result = await this.$axios.post(options.uploadUrl, formData)
+        progress(100) // (native fetch doesn’t support progress updates)
+        return await Promise.resolve(result.data)
+      } catch (err) {
+        error('Unable to upload file')
+      }
+    },
+    async createStore(data) {
+      try {
+        console.log(data)
+        await this.$axios.$post('/stores', {
+          desc: data.desc,
+          files: data.files[0].map((x) => x.url),
+          location: data.location,
+          title: data.title,
+          owener: this.$auth.user!._id,
+        })
         this.$notify({
           group: 'foo',
           type: 'success',
@@ -162,7 +170,7 @@ export default Vue.extend({
         this.$notify({
           group: 'foo',
           title: 'حدث خطأ ما',
-          text: err.response.data.msg,
+          text: err,
         })
       }
     },
