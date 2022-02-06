@@ -112,8 +112,6 @@
       </div>
       <button class="btn btn-primary btn-sm" @click="addProduct">أضف</button>
     </FormulateForm>
-
-    {{ formValues }}
   </div>
 </template>
 

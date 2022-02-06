@@ -43,17 +43,6 @@
             validation="required"
           />
 
-          <div>
-            <ul>
-              <li
-                v-for="cat in category.subCategory"
-                :key="'subcategory input' + cat.name"
-                class="inline-block"
-              >
-                {{ cat.name }},
-              </li>
-            </ul>
-          </div>
           <button class="btn btn-success btn-sm" @click="addSubCategory">
             أضف فئة فرعية
           </button>
