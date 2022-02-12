@@ -2,9 +2,16 @@
   <div class="container mx-auto">
     <h2 class="text-2xl">أضف منتج</h2>
 
-    <input id="images" name="img[]" type="file" multiple accept="images/*" />
-
-    <FormulateForm v-model="formValues" class="login-form">
+    <FormulateForm v-model="formValues" class="login-form" @submit="addProduct">
+      <FormulateInput
+        type="image"
+        name="files"
+        label="صور المنتج"
+        validation="mime:image/jpeg,image/png,image/gif"
+        multiple
+        :uploader="uploader"
+        upload-behavior="delayed"
+      />
       <div class="grid grid-cols-1 lg:grid-cols-3">
         <FormulateInput
           name="name"
@@ -110,7 +117,8 @@
           />
         </div>
       </div>
-      <button class="btn btn-primary btn-sm" @click="addProduct">أضف</button>
+      <!-- <button class="btn btn-primary btn-sm" @click="addProduct">أضف</button> -->
+      <FormulateInput type="submit" label="أضف" />
     </FormulateForm>
   </div>
 </template>
@@ -119,7 +127,7 @@
 import Vue from 'vue'
 import ICategory from '~/interfaces/category'
 import IProduct from '~/interfaces/product'
-
+import uploader from '~/utils/uploader'
 export default Vue.extend({
   name: 'AddProductForm',
   layout: 'admin',
@@ -137,43 +145,28 @@ export default Vue.extend({
     this.getCategories()
   },
   methods: {
-    async uploadFile() {
-      try {
-        const input = document.getElementById('images') as HTMLInputElement
-        if (input && input.files) {
-          for (let i = 0; i < input.files.length; i++) {
-            const formData = new FormData()
-            formData.append('img', input.files[i])
-            const result = await this.$axios.post('/image', formData)
-            this.images.push(result.data)
-          }
-        }
-      } catch (err) {
-        console.log('Unable to upload file')
-      }
-    },
+    uploader,
     reset() {
       this.product = {} as IProduct
     },
-    async addProduct() {
+    async addProduct(data) {
       try {
-        await this.uploadFile()
         const product = {
-          images: this.images,
-          name: this.formValues.name,
-          desc: this.formValues.desc,
-          price: this.formValues.price,
+          images: data.files[0].map((x) => x.url),
+          name: data.name,
+          desc: data.desc,
+          price: data.price,
           category: this.selectedCategories.map((cat) => cat._id),
           amount: {
-            amountType: this.formValues.amountType,
-            available: this.formValues.available,
-            alarm: this.formValues.alarm,
-            alarmAmount: this.formValues.alarmAmount,
+            amountType: data.amountType,
+            available: data.available,
+            alarm: data.alarm,
+            alarmAmount: data.alarmAmount,
           },
-          url: this.formValues.url,
+          url: data.url,
           visible: {
-            store: this.formValues['visible[website]'],
-            app: this.formValues['visible[app]'],
+            store: data['visible[website]'],
+            app: data['visible[app]'],
           },
           storeName: this.$route.params.storeName,
         }
@@ -182,7 +175,7 @@ export default Vue.extend({
         this.$notify({
           group: 'foo',
           type: 'success',
-          title: 'تمت إضافة الفئة بنجاح',
+          title: 'تمت إضافة المنتج بنجاح',
         })
       } catch (error: any) {
         this.$notify({

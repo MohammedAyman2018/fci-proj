@@ -106,6 +106,7 @@
 import Vue from 'vue'
 import IStore from '~/interfaces/store'
 import Success from '@/components/NewStore/success.vue'
+import uploader from '~/utils/uploader'
 
 export default Vue.extend({
   name: 'CreateStore',
@@ -151,20 +152,9 @@ export default Vue.extend({
     }
   },
   methods: {
-    async uploader(file, progress, error, options) {
-      try {
-        const formData = new FormData()
-        formData.append('file', file)
-        const result = await this.$axios.post(options.uploadUrl, formData)
-        progress(100) // (native fetch doesn’t support progress updates)
-        return await Promise.resolve(result.data)
-      } catch (err) {
-        error('Unable to upload file')
-      }
-    },
+    uploader,
     async createStore(data) {
       try {
-        console.log(data)
         await this.$axios.$post('/stores', {
           desc: data.desc,
           files: data.files[0].map((x) => x.url),
