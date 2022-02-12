@@ -43,7 +43,7 @@ exports.getUser = (req, res) => {
  */
 exports.addProductToFav = async (req, res) => {
   const { productId } = req.body
-  await User.findOne({ _id: req.params.id })
+  await User.findOne({ _id: req.user.id })
     .then(async (user) => {
       const idx = user.fav.indexOf(productId)
       if (idx === -1) {
@@ -154,7 +154,7 @@ exports.deleteUser = async (req, res) => {
 
 exports.getUserFav = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id, { password: 0 }).populate('fav')
+    const user = await User.findById(req.user.id, { password: 0 }).populate('fav')
     res.status(200).json(user)
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -163,7 +163,7 @@ exports.getUserFav = async (req, res) => {
 
 exports.getUserOrders = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id, { password: 0 }).populate('orders')
+    const user = await User.findById(req.user.id, { password: 0 }).populate('orders')
     res.status(200).json(user)
   } catch (err) {
     res.status(400).json({ msg: err.message })

@@ -23,9 +23,9 @@ router.patch('/users/:id', clientAuth, updateUser)
 router.delete('/users/:id', auth, deleteUser)
 router.post('/users/', addUser)
 
-router.post('/users/fav/:id', clientAuth, addProductToFav)
-router.get('/users/all/fav/:id', clientAuth, getUserFav)
-router.get('/users/all/orders/:id', clientAuth, getUserOrders)
+router.post('/users/fav/', clientAuth, addProductToFav)
+router.get('/users/all/fav/', clientAuth, getUserFav)
+router.get('/users/all/orders/', clientAuth, getUserOrders)
 // For Authentication
 router.get('/users/me', clientAuth, getUser)
 router.post('/users/auth', authenticate)
