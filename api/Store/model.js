@@ -12,25 +12,51 @@ const Schema = new mongoose.Schema({
   // location: { lng: String, lat: String },
   location: { type: String, required: true },
   contacts: {
-    tel: String,
-    whats: String,
-    phone: String,
-    telegram: String,
-    email: String
+    type: {
+      tel: String,
+      whats: String,
+      phone: String,
+      telegram: String,
+      email: String
+    },
+    default: {
+      tel: '',
+      whats: '',
+      phone: '',
+      telegram: '',
+      email: '',
+    }
   },
   workOn: [String],
   social: {
-    insta: String,
-    twitter: String,
-    fb: String,
-    yt: String,
-    snap: String,
-    tiktok: String,
+    type: {
+      insta: String,
+      twitter: String,
+      fb: String,
+      yt: String,
+      snap: String,
+      tiktok: String,
+    },
+    default: {
+      insta: '',
+      twitter: '',
+      fb: '',
+      yt: '',
+      snap: '',
+      tiktok: '',
+    }
   },
   otherLinks: {
-    link: String,
-    android: String,
-    apple: String
+    type: {
+      link: String,
+      android: String,
+      apple: String
+    },
+    default: {
+      link: '',
+      android: '',
+      apple: '',
+    }
   },
   approved: {
     type: Boolean,

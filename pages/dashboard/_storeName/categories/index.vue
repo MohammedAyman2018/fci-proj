@@ -157,6 +157,7 @@ import ICategory from '@/interfaces/category'
 
 export default Vue.extend({
   name: 'CategoryPage',
+  layout: 'admin',
   data() {
     return {
       categories: [] as ICategory[],

@@ -1,0 +1,47 @@
+openapi: "3.0.2"
+info:
+  title: FCI project
+  version: "1.0"
+servers:
+  - url: http://fci-proj.herokuapp.com/api
+
+components:
+  schemas:
+    user:
+      type: object
+      properties:
+        name:
+          type: string
+  securitySchemes:
+    x-auth-token:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+paths:
+  /users:
+    get:
+      description: Get All Users
+      responses:
+        "200":
+          description: OK
+          content:
+            "application/json":
+              {
+                "schema": { "$ref": "#/components/schemas/user" },
+                "examples":
+                  {
+                    "user":
+                      {
+                        "summary": "An example of a cat",
+                        "value":
+                          {
+                            "name": "Fluffy",
+                            "petType": "Cat",
+                            "color": "White",
+                            "gender": "male",
+                            "breed": "Persian",
+                          },
+                      },
+                  },
+              }

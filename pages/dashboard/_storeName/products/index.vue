@@ -80,6 +80,7 @@ import IProduct from '@/interfaces/product'
 
 export default Vue.extend({
   name: 'ProductPage',
+  layout: 'admin',
   data() {
     return {
       product: {} as IProduct,

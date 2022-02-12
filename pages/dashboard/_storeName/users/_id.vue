@@ -50,6 +50,7 @@ import Vue from 'vue'
 import IUser from '~/interfaces/user'
 
 export default Vue.extend({
+  layout: 'admin',
   data() {
     return {
       user: {} as IUser,

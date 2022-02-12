@@ -75,7 +75,12 @@ export default {
     //     secure: 'true'
     //   }
     // },
-    redirect: false,
+    redirect: {
+      login: '/',
+      logout: '/',
+      callback: '/',
+      home: '/'
+    },
     strategies: {
       local: {
         endpoints: {

@@ -176,6 +176,7 @@ import IUser from '@/interfaces/user'
 export default Vue.extend({
   name: 'UsersDashBoard',
 
+  layout: 'admin',
   data() {
     return {
       user: {} as IUser,

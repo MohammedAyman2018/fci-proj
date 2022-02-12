@@ -122,6 +122,7 @@ import IProduct from '~/interfaces/product'
 
 export default Vue.extend({
   name: 'AddProductForm',
+  layout: 'admin',
   data() {
     return {
       images: [] as string[],

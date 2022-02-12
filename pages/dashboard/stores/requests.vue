@@ -76,6 +76,7 @@ export default Vue.extend({
       debug: true,
     }),
   },
+  layout: 'admin',
   data() {
     return {
       stores: [] as IStore[],

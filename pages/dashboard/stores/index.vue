@@ -43,7 +43,11 @@
         </span>
 
         <span v-else-if="props.column.field == 'operations'">
-          <div data-tip="تعديل" class="tooltip">
+          <div
+            data-tip="تعديل"
+            class="tooltip"
+            @click="$router.push(`/dashboard/stores/edit/${props.row._id}`)"
+          >
             <button class="btn btn-warning btn-square btn-xs">
               <i class="ri-pencil-line"></i>
             </button>
@@ -73,6 +77,7 @@ import IStore from '@/interfaces/store'
 
 export default Vue.extend({
   name: 'StorePage',
+  layout: 'admin',
   data() {
     return {
       stores: [] as IStore[],
@@ -84,13 +89,15 @@ export default Vue.extend({
   },
   methods: {
     async getStores() {
-      this.stores = await this.$axios.$get('/stores').catch((err) => {
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: err,
+      this.stores = await this.$axios
+        .$get('/stores?approved=true')
+        .catch((err) => {
+          this.$notify({
+            group: 'foo',
+            type: 'success',
+            title: err,
+          })
         })
-      })
     },
     openModal(modalName, store) {
       this.store = store
