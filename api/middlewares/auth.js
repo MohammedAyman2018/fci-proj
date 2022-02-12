@@ -10,7 +10,7 @@ export default function AdminAuth(req, res, next) {
       return res.status(401).send('Access denied. No token provided.')
     }
     const decoded = jwt.verify(token, process.env.jwtSecret)
-    if (!['admin', 'Restaurant Owner'].includes(decoded.role)) {
+    if (!['admin', 'owner'].includes(decoded.role)) {
       return res.status(401).send('Access denied. No token provided.')
     }
     req.user = decoded

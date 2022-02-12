@@ -13,7 +13,7 @@
       </li>
       <li>
         <nuxt-link
-          v-if="$auth && $auth.loggedIn && $auth.user.storeName === ''"
+          v-if="$auth && $auth.loggedIn && $auth.user.role === 'client'"
           to="/new-store"
           class="btn btn-ghost btn-sm rounded-btn"
         >
@@ -40,9 +40,9 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            $auth.user.role === 'admin'
+            ['admin', 'owner'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.name}/users`"
+          :to="`/dashboard/${$auth.user.storeName}/users`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           العملاء
@@ -54,9 +54,9 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            $auth.user.role === 'admin'
+            ['admin', 'owner'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.name}/products`"
+          :to="`/dashboard/${$auth.user.storeName}/products`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           المنتجات
@@ -68,9 +68,9 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            $auth.user.role === 'admin'
+            ['admin', 'owner'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.name}/categories`"
+          :to="`/dashboard/${$auth.user.storeName}/categories`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           الفئات
@@ -99,7 +99,7 @@
           $auth &&
           $auth.loggedIn &&
           $auth.user.storeName &&
-          $auth.user.role === 'admin'
+          ['admin', 'owner'].includes($auth.user.role)
         "
       >
         <nuxt-link
