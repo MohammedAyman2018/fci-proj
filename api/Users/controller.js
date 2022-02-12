@@ -155,7 +155,7 @@ exports.deleteUser = async (req, res) => {
 exports.getUserFav = async (req, res) => {
   try {
     const user = await User.findById(req.user.id, { password: 0 }).populate('fav')
-    res.status(200).json(user)
+    res.status(200).json(user.fav)
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
@@ -164,7 +164,7 @@ exports.getUserFav = async (req, res) => {
 exports.getUserOrders = async (req, res) => {
   try {
     const user = await User.findById(req.user.id, { password: 0 }).populate('orders')
-    res.status(200).json(user)
+    res.status(200).json(user.orders)
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
