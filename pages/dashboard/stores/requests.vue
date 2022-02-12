@@ -110,11 +110,12 @@ export default Vue.extend({
           approved,
           message,
         })
+        await this.getStores()
         this.closeModal()
         this.$notify({
           group: 'foo',
-          type: 'error',
-          title: 'تم الحذف بنجاح',
+          type: 'success',
+          title: 'تم الطلب بنجاح',
         })
       } catch (error: any) {
         this.$notify({
@@ -129,7 +130,9 @@ export default Vue.extend({
         this.displayedStores = this.stores.filter((store) => !store.reviewed)
         return
       }
-      this.displayedStores = this.stores.filter((store) => store.reviewed)
+      this.displayedStores = this.stores.filter(
+        (store) => store.reviewed && !store.approved
+      )
     },
     closeModal() {
       this.store = {} as IStore
