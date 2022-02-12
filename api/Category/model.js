@@ -7,12 +7,6 @@ const Schema = new mongoose.Schema({
     type: String,
     required: true
   },
-  subCategory: {
-    type: [{
-      name: String
-    }],
-    default: []
-  },
   storeName: {
     required: true,
     type: String
@@ -25,7 +19,6 @@ const Category = mongoose.model('categories', Schema)
 function validate(category) {
   const categorySchema = Joi.object({
     name: Joi.string().required(),
-    subCategory: Joi.array(),
     storeName: Joi.string().required()
   })
 

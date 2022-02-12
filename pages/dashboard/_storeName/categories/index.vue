@@ -6,7 +6,7 @@
         class="btn btn-primary btn-sm"
         @click="
           edit = false
-          openModal('edit-category', { subCategory: [] })
+          openModal('edit-category', {})
         "
       >
         أضف فئة
@@ -42,33 +42,6 @@
             placeholder="اسم الفئة"
             validation="required"
           />
-
-          <button class="btn btn-success btn-sm" @click="addSubCategory">
-            أضف فئة فرعية
-          </button>
-
-          <div
-            v-for="(subCat, idx) in category.subCategory"
-            :key="'subcategory input' + idx"
-            class="flex justify-between items-center"
-          >
-            <FormulateInput
-              v-model="category.subCategory[idx].name"
-              name="اسم الفئة"
-              label="اسم الفئة"
-              class="flex-1"
-              placeholder="اسم الفئة"
-              validation="required"
-            />
-
-            <button
-              class="btn btn-error btn-square btn-xs"
-              @click="removeSubCategory(idx)"
-            >
-              <i class="ri-delete-bin-line"></i>
-            </button>
-          </div>
-
           <div class="flex justify-between items-center mt-4 mb-12">
             <button
               v-if="!edit"
@@ -100,7 +73,6 @@
     <vue-good-table
       :columns="[
         { label: 'اسم الفئة', field: 'name' },
-        { label: 'الفئات الداخلية', field: 'subCategory' },
         { label: 'تاريخ الانشاء', field: 'createdAt' },
         { label: 'العمليات المتاحة', field: 'operations' },
       ]"
@@ -112,16 +84,6 @@
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'createdAt'">
           <span>{{ props.row.createdAt.substr(0, 10) }}</span>
-        </span>
-        <span v-else-if="props.column.field == 'subCategory'">
-          <span v-if="props.row.subCategory.length === 0">لا يوجد</span>
-          <span
-            v-for="subCate in props.row.subCategory"
-            v-else
-            :key="subCate"
-            class="m-1"
-            v-text="subCate.name"
-          />
         </span>
         <span v-else-if="props.column.field == 'operations'">
           <div data-tip="تعديل" class="tooltip">
@@ -161,9 +123,7 @@ export default Vue.extend({
   data() {
     return {
       categories: [] as ICategory[],
-      category: {
-        subCategory: [] as { name: string }[],
-      } as ICategory,
+      category: {} as ICategory,
       edit: true,
     }
   },
@@ -190,12 +150,6 @@ export default Vue.extend({
     openModal(modalName, category) {
       this.category = category
       this.$modal.show(modalName)
-    },
-    addSubCategory() {
-      this.category.subCategory.push({ name: '' })
-    },
-    removeSubCategory(idx) {
-      this.category.subCategory.splice(idx, 1)
     },
     async addCategory() {
       try {

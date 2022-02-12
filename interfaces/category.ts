@@ -3,5 +3,4 @@ export default interface ICategory {
   createdAt: Date | null
   name: string
   storeName: string
-  subCategory: [{ name: string }]
 }
