@@ -73,7 +73,7 @@ const Schema = new mongoose.Schema({
     type: [String],
     required: true
   },
-  owener: {
+  owner: {
     type: mongoose.Types.ObjectId,
     ref: 'users',
     required: true
@@ -112,7 +112,7 @@ function validate(store) {
       apple: Joi.string()
     },
     files: Joi.array(),
-    owener: Joi.string()
+    owner: Joi.string()
   })
 
   return storeSchema.validate(store, { abortEarly: false })

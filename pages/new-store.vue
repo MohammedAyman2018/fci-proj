@@ -170,7 +170,7 @@ export default Vue.extend({
           files: data.files[0].map((x) => x.url),
           location: data.location,
           title: data.title,
-          owener: this.$auth.user!._id,
+          owner: this.$auth.user!._id,
         })
         this.$notify({
           group: 'foo',

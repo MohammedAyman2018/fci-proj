@@ -32,7 +32,7 @@ exports.validateStore = async (req, res) => {
     store.rejectMessage = req.body.message
     store.approved = req.body.approved
     if (req.body.approved) {
-      const user = await User.findById(store.owener)
+      const user = await User.findById(store.owner)
       user.role = 'owner'
       user.storeName = store.title
       await user.save()
