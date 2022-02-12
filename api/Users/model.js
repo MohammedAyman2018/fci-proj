@@ -32,7 +32,7 @@ const Schema = new mongoose.Schema({
   },
   fav: {
     type: [
-      { type: mongoose.Schema.Types.ObjectId, ref: 'dishes' }
+      { type: mongoose.Schema.Types.ObjectId, ref: 'products' }
     ],
     default: []
   },
