@@ -101,7 +101,10 @@
           </p>
         </div>
         <div>
-          <nuxt-link :to="`/dashboard/${storeName}`" class="btn btn-primary">
+          <nuxt-link
+            :to="`/dashboard/${$store.state.store.title}`"
+            class="btn btn-primary"
+          >
             إنطلق
           </nuxt-link>
         </div>
@@ -114,11 +117,5 @@
 import Vue from 'vue'
 export default Vue.extend({
   name: 'StoreValidatedAndValid',
-  props: {
-    storeName: {
-      type: String,
-      required: true,
-    },
-  },
 })
 </script>

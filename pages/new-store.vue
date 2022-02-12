@@ -2,14 +2,17 @@
   <div class="banner">
     <img class="bg" src="@/assets/topography.svg" alt="" />
 
-    <Success v-if="storeSuccess" :store-name="store.title" />
+    <Success v-if="storeSuccess" />
 
     <p v-if="storeEdit" class="text-2xl text-center my-5">
       للأسف لم يتم قبول متجرك للسبب التالي: {{ store.rejectMessage }}. لكن لا
       تقلق يمكنك دائماً التقديم مرة أخرى
     </p>
 
-    <div v-if="!storeSuccess" class="flex items-center">
+    <div
+      v-if="!showNotReviewedMessage && !storeSuccess"
+      class="flex items-center"
+    >
       <div
         class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
       >
@@ -92,6 +95,10 @@
         </div>
       </div>
     </div>
+
+    <div v-if="!storeSuccess || showNotReviewedMessage">
+      <p class="text-xl mt-4 text-center">المتجر تحت المراجعة برجاء الانتظار</p>
+    </div>
   </div>
 </template>
 
@@ -107,7 +114,8 @@ export default Vue.extend({
   },
   data() {
     return {
-      store: {
+      showNotReviewedMessage: false,
+      theStore: {
         title: '',
         desc: '',
         location: '',
@@ -132,11 +140,14 @@ export default Vue.extend({
     if (validateStore === null) return
     if (validateStore.reviewed && validateStore.approved) {
       // TODO: your app
-      this.store = validateStore
+      this.theStore = validateStore
+      this.$store.commit('setStore', validateStore)
       this.storeSuccess = true
     } else if (validateStore.reviewed && !validateStore.approved) {
-      this.store = validateStore
+      this.theStore = validateStore
       this.storeEdit = true
+    } else if (!validateStore.reviewed) {
+      this.showNotReviewedMessage = true
     }
   },
   methods: {
