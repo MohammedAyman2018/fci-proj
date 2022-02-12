@@ -1,5 +1,6 @@
 
 require('dotenv').config()
+const { User } = require('../Users/model')
 const { Store, validate } = require('./model')
 
 /**
@@ -30,8 +31,14 @@ exports.validateStore = async (req, res) => {
     store.reviewed = true
     store.rejectMessage = req.body.message
     store.approved = req.body.approved
+    if (req.body.approved) {
+      const user = await User.findById(store.owener)
+      user.role = 'owner'
+      user.storeName = store.title
+      await user.save()
+    }
     await store.save()
-    res.status(200).json({ msg: 'تم تفعيل المتجر' })
+    return res.status(200).json({ msg: 'تم تفعيل المتجر' })
   } catch (error) {
     res.status(500).json({ msg: error.message, error })
   }
