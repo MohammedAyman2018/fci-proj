@@ -66,10 +66,10 @@ exports.addStore = async (req, res) => {
   try {
     const { error } = validate(req.body)
     if (error) { return res.status(400).send({ msg: error.details[0].message }) }
-    let store = await Store.findOne({ name: req.body.name })
+    let store = await Store.findOne({ title: req.body.title })
     if (store) { return res.status(400).json({ msg: 'هناك متجر بهذا الاسم بالفعل.' }) }
 
-    store = new Store({ ...req.body, owner: req.id })
+    store = new Store({ ...req.body, owner: req.user.id })
     await store.save().then(result => res.status(200).json(result))
   } catch (err) {
     res.status(400).json({ msg: err.message })
