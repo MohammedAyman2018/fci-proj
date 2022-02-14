@@ -68,3 +68,14 @@ textarea {
 textarea {
   @apply h-32;
 }
+
+.formulate-input[data-classification='box'] .formulate-input-element input {
+  left: 0 !important;
+}
+
+.formulate-input[data-classification='file']
+  .formulate-files
+  .formulate-file-remove {
+  left: 0.75em !important;
+  right: auto !important;
+}
