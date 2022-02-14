@@ -50,7 +50,11 @@
           <div data-tip="تعديل" class="tooltip">
             <button
               class="btn btn-warning btn-square btn-xs"
-              @click="openModal('edit-product', props.row)"
+              @click="
+                $router.push(
+                  `/dashboard/${$route.params.storeName}/products/edit/${props.row._id}`
+                )
+              "
             >
               <i class="ri-pencil-line"></i>
             </button>
