@@ -5,7 +5,7 @@
     <Success v-if="storeSuccess" />
 
     <p v-if="storeEdit" class="text-2xl text-center my-5">
-      للأسف لم يتم قبول متجرك للسبب التالي: {{ store.rejectMessage }}. لكن لا
+      للأسف لم يتم قبول متجرك للسبب التالي: {{ theStore.rejectMessage }}. لكن لا
       تقلق يمكنك دائماً التقديم مرة أخرى
     </p>
 
@@ -49,7 +49,7 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ متجرك
               </h1>
-              <FormulateForm v-model="store" @submit="createStore">
+              <FormulateForm v-model="theStore" @submit="createStore">
                 <FormulateInput
                   name="title"
                   label="اسم المتجر"
@@ -135,20 +135,21 @@ export default Vue.extend({
     },
   },
   async mounted() {
-    const validateStore: IStore = await this.$axios.$get(
-      '/stores/check-if-validate'
-    )
-    if (validateStore === null) return
-    if (validateStore.reviewed && validateStore.approved) {
-      // TODO: your app
-      this.theStore = validateStore
-      this.$store.commit('setStore', validateStore)
-      this.storeSuccess = true
-    } else if (validateStore.reviewed && !validateStore.approved) {
-      this.theStore = validateStore
-      this.storeEdit = true
-    } else if (!validateStore.reviewed) {
-      this.showNotReviewedMessage = true
+    if (this.$auth.loggedIn) {
+      const validateStore: IStore = await this.$axios.$get(
+        '/stores/check-if-validate'
+      )
+      if (validateStore === null) return
+      if (validateStore.reviewed && validateStore.approved) {
+        this.theStore = validateStore
+        this.$store.commit('setStore', validateStore)
+        this.storeSuccess = true
+      } else if (validateStore.reviewed && !validateStore.approved) {
+        this.theStore = validateStore
+        this.storeEdit = true
+      } else if (!validateStore.reviewed) {
+        this.showNotReviewedMessage = true
+      }
     }
   },
   methods: {
@@ -171,7 +172,7 @@ export default Vue.extend({
         this.$notify({
           group: 'foo',
           title: 'حدث خطأ ما',
-          text: err,
+          text: err.response.data.msg,
         })
       }
     },
