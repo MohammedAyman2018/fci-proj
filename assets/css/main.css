@@ -79,3 +79,7 @@ textarea {
   left: 0.75em !important;
   right: auto !important;
 }
+
+button.w-full {
+  width: 100% !important;
+}

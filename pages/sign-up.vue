@@ -37,56 +37,80 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ حساب
               </h1>
-              <FormulateInput
-                v-model="user.name"
-                name="اسمك"
-                label="اسمك"
-                placeholder="اسمك"
-                validation="required"
-              />
-              <FormulateInput
-                v-model="user.email"
-                name="البريد الإلكتروني"
-                label="البريد الإلكتروني"
-                placeholder="البريد الإلكتروني"
-                validation="required|email"
-              />
-              <FormulateInput
-                v-model="user.phone"
-                type="tel"
-                name="رقم الجوال"
-                label="رقم الجوال"
-                placeholder="رقم الجوال"
-                validation="required"
-              />
-              <FormulateInput
-                v-model="user.country"
-                :options="{ مصر: 'مصر', السعودية: 'السعودية' }"
-                type="select"
-                placeholder="اختر دولتك"
-                label="الدولة"
-              />
+              <FormulateForm @submit="createUser" #default="{ isLoading }">
+                <FormulateInput
+                  v-model="user.name"
+                  name="اسمك"
+                  label="اسمك"
+                  placeholder="اسمك"
+                  validation="required"
+                />
+                <FormulateInput
+                  v-model="user.email"
+                  name="البريد الإلكتروني"
+                  label="البريد الإلكتروني"
+                  placeholder="البريد الإلكتروني"
+                  validation="required|email"
+                />
 
-              <FormulateInput
-                v-model="user.password"
-                type="password"
-                name="كلمة المرور"
-                label="كلمة المرور"
-                placeholder="كلمة المرور"
-                validation="required"
-              />
+                <FormulateInput
+                  v-model="user.country"
+                  :options="{ مصر: 'مصر', السعودية: 'السعودية' }"
+                  type="select"
+                  placeholder="اختر دولتك"
+                  label="الدولة"
+                />
+                <FormulateInput
+                  :key="user.country"
+                  v-model="user.phone"
+                  type="tel"
+                  name="رقم الجوال"
+                  label="رقم الجوال"
+                  placeholder="رقم الجوال"
+                  validation="required|validNumber"
+                  :validation-rules="{
+                    validNumber: ({ value }) =>
+                      user.country === 'مصر'
+                        ? value.length === 11
+                        : value.length === 10,
+                    startsWith01: ({ value }) =>
+                      user.country === 'مصر'
+                        ? value.startsWith('01')
+                        : value.startsWith('05'),
+                  }"
+                  :validation-messages="{
+                    startsWith01:
+                      user.country === 'مصر'
+                        ? 'يجب أن يبدأ الرقم ب 01'
+                        : 'يجب أن يبدأ الرقم ب 05',
+                    validNumber:
+                      user.country === 'مصر'
+                        ? 'يجب ان يتكون من 11 رقم'
+                        : 'يجب ان يتكون من 10 رقم',
+                  }"
+                />
 
-              <button
-                :class="{ 'btn-disabled': !valid }"
-                class="btn mt-4 w-full btn-success btn-wide"
-                @click="createUser"
-              >
-                تسجيل
-              </button>
+                <FormulateInput
+                  v-model="user.password"
+                  type="password"
+                  name="كلمة المرور"
+                  label="كلمة المرور"
+                  placeholder="كلمة المرور"
+                  validation="required|min:8,length"
+                />
+
+                <FormulateInput
+                  type="submit"
+                  :wrapper-class="['w-full']"
+                  :input-class="['btn-success', 'w-full', 'btn']"
+                  :disabled="isLoading || !valid"
+                  :label="isLoading ? 'جاري التسجيل' : 'تسجيل'"
+                />
+              </FormulateForm>
 
               <div class="mt-4 text-center">
                 <p class="text-sm">
-                  لديك حساب بالفعل?
+                  لديك حساب بالفعل؟
                   <nuxt-link to="/login" class="text-blue-600 hover:underline">
                     سجل دخول.</nuxt-link
                   >
@@ -142,5 +166,3 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-</style>
