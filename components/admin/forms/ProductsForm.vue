@@ -1,7 +1,36 @@
 <template>
   <div class="container mx-auto">
     <h2 class="text-2xl">أضف منتج</h2>
+    <modal name="add-category" scrollable height="auto">
+      <div class="p-4">
+        <h2 class="text-xl font-bold">أضف فئة</h2>
 
+        <div class="mt-5">
+          <FormulateInput
+            v-model="category.name"
+            name="اسم الفئة"
+            label="اسم الفئة"
+            placeholder="اسم الفئة"
+            validation="required"
+          />
+          <div class="flex justify-between items-center mt-4 mb-12">
+            <button
+              :disabled="!category.name"
+              class="btn btn-success btn-sm"
+              @click="addCategory"
+            >
+              أضافة
+            </button>
+            <button
+              class="btn btn-ghost btn-sm"
+              @click="closeModal('add-category')"
+            >
+              إلغاء
+            </button>
+          </div>
+        </div>
+      </div>
+    </modal>
     <FormulateForm
       v-model="formValues"
       class="login-form"
@@ -10,11 +39,11 @@
       <div class="grid grid-cols-1 lg:grid-cols-3">
         <client-only>
           <FormulateInput
-            :key="oldProduct.images"
+            :value="oldProduct ? oldProduct.images : [{}]"
+            :key="oldProduct ? oldProduct.images : 'this is the key'"
             type="image"
             name="files"
             label="صور المنتج"
-            :value="oldProduct.images"
             validation="mime:image/jpeg,image/png,image/gif"
             multiple
             :uploader="uploader"
@@ -67,13 +96,26 @@
               </button>
             </li>
           </ul>
-          <autocomplete
-            :search="search"
-            placeholder="اختر الفئات التي يندرج تحتها المنتج"
-            aria-label="اختر الفئات التي يندرج تحتها المنتج"
-            :get-result-value="getResultValue"
-            @submit="handleCategory"
-          />
+          <div>
+            <autocomplete
+              :search="search"
+              placeholder="اختر الفئات التي يندرج تحتها المنتج"
+              aria-label="اختر الفئات التي يندرج تحتها المنتج"
+              :get-result-value="getResultValue"
+              @submit="handleCategory"
+              @keypress.enter="
+                () => {
+                  return
+                }
+              "
+            />
+            <button
+              class="btn btn-link btn-sm mt-3"
+              @click="$modal.show('add-category')"
+            >
+              الفئة التي تريدها غير موجودة؟ أضف فئة
+            </button>
+          </div>
         </div>
 
         <FormulateInput
@@ -153,6 +195,7 @@ export default Vue.extend({
       product: {} as IProduct,
       formValues: {} as any,
       categories: [] as ICategory[],
+      category: {} as ICategory,
       selectedCategories: [] as ICategory[],
       productImages: '',
     }
@@ -254,6 +297,23 @@ export default Vue.extend({
     handleCategory(result) {
       if (!result) return
       return this.selectedCategories.push(result)
+    },
+    async addCategory() {
+      try {
+        await this.$axios.$post('/categories', {
+          ...this.category,
+          storeName: this.$route.params.storeName,
+        })
+        await this.getCategories()
+        this.closeModal('edit-category')
+        this.$notification('نجح الطلب', 'تمت إضافة الفئة بنجاح')
+      } catch (error: any) {
+        this.$notification('حدث خطأ ما', error.response.data.msg)
+      }
+    },
+    closeModal(modalName) {
+      this.category = {} as ICategory
+      this.$modal.hide(modalName)
     },
   },
 })
