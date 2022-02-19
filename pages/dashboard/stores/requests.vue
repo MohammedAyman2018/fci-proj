@@ -42,9 +42,14 @@
 
     <modal name="validate-store" scrollable height="auto">
       <div class="p-4">
-        <h2 class="text-xl font-bold">ملفات المتجر</h2>
-        <div class="images h-12 w-12" v-viewer="{ movable: false }">
-          <img v-for="src in store.files" :src="src" :key="src" />
+        <h2 class="text-xl mb-3 font-bold">ملفات المتجر</h2>
+        <div class="images flex h-12 w-12" v-viewer="{ movable: false }">
+          <img
+            v-for="src in store.files"
+            class="inline-block mx-3"
+            :src="src"
+            :key="src"
+          />
         </div>
         <div class="mt-5">
           <button class="btn btn-error btn-sm" @click="approved(true)">
