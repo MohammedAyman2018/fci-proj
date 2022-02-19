@@ -9,7 +9,7 @@
           </client-only>
           <Nuxt />
           <!-- <main-footer /> -->
-          <notifications group="foo" position="top right" />
+          <div id="notifikation"></div>
         </div>
         <client-only>
           <side-bar />
