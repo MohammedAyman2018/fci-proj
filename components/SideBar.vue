@@ -131,6 +131,24 @@ export default Vue.extend({
       return this.$store.state.links
     },
   },
+  mounted() {
+    const lists = document.getElementsByTagName('li')
+    if (lists) {
+      Array.from(lists).forEach((li) => {
+        li.addEventListener('click', this.closeSideBar)
+      })
+    }
+  },
+  methods: {
+    closeSideBar() {
+      const el: HTMLInputElement = document.getElementById(
+        'my-drawer-3'
+      ) as HTMLInputElement
+      if (el) {
+        el.checked = false
+      }
+    },
+  },
 })
 </script>
 
