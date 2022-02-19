@@ -49,7 +49,11 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ متجرك
               </h1>
-              <FormulateForm v-model="theStore" @submit="createStore">
+              <FormulateForm
+                v-model="theStore"
+                #default="{ isLoading }"
+                @submit="createStore"
+              >
                 <FormulateInput
                   name="title"
                   label="اسم المتجر"
@@ -74,12 +78,18 @@
                   name="files"
                   label="ملفات إثبات الهوية"
                   help="برجاء رفع صور من الملفات الاتية ملف 1, ملف 2 , ملف 3"
-                  validation="mime:image/jpeg,image/png,image/gif"
+                  validation="mime:image/jpeg,image/png,image/gif,application/pdf"
                   multiple
                   :uploader="uploader"
                   upload-behavior="delayed"
                 />
-                <FormulateInput type="submit" label="تسجيل" />
+                <FormulateInput
+                  type="submit"
+                  :wrapper-class="['w-full']"
+                  :input-class="['btn-success', 'w-full', 'btn']"
+                  :disabled="isLoading || !valid"
+                  :label="isLoading ? 'جاري التسجيل' : 'تسجيل'"
+                />
                 <!-- class="btn mt-4 btn-success w-full" -->
               </FormulateForm>
               <div class="mt-4 text-center">
@@ -120,17 +130,23 @@ export default Vue.extend({
         title: '',
         desc: '',
         location: '',
-        files: [],
+        files: { files: [] },
       } as IStore,
       storeSuccess: false,
       storeEdit: false,
     }
   },
   computed: {
-    valid() {
-      return true
+    valid(): boolean {
+      return (
+        !!this.theStore.title &&
+        !!this.theStore.desc &&
+        !!this.theStore.location &&
+        this.theStore.files.files &&
+        this.theStore.files.files.length >= 3
+      )
     },
-    filesError() {
+    filesError(): boolean {
       return false
     },
   },
@@ -155,14 +171,17 @@ export default Vue.extend({
   methods: {
     uploader,
     async createStore(data) {
+      const files: string[] = []
+      data.files.forEach((file: { url: string }[]) => files.push(file[0].url))
       try {
         await this.$axios.$post('/stores', {
           desc: data.desc,
-          files: data.files[0].map((x) => x.url),
+          files,
           location: data.location,
           title: data.title,
           owner: this.$auth.user!._id,
         })
+        window.location.reload()
         this.$notification('نجح الطلب', 'تم إنشاء الحساب بنجاح')
       } catch (err: any) {
         this.$notification('حدث خطأ ما', err.response.data.msg)
