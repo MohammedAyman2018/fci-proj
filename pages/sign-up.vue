@@ -8,7 +8,7 @@
           <div class="h-32 md:h-auto md:w-1/2">
             <img
               class="object-cover w-full h-full"
-              src="https://source.unsplash.com/user/erondu/1600x900"
+              src="@/assets/banner.jpeg"
               alt="img"
             />
           </div>
