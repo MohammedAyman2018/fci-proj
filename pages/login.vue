@@ -55,7 +55,6 @@ import Vue from 'vue'
 
 export default Vue.extend({
   name: 'LoginPage',
-
   data() {
     return {
       user: {
@@ -68,6 +67,11 @@ export default Vue.extend({
     valid(): Boolean {
       return !!this.user.email && !!this.user.password
     },
+  },
+  created() {
+    if (this.$auth.loggedIn) {
+      this.$router.push('/')
+    }
   },
   methods: {
     async userLogin() {

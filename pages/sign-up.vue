@@ -144,6 +144,11 @@ export default Vue.extend({
       return true
     },
   },
+  created() {
+    if (this.$auth.loggedIn) {
+      this.$router.push('/')
+    }
+  },
   methods: {
     async createUser() {
       try {
