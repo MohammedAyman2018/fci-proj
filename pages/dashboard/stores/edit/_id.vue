@@ -167,19 +167,15 @@ export default Vue.extend({
       const res = await this.$axios.get(`/stores/one/${this.$route.params.id}`)
       this.store = res.data.store
     } catch (error) {
-      console.log(error)
+      this.$notification('حدث خطأ ما', error)
     }
   },
   methods: {
     async editStore() {
       try {
-        const res = await this.$axios.patch(
-          `/stores/${this.$route.params.id}`,
-          this.store
-        )
-        console.log(res)
+        await this.$axios.patch(`/stores/${this.$route.params.id}`, this.store)
       } catch (error) {
-        console.log(error)
+        this.$notification('حدث خطأ ما', error)
       }
     },
   },

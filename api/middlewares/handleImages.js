@@ -21,7 +21,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 async function uploadImage(req, res) {
-  console.log(req.file)
   await cloudinary.uploader.upload(req.file.path,
     { resource_type: 'auto', folder: 'fci' },
     function (error, result) {
