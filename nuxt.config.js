@@ -25,8 +25,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '~/plugins/vue-notification',
     { src: '~/plugins/vue-good-table', ssr: false },
+    { src: '~/plugins/notif', ssr: false },
     '~/plugins/Autocomplete',
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js'

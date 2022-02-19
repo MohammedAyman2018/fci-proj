@@ -140,11 +140,7 @@ export default Vue.extend({
       this.categories = await this.$axios
         .$get(`/categories?storeName=${this.$route.params.storeName}`)
         .catch((err) => {
-          this.$notify({
-            group: 'foo',
-            type: 'success',
-            title: err,
-          })
+          this.$notification('حدث خطأ ما', err.response.data.msg)
         })
     },
     openModal(modalName, category) {
@@ -159,17 +155,9 @@ export default Vue.extend({
         })
         await this.getCategories()
         this.closeModal('edit-category')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تمت إضافة الفئة بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تمت إضافة الفئة بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     async editCategory() {
@@ -180,17 +168,9 @@ export default Vue.extend({
         )
         await this.getCategories()
         this.closeModal('edit-category')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم التعديل بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تم التعديل بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     async removeCategory() {
@@ -198,17 +178,9 @@ export default Vue.extend({
         await this.$axios.$delete(`/categories/${this.category._id}`)
         await this.getCategories()
         this.closeModal('delete-category')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم حذف الفئة بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تم حذف الفئة بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
 

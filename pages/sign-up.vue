@@ -148,18 +148,10 @@ export default Vue.extend({
     async createUser() {
       try {
         await this.$axios.$post('/users', this.user)
+        this.$notification('نجح الطلب', 'تم إنشاء الحساب بنجاح')
         this.$router.push('/login')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          text: 'تم إنشاء الحساب بنجاح',
-        })
       } catch (err: any) {
-        this.$notify({
-          group: 'foo',
-          title: 'حدث خطأ ما',
-          text: err,
-        })
+        this.$notification('حدث خطأ ما', err.response.data.msg)
       }
     },
   },

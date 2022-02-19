@@ -26,12 +26,8 @@ export default Vue.extend({
         return { name: x + idx, url: x }
       })
       this.product = res
-    } catch (error) {
-      this.$notify({
-        group: 'foo',
-        type: 'error',
-        title: error,
-      })
+    } catch (error: any) {
+      this.$notification('حدث خطأ ما', error.response.data.msg)
     }
   },
 })

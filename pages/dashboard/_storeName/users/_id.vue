@@ -60,11 +60,7 @@ export default Vue.extend({
     try {
       this.user = await this.$axios.$get(`/users/one/${this.$route.params.id}`)
     } catch (error: any) {
-      this.$notify({
-        group: 'foo',
-        type: 'error',
-        title: error,
-      })
+      this.$notification('حدث خطأ ما', error.response.data.msg)
     }
   },
 })

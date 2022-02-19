@@ -74,17 +74,9 @@ export default Vue.extend({
       try {
         await this.$auth.loginWith('local', { data: this.user })
         this.$router.push('/')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          text: 'تم تسجيل الدخول',
-        })
+        this.$notification('أهلا بك مجدداُ', 'تم تسجيل الدخول')
       } catch (err: any) {
-        this.$notify({
-          group: 'foo',
-          title: 'حدث خطأ ما',
-          text: err.response.data.msg,
-        })
+        this.$notification('حدث خطأ ما', err.response.data.msg)
       }
     },
   },

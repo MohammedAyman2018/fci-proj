@@ -90,11 +90,7 @@ export default Vue.extend({
   methods: {
     async getStores() {
       const res = await this.$axios.$get('/stores').catch((error: any) => {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       })
       this.stores = res
       this.filter('waiting')
@@ -113,17 +109,9 @@ export default Vue.extend({
         })
         await this.getStores()
         this.closeModal()
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم الطلب بنجاح',
-        })
+        this.$notification('نجح الطلب', '')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     filter(type: string): void {

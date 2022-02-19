@@ -92,11 +92,7 @@ export default Vue.extend({
       this.stores = await this.$axios
         .$get('/stores?approved=true')
         .catch((err) => {
-          this.$notify({
-            group: 'foo',
-            type: 'success',
-            title: err,
-          })
+          this.$notification('حدث خطأ ما', err.response.data.msg)
         })
     },
     openModal(modalName, store) {
@@ -108,17 +104,10 @@ export default Vue.extend({
         await this.$axios.$delete(`/stores/${this.store._id}`)
         await this.getStores()
         this.closeModal('delete-store')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم حذف الفئة بنجاح',
-        })
+
+        this.$notification('نجح الطلب', 'تم حذف الفئة بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
 

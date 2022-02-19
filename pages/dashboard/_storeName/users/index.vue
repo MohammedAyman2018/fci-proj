@@ -209,11 +209,7 @@ export default Vue.extend({
         )
         this.displayedUsers = this.users
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     openModal(modalName, user) {
@@ -228,17 +224,9 @@ export default Vue.extend({
         })
         await this.getUsers()
         this.closeModal('edit-user')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تمت إضافة العميل بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تمت إضافة العميل بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     async editUser() {
@@ -249,17 +237,9 @@ export default Vue.extend({
         })
         await this.getUsers()
         this.closeModal('edit-user')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم التعديل بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تم التعديل بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     async removeUser() {
@@ -267,17 +247,10 @@ export default Vue.extend({
         await this.$axios.$delete(`/users/${this.user._id}`)
         await this.getUsers()
         this.closeModal('delete-user')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم حذف العميل بنجاح',
-        })
+
+        this.$notification('نجح الطلب', 'تم حذف العميل بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     closeModal(modalName) {

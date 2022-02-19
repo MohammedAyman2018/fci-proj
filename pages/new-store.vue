@@ -163,17 +163,9 @@ export default Vue.extend({
           title: data.title,
           owner: this.$auth.user!._id,
         })
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          text: 'تم إنشاء الحساب بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تم إنشاء الحساب بنجاح')
       } catch (err: any) {
-        this.$notify({
-          group: 'foo',
-          title: 'حدث خطأ ما',
-          text: err.response.data.msg,
-        })
+        this.$notification('حدث خطأ ما', err.response.data.msg)
       }
     },
   },

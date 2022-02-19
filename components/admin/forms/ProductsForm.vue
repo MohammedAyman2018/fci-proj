@@ -218,17 +218,9 @@ export default Vue.extend({
         const product = this.createProduct(data)
         await this.$axios.$post('/products', product)
         this.reset()
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تمت إضافة المنتج بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تمت إضافة المنتج بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     async editProduct(data) {
@@ -236,28 +228,16 @@ export default Vue.extend({
         const product = this.createProduct(data)
         await this.$axios.$patch(`/products/${this.$route.params.id}`, product)
         this.reset()
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم تعديل المنتج بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تم تعديل المنتج بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
     async getCategories() {
       this.categories = await this.$axios
         .$get(`/categories?storeName=${this.$route.params.storeName}`)
         .catch((err) => {
-          this.$notify({
-            group: 'foo',
-            type: 'error',
-            title: err,
-          })
+          this.$notification('حدث خطأ ما', err.response.data.msg)
         })
     },
     search(input) {

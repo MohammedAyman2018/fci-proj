@@ -107,11 +107,7 @@ export default Vue.extend({
           this.products = res
         })
         .catch((err) => {
-          this.$notify({
-            group: 'foo',
-            type: 'success',
-            title: err,
-          })
+          this.$notification('حدث خطأ ما', err.response.data.msg)
         })
     },
 
@@ -120,17 +116,9 @@ export default Vue.extend({
         await this.$axios.$delete(`/products/${this.product._id}`)
         await this.getProducts()
         this.closeModal('delete-product')
-        this.$notify({
-          group: 'foo',
-          type: 'success',
-          title: 'تم حذف المنتج بنجاح',
-        })
+        this.$notification('نجح الطلب', 'تم حذف المنتج بنجاح')
       } catch (error: any) {
-        this.$notify({
-          group: 'foo',
-          type: 'error',
-          title: error,
-        })
+        this.$notification('حدث خطأ ما', error.response.data.msg)
       }
     },
 
