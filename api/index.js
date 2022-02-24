@@ -6,6 +6,7 @@ const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
 const swaggerUi = require('swagger-ui-express');
+const cors = require('cors');
 const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
 const swaggerDocument = require('./swagger.json');
@@ -21,6 +22,9 @@ app.use(helmet())
 app.use(logger('dev'))
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
+app.use(cors({
+  origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
+}));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
