@@ -46,7 +46,11 @@
           <div
             data-tip="تعديل"
             class="tooltip"
-            @click="$router.push(`/dashboard/stores/edit/${props.row._id}`)"
+            @click="
+              $router.push(
+                `/dashboard/${props.row.title}/edit/${props.row._id}`
+              )
+            "
           >
             <button class="btn btn-warning btn-square btn-xs">
               <i class="ri-pencil-line"></i>
