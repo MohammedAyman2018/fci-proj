@@ -24,7 +24,8 @@ const Schema = new mongoose.Schema({
       amount: { type: Number, required: true },
       price: { type: Number, required: true },
       img: { type: String, required: true },
-    }]
+    }],
+    required: true
   },
   user: {
     name: { type: String, required: true },
@@ -41,12 +42,7 @@ const Order = mongoose.model('orders', Schema)
 function validate(order) {
   const orderSchema = Joi.object({
     state: Joi.string(),
-    items: {
-      name: Joi.string(),
-      amount: Joi.number(),
-      price: Joi.number(),
-      img: Joi.string(),
-    },
+    items: Joi.array(),
     user: {
       name: Joi.string(),
       tel: Joi.string(),
