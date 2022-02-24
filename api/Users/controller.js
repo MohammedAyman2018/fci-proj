@@ -106,7 +106,7 @@ exports.authenticate = async (req, res) => {
       jwt.sign(
         { id: user._id, role: user.role, restaurantId: user.restaurantId },
         process.env.jwtSecret,
-        { expiresIn: 36000 },
+        // { expiresIn: 36000 },
         (err, token) => {
           if (err) { throw err }
           res.json({ token: `${user.role},${token}`, user })
