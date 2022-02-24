@@ -9,6 +9,12 @@
           الرئيسية
         </nuxt-link>
         <nuxt-link
+          to="/store/products"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          تصفح المنتجات
+        </nuxt-link>
+        <nuxt-link
           v-if="$auth && $auth.loggedIn"
           to="/profile"
           class="btn btn-ghost btn-sm rounded-btn"
@@ -45,6 +51,18 @@
           class="btn btn-ghost btn-sm rounded-btn"
         >
           المتاجر
+        </nuxt-link>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
+            ['admin', 'owner'].includes($auth.user.role)
+          "
+          :to="`/dashboard/${$auth.user.storeName}/edit/${props.row._id}`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          تعديل متجرك
         </nuxt-link>
         <nuxt-link
           v-if="

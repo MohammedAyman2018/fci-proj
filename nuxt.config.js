@@ -97,7 +97,7 @@ export default {
     }
   },
   env: {
-    baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000' : '',
+    baseUrl: process.env.NODE_ENV === 'development' ? 'http://localhost:3000/api' : 'https://fci-proj.herokuapp.com/api',
   },
 
   router: {
