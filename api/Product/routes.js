@@ -9,6 +9,7 @@ const {
   deleteProduct,
   searchProductsName,
   getProductsByCategory,
+  getAllProductsForAllStores,
   rateProduct
 } = require('./controller')
 
@@ -18,6 +19,8 @@ router
   .route('/products')
   .get(auth, getAllProducts)
   .post(auth, addProduct)
+
+router.get('/products/all/stores', getAllProductsForAllStores)
 
 router
   .route('/products/:id')

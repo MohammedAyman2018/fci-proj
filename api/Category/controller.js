@@ -9,6 +9,15 @@ export const getAllCategories = async (req, res) => {
   }
 }
 
+export const getAllCategoriesForAllStores = async (_req, res) => {
+  try {
+    const categories = await Category.find()
+    res.status(200).json(categories)
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
+
 
 export const addCategory = async (req, res) => {
   try {
