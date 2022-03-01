@@ -6,7 +6,7 @@ export default interface IProduct {
   name: string
   images: string[]
   price: number
-  category: ICategory[]
+  category: ICategory
   amount: {
     amountType: string
     available: number
@@ -15,6 +15,7 @@ export default interface IProduct {
   }
   url: string
   views: string
+  rate: number
   visible: {
     store: boolean
     app: boolean

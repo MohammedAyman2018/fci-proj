@@ -27,6 +27,7 @@ export default {
   plugins: [
     { src: '~/plugins/vue-good-table', ssr: false },
     { src: '~/plugins/notif', ssr: false },
+    '~/plugins/v-tooltip',
     '~/plugins/Autocomplete',
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js'
@@ -51,6 +52,7 @@ export default {
   modules: [
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    'nuxt-vuex-localstorage',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/auth-next'

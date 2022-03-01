@@ -159,6 +159,7 @@ export default Vue.extend({
       if (validateStore.reviewed && validateStore.approved) {
         this.theStore = validateStore
         this.$store.commit('setStore', validateStore)
+        // TODO: refresh token and get user again
         this.storeSuccess = true
       } else if (validateStore.reviewed && !validateStore.approved) {
         this.theStore = validateStore

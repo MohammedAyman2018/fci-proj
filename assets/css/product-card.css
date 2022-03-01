@@ -1,5 +1,11 @@
 .product-card {
-  @apply bordered border-gray-300 overflow-hidden rounded-xl border-2 flex flex-col w-72 my-3;
+  @apply bordered relative border-gray-300 overflow-hidden rounded-xl border-2 flex flex-col w-72 my-3;
+}
+
+.product-card button.like-btn {
+  position: absolute !important;
+  left: 10px !important;
+  top: 10px !important;
 }
 
 .product-card--image img {

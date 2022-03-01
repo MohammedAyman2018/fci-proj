@@ -14,6 +14,9 @@
         >
           تصفح المنتجات
         </nuxt-link>
+        <nuxt-link to="/store/cart" class="btn btn-ghost btn-sm rounded-btn">
+          السلة
+        </nuxt-link>
         <nuxt-link
           v-if="$auth && $auth.loggedIn"
           to="/profile"
@@ -59,7 +62,7 @@
             $auth.user.storeName &&
             ['admin', 'owner'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.storeName}/edit/${props.row._id}`"
+          :to="`/dashboard/${$auth.user.storeName}/edit/`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           تعديل متجرك

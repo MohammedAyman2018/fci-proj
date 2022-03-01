@@ -26,17 +26,9 @@ const Schema = new mongoose.Schema({
     required: true
   },
   category: {
-    type: [{
-      ref: 'categories',
-      type: mongoose.Types.ObjectId
-    }],
+    ref: 'categories',
+    type: mongoose.Types.ObjectId,
     required: true,
-    validate: {
-      validator(arr) {
-        return arr.length >= 1
-      },
-      message: 'يجب اختيار فئة واحدة على الأقل'
-    }
   },
   amount: {
     amountType: {
@@ -65,6 +57,7 @@ const Schema = new mongoose.Schema({
   rating: {
     type: [{ userId: String, rate: Number }],
   },
+  actualRating: { type: Number, default: 0 },
   ordered: {
     type: Number,
     default: 0
@@ -82,10 +75,11 @@ function validate(product) {
   const productSchema = Joi.object({
     name: Joi.string().required(),
     images: Joi.array().min(1).max(6).required(),
-    category: Joi.array().min(1).required(),
+    category: Joi.required(),
     price: Joi.number().required(),
     desc: Joi.string().required(),
     rating: { userId: Joi.string(), rate: Joi.number() },
+    rate: Joi.number(),
     ordered: Joi.number(),
     amount: {
       amountType: Joi.string(),

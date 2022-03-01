@@ -91,7 +91,8 @@ export const rateProduct = async (req, res) => {
       } else {
         userRatedBefore = req.body
       }
-      product.rating.push(userRatedBefore)
+      product.rate.push(userRatedBefore)
+      product.actualRating = calcRating(product.rating)
       await product.save()
       const rateSum = product.rating.reduce((a, b) => a + b, 0)
       res.status(200).json({ rate: rateSum / product.rating.length })
@@ -99,4 +100,12 @@ export const rateProduct = async (req, res) => {
   } catch (error) {
     res.status(400).json({ msg: err.message })
   }
+}
+
+function calcRating(rating) {
+  let sd = 0
+  rating.forEach(el => {
+    sd += el.rate
+  });
+  return sd / rating.length
 }

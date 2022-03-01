@@ -1,51 +1,71 @@
 <template>
   <div>
     <section class="container mx-auto">
-      <h1>تصفح المنتجات</h1>
-      <div
-        class="
-          grid grid-cols-1
-          place-items-center
-          sm:grid-cols-2
-          lg:grid-cols-3
-          xl:grid-cols-4
-        "
-      >
-        <product-card
-          v-for="product in products"
-          :key="product.name"
-          :product="product"
-        />
+      <h1 class="text-xl font-bold my-4">تصفح المنتجات</h1>
+      <div class="grid grid-cols-12">
+        <div class="col-span-2">
+          <h1 class="text-lg font-bold mb-3">التصنيفات</h1>
+          <categories-menu />
+        </div>
+
+        <div class="col-span-10">
+          <div
+            v-if="displayedProducts.length > 0"
+            class="
+              grid grid-cols-1
+              place-items-center
+              lg:grid-cols-2
+              xl:grid-cols-3
+            "
+          >
+            <product-card
+              v-for="product in displayedProducts"
+              :key="product._id"
+              :product="product"
+            />
+          </div>
+          <div v-else>
+            <p class="text-center">لايوجد منتجات تحت هذه الفئة</p>
+          </div>
+        </div>
       </div>
     </section>
   </div>
 </template>
 
-<script lang="ts">
-import Vue from 'vue'
-import IProduct from '@/interfaces/product'
+<script>
+import { mapActions } from 'vuex'
 import productCard from '~/components/products/product-card.vue'
-
-export default Vue.extend({
-  components: { productCard },
+import CategoriesMenu from '~/components/products/CategoriesMenu.vue'
+export default {
   name: 'ProductsPage',
-  data() {
-    return {
-      products: [] as IProduct[],
-    }
+  components: { productCard, CategoriesMenu },
+  computed: {
+    products() {
+      return this.$store.state.products.products
+    },
+    displayedProducts() {
+      return this.$store.state.products.displayedProducts
+    },
   },
+
   async beforeMount() {
     try {
-      const res = await this.$axios.get<IProduct[]>('/products/all/stores')
-      this.products = res.data
+      await this.getProducts()
+      await this.getCategories()
     } catch (error) {
       console.log(error)
     }
   },
-})
+  methods: {
+    ...mapActions({
+      getProducts: 'products/getProducts',
+      getCategories: 'categories/getCategories',
+    }),
+  },
+}
 /*
 TODO:
-  - POPULATE CATEGORY.
   - Save Cart.
   - Save this to the state.
   - Add sorting and filtering.
@@ -69,3 +89,16 @@ TODO:
 */
 </script>
 
+
+<style scoped>
+.fadeHeight-enter-active,
+.fadeHeight-leave-active {
+  transition: all 0.2s;
+  max-height: 230px;
+}
+.fadeHeight-enter,
+.fadeHeight-leave-to {
+  opacity: 0;
+  max-height: 0px;
+}
+</style>
