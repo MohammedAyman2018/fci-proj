@@ -1,7 +1,14 @@
 <template>
   <div class="drawer-side">
     <label for="my-drawer-3" class="drawer-overlay"></label>
-    <ul class="p-4 overflow-y-auto menu w-80 bg-base-100">
+    <ul class="menu p-4 overflow-y-auto menu w-80 bg-base-100">
+      <div class="flex justify-between items-center">
+        <h3 class="font-bold text-lg my-3">روابط متاحة</h3>
+
+        <label for="my-drawer-3">
+          <i class="ri-close-fill"></i>
+        </label>
+      </div>
       <li>
         <nuxt-link
           v-if="$auth && $auth.loggedIn"
@@ -18,6 +25,19 @@
           class="btn btn-ghost btn-sm rounded-btn"
         >
           انشئ متجرك
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
+          to="/store/products"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          تصفح المنتجات
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link to="/store/cart" class="btn btn-ghost btn-sm rounded-btn">
+          السلة
         </nuxt-link>
       </li>
       <li>

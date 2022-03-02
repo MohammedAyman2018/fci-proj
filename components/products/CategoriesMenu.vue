@@ -4,7 +4,10 @@
     <div class="drawer-side">
       <label for="my-drawer-4" class="drawer-overlay"></label>
       <ul class="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content">
-        <h3 class="font-bold text-lg my-3">التصنيفات</h3>
+        <div class="flex justify-between items-center">
+          <h3 class="font-bold text-lg my-3">التصنيفات</h3>
+          <label for="my-drawer-4"> <i class="ri-close-fill"></i></label>
+        </div>
 
         <!-- Sidebar content here -->
         <li v-for="category in categories" :key="category._id">
