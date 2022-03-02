@@ -1,0 +1,36 @@
+.filters-drawer {
+  height: 100vh;
+  position: fixed;
+  z-index: 999999;
+  top: 0;
+  background: white;
+  right: 0;
+}
+.filters-drawer .drawer-side {
+  height: 100vh;
+  position: fixed;
+  z-index: 999999;
+  top: 0;
+  background: white;
+  right: 0;
+}
+
+.filters-drawer .drawer-side label.drawer-overlay {
+  width: 100%;
+  position: fixed;
+  z-index: 999998;
+  top: 0;
+  right: 0;
+  height: 100%;
+}
+.filters-drawer .drawer-side ul.menu {
+  position: fixed !important;
+  z-index: 999999 !important;
+  height: 100% !important;
+}
+.drawer-content.filter {
+  display: inline-block;
+  position: fixed;
+  left: 5%;
+  bottom: 10%;
+}

@@ -80,8 +80,8 @@ export default Vue.extend({
   computed: {
     checkInFav() {
       const vm = this
-      if (!this.$auth.loggedIn) return false
       return function (itemId) {
+        if (!vm.$auth.loggedIn) return false
         return vm.$auth && vm.$auth.user && Array.isArray(vm.$auth.user.fav)
           ? vm.$auth.user.fav.includes(itemId)
           : false
