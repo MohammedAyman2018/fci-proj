@@ -17,7 +17,7 @@ const router = Router()
 
 router
   .route('/products')
-  .get(auth, getAllProducts)
+  .get(getAllProducts)
   .post(auth, addProduct)
 
 router.get('/products/all/stores', getAllProductsForAllStores)

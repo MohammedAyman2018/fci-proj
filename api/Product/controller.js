@@ -2,7 +2,7 @@ const { Product, validate } = require('./model')
 
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find({ storeName: req.query.storeName })
+    const products = await Product.find({ storeName: req.query.storeName }).populate('category')
     res.status(200).json(products)
   } catch (err) {
     res.status(400).json({ msg: err.message })
