@@ -1,6 +1,9 @@
 
 require('dotenv').config()
 const { User } = require('../Users/model')
+const { Order } = require('../Orders/model')
+const { Product } = require('../Product/model')
+const { Category } = require('../Category/model')
 const { Store, validate } = require('./model')
 
 /**
@@ -20,8 +23,16 @@ exports.getAllStores = async (req, res) => {
  * @access Private
 */
 exports.getStore = (req, res) => {
-  Store.findById(req.params.id)
-    .then(store => res.status(200).json({ store }))
+  Store.findOne({ title: req.params.storeName }, {
+    contacts: 1,
+    createdAt: 1,
+    desc: 1,
+    location: 1,
+    otherLinks: 1,
+    social: 1,
+    workOn: 1,
+  })
+    .then(store => res.status(200).json(store))
     .catch(err => res.status(500).json({ msg: err.message, err }))
 }
 
@@ -95,6 +106,10 @@ exports.updateStore = async (req, res) => {
 exports.deleteStore = async (req, res) => {
   try {
     await Store.findOneAndDelete({ _id: req.params.id })
+    await Order.deleteMany({ storeName: req.params.storeName })
+    await Product.deleteMany({ storeName: req.params.storeName })
+    await Category.deleteMany({ storeName: req.params.storeName })
+    await User.deleteMany({ storeName: req.params.storeName })
     res.status(200).json({ msg: 'Deleted Successfully' })
   } catch (err) {
     res.status(400).json({ msg: err.message })

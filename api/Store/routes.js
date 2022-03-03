@@ -14,7 +14,8 @@ const {
 const router = Router()
 
 router.get('/stores/', auth, getAllStores)
-router.get('/stores/one/:id', auth, getStore)
+router.get('/stores/one/:storeName', getStore)
+router.get('/stores/clint/all', getAllStores)
 router.patch('/stores/:id', clientAuth, updateStore)
 router.delete('/stores/:id', auth, deleteStore)
 router.post('/stores/', clientAuth, addStore)
