@@ -4,9 +4,22 @@ export const state = () => ({
 })
 
 export const actions = {
+  reset({ commit }) {
+    commit('setDisplayedProducts', [])
+    commit('setProducts', [])
+  },
   async getProducts({ commit }) {
     try {
       const res = await this.$axios.get('/products/all/stores')
+      commit('setProducts', res.data)
+      commit('setDisplayedProducts', res.data)
+    } catch (error) {
+      // TODO: Add error
+    }
+  },
+  async getStoreProducts({ commit }, storeName) {
+    try {
+      const res = await this.$axios.get(`/products?storeName=${storeName}`)
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
     } catch (error) {

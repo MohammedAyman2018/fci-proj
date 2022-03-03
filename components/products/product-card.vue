@@ -24,7 +24,10 @@
         <div class="product-card--info--header">
           <h2>{{ product.name }}</h2>
 
-          <h4><i class="ri-store-fill ri-1x" /> {{ product.storeName }}</h4>
+          <nuxt-link :to="`/store/${product.storeName}/products`"
+            ><i class="ri-store-fill ri-1x" />
+            {{ product.storeName }}</nuxt-link
+          >
         </div>
         <!-- Add Link To One Store In Here -->
       </div>
