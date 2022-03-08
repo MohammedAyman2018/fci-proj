@@ -102,7 +102,7 @@ export default Vue.extend({
   },
   methods: {
     addToCart(item) {
-      this.$store.commit('localStorage/addToCart', item)
+      this.$store.commit('localStorage/addToCart', { ...item, amount: 1 })
     },
     addToFav(itemId) {
       this.$store.dispatch('products/addAndRemoveFromFav', itemId)
