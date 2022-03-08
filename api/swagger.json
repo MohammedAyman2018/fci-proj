@@ -1,26 +1,161 @@
 {
   "openapi": "3.0.1",
   "info": {
-    "title": "E-commerce generator",
+    "title": "API docs",
     "version": "v1"
   },
+  "components": {
+    "schemas": {
+      "user": {
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "country": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "dob": {
+            "type": "date",
+            "example": "any date object"
+          }
+        }
+      }
+    }
+  },
   "paths": {
-    "/pets": {
+    "/users": {
       "get": {
-        "description": "Returns all pets from the system that the user has access to",
+        "description": "Get all users",
+        "parameters": [],
         "responses": {
           "200": {
-            "description": "A list of pets.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/pet"
-                  }
-                }
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "description": "Add user",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/:id": {
+      "patch": {
+        "description": "Update user",
+        "parameters": [],
+        "requestBody": {
+          "description": "You can set any property you want. Any property in the body will be updated.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user"
               }
             }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "description": "Remove user",
+        "parameters": [],
+        "requestBody": {
+          "description": "You can set any property you want. Any property in the body will be updated.",
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/one/:id": {
+      "get": {
+        "description": "get one user by Id.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/fav/": {
+      "post": {
+        "description": "Add and remove item from users fav",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/all/fav/": {
+      "get": {
+        "description": "get user favourites.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/all/orders/": {
+      "get": {
+        "description": "get user order.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "description": "Login for web.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/users/auth": {
+      "get": {
+        "description": "Login endpoint.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
