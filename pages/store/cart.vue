@@ -5,7 +5,7 @@
       <nuxt-link
         v-if="cart.length > 0"
         class="btn btn-primary btn-sm"
-        to="/store/products"
+        to="/store/order"
       >
         الذهاب لصفحة الشراء
       </nuxt-link>
