@@ -31,19 +31,21 @@ const Schema = new mongoose.Schema({
     required: true,
   },
   amount: {
-    amountType: {
-      type: String,
-      enum: ['limited', 'unlimited'],
-      required: true
-    },
-    available: {
-      type: Number
-    },
-    alarm: {
-      type: Boolean,
-      default: false
-    },
-    alarmAmount: Number
+    type: {
+      amountType: {
+        type: String,
+        enum: ['limited', 'unlimited'],
+        required: true
+      },
+      available: {
+        type: Number
+      },
+      alarm: {
+        type: Boolean,
+        default: false
+      },
+      alarmAmount: Number
+    }
   },
   url: String,
   views: {
@@ -51,8 +53,14 @@ const Schema = new mongoose.Schema({
     default: 0
   },
   visible: {
-    store: { type: Boolean, default: true },
-    app: { type: Boolean, default: true }
+    type: {
+      store: { type: Boolean, default: true },
+      app: { type: Boolean, default: true }
+    },
+    default: {
+      store: true,
+      app: true
+    }
   },
   rating: {
     type: [{ userId: String, rate: Number }],

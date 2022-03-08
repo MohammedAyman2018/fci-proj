@@ -10,7 +10,7 @@ const Schema = new mongoose.Schema({
   logo: String,
   desc: String,
   // location: { lng: String, lat: String },
-  location: { type: String, required: true },
+  location: { type: { lng: String, lat: String }, required: true },
   contacts: {
     type: {
       tel: String,

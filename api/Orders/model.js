@@ -28,10 +28,13 @@ const Schema = new mongoose.Schema({
     required: true
   },
   user: {
-    name: { type: String, required: true },
-    tel: { type: String, required: true },
-    address: { type: String, required: true },
-    payment: { type: String, required: true },
+    type: {
+      name: { type: String, required: true },
+      tel: { type: String, required: true },
+      address: { type: String, required: true },
+      payment: { type: String, required: true },
+    },
+    required: true
   },
   storeName: String
 },
