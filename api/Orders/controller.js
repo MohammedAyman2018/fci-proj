@@ -1,3 +1,4 @@
+const { User } = require('../Users/model')
 const { Order, validate } = require('./model')
 
 export const getAllOrders = async (req, res) => {
@@ -15,6 +16,9 @@ export const addOrder = async (req, res) => {
     const { error } = validate(req.body)
     if (error) { return res.status(400).send({ msg: error.details[0].message }) }
     const order = await Order.create(req.body)
+    const user = await User.findById(req.user.id)
+    user.orders.push(order._id)
+    await user.save()
     res.status(200).json(order)
   } catch (err) {
     res.status(400).json({ msg: err.message })
