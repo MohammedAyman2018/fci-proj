@@ -1,36 +1,6 @@
 <template>
   <div class="container mx-auto">
     <h2 class="text-2xl">أضف منتج</h2>
-    <modal name="add-category" scrollable height="auto">
-      <div class="p-4">
-        <h2 class="text-xl font-bold">أضف فئة</h2>
-
-        <div class="mt-5">
-          <FormulateInput
-            v-model="category.name"
-            name="اسم الفئة"
-            label="اسم الفئة"
-            placeholder="اسم الفئة"
-            validation="required"
-          />
-          <div class="flex justify-between items-center mt-4 mb-12">
-            <button
-              :disabled="!category.name"
-              class="btn btn-success btn-sm"
-              @click="addCategory"
-            >
-              أضافة
-            </button>
-            <button
-              class="btn btn-ghost btn-sm"
-              @click="closeModal('add-category')"
-            >
-              إلغاء
-            </button>
-          </div>
-        </div>
-      </div>
-    </modal>
     <FormulateForm
       v-model="formValues"
       class="login-form"
@@ -85,36 +55,15 @@
 
         <div class="md:col-span-3 my-3">
           <h4 class="text-lg my-3">الفئات</h4>
-          <ul class="mb-3">
-            <li v-for="(cat, idx) in selectedCategories" :key="cat._id">
-              <p class="inline-block ml-3">{{ cat.name }}</p>
-              <button
-                class="btn btn-error btn-square btn-xs mx-3"
-                @click="selectedCategories.splice(idx, 1)"
-              >
-                <i class="ri-delete-bin-line"></i>
-              </button>
-            </li>
-          </ul>
           <div>
-            <autocomplete
-              :search="search"
-              placeholder="اختر الفئات التي يندرج تحتها المنتج"
-              aria-label="اختر الفئات التي يندرج تحتها المنتج"
-              :get-result-value="getResultValue"
-              @submit="handleCategory"
-              @keypress.enter="
-                () => {
-                  return
-                }
-              "
+            <FormulateInput
+              name="selectedCategories"
+              type="select"
+              :options="categories"
+              label="الفئات"
+              placeholder="اختر فئة المنتج"
+              validation="required"
             />
-            <button
-              class="btn btn-link btn-sm mt-3"
-              @click="$modal.show('add-category')"
-            >
-              الفئة التي تريدها غير موجودة؟ أضف فئة
-            </button>
           </div>
         </div>
 
@@ -194,9 +143,13 @@ export default Vue.extend({
       images: [] as string[],
       product: {} as IProduct,
       formValues: {} as any,
-      categories: [] as ICategory[],
-      category: {} as ICategory,
-      selectedCategories: [] as ICategory[],
+      categories: [] as {
+        label: string
+        value: string
+        name?: string
+        _id?: string
+      }[],
+      selectedCategories: {} as ICategory,
       productImages: '',
     }
   },
@@ -229,6 +182,7 @@ export default Vue.extend({
   methods: {
     uploader,
     reset() {
+      this.formValues = {}
       this.product = {} as IProduct
     },
     createProduct(data) {
@@ -241,7 +195,7 @@ export default Vue.extend({
         name: data.name,
         desc: data.desc,
         price: data.price,
-        category: this.selectedCategories.map((cat) => cat._id),
+        category: data.selectedCategories,
         amount: {
           amountType: data.amountType,
           available: data.available,
@@ -282,38 +236,9 @@ export default Vue.extend({
         .catch((err) => {
           this.$notification('حدث خطأ ما', err.response.data.msg)
         })
-    },
-    search(input) {
-      if (input.length < 1) {
-        return []
-      }
-      return this.categories.filter((category) => {
-        return category.name.toLowerCase().startsWith(input.toLowerCase())
+      this.categories = this.categories.map((cat) => {
+        return { label: cat.name!, value: cat._id! }
       })
-    },
-    getResultValue(result) {
-      return result.name
-    },
-    handleCategory(result) {
-      if (!result) return
-      return this.selectedCategories.push(result)
-    },
-    async addCategory() {
-      try {
-        await this.$axios.$post('/categories', {
-          ...this.category,
-          storeName: this.$route.params.storeName,
-        })
-        await this.getCategories()
-        this.closeModal('edit-category')
-        this.$notification('نجح الطلب', 'تمت إضافة الفئة بنجاح')
-      } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
-      }
-    },
-    closeModal(modalName) {
-      this.category = {} as ICategory
-      this.$modal.hide(modalName)
     },
   },
 })
