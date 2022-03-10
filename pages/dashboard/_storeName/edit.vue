@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto">
     <h2 class="mb-3 text-2xl">تعديل المتجر</h2>
-    <div class="grid md:grid-cols-3">
+    <div v-if="store" class="grid md:grid-cols-3">
       <FormulateInput
         v-model="store.title"
         type="text"
@@ -139,6 +139,13 @@
     </div>
 
     <button class="btn btn-primary" @click="editStore">تعديل</button>
+
+    <!-- <GmapMap
+      :center="{ lat: 10, lng: 10 }"
+      :zoom="7"
+      map-type-id="terrain"
+      style="width: 500px; height: 300px"
+    /> -->
   </div>
 </template>
 
@@ -164,8 +171,10 @@ export default Vue.extend({
   },
   async mounted() {
     try {
-      const res = await this.$axios.get(`/stores/one/${this.$route.params.id}`)
-      this.store = res.data.store
+      const res = await this.$axios.get(
+        `/stores/one/admin/${this.$route.params.storeName}`
+      )
+      this.store = res.data
     } catch (error) {
       this.$notification('حدث خطأ ما', error)
     }
@@ -173,7 +182,10 @@ export default Vue.extend({
   methods: {
     async editStore() {
       try {
-        await this.$axios.patch(`/stores/${this.$route.params.id}`, this.store)
+        await this.$axios.patch(
+          `/stores/${this.$route.params.storeName}?storeName=${this.$route.params.storeName}`,
+          this.store
+        )
       } catch (error) {
         this.$notification('حدث خطأ ما', error)
       }
