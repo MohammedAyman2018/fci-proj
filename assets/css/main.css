@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Changa:wght@300;400;700&display=swap');
+@import url('./font/main.css');
 @import url('./tooltip.css');
 @import url('./filter-drawer.css');
 @import url('./product-card.css');
