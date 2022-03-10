@@ -28,6 +28,7 @@ export default {
     { src: '~/plugins/vue-good-table', ssr: false },
     { src: '~/plugins/notif', ssr: false },
     '~/plugins/v-tooltip',
+    { src: '~/plugins/vue-google-maps', ssr: false },
     '~/plugins/Autocomplete',
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js'
@@ -111,5 +112,6 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+    transpile: [/^vue2-google-maps($|\/)/]
   }
 }
