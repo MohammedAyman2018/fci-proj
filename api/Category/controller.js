@@ -1,8 +1,8 @@
 const { Category, validate } = require('./model')
 
-export const getAllCategories = async (req, res) => {
+export const getAllCategories = async (_req, res) => {
   try {
-    const categories = await Category.find({ storeName: req.query.storeName })
+    const categories = await Category.find()
     res.status(200).json(categories)
   } catch (err) {
     res.status(400).json({ msg: err.message })
