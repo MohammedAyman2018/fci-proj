@@ -15,7 +15,8 @@
       <div class="flex justify-center items-center">
         <img
           width="60%"
-          src="@/assets/undraw_world_re_768g.svg"
+          class="rounded-xl"
+          src="@/assets/story_2.jpg"
           alt="انشئ موقعك واحظ بعملاء حول العالم"
         />
       </div>
