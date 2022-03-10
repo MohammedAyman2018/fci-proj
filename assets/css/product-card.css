@@ -1,5 +1,5 @@
 .product-card {
-  @apply bordered relative border-gray-300 overflow-hidden rounded-xl border-2 flex flex-col w-72 my-3;
+  @apply bordered relative justify-between border-gray-300 overflow-hidden rounded-xl border-2 flex flex-col w-72 my-3;
 }
 
 .product-card button.like-btn {
@@ -10,17 +10,17 @@
 
 .product-card--image img {
   width: 100% !important;
-  height: 100px;
+  height: 400px;
   object-fit: cover;
 }
 
 .product-card--info {
-  @apply p-3;
+  @apply flex flex-col flex-grow justify-between p-3;
 }
 
-.product-card--info--header {
+/* .product-card--info--header {
   @apply flex justify-between;
-}
+} */
 
 .product-card--info--header h2 {
   @apply text-xl font-bold;
