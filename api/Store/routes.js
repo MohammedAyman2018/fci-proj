@@ -8,6 +8,7 @@ const {
   getStore,
   checkIfValidated,
   validateStore,
+  getStoreForEditAdmin,
   updateStore
 } = require('./controller')
 
@@ -15,6 +16,7 @@ const router = Router()
 
 router.get('/stores/', auth, getAllStores)
 router.get('/stores/one/:storeName', getStore)
+router.get('/stores/one/admin/:storeName', auth, getStoreForEditAdmin)
 router.get('/stores/clint/all', getAllStores)
 router.patch('/stores/:id', clientAuth, updateStore)
 router.delete('/stores/:id', auth, deleteStore)

@@ -17,6 +17,15 @@ exports.getAllStores = async (req, res) => {
     .catch(err => res.status(400).json({ msg: err.message }))
 }
 
+exports.getStoreForEditAdmin = async (req, res) => {
+  try {
+    const store = await Store.findOne({ title: req.params.storeName })
+    return res.status(200).json(store)
+  } catch (error) {
+    res.status(500).json({ msg: err.message, err })
+  }
+}
+
 /**
  * @desc Get a store
  * @route GET /api/stores/me
@@ -92,11 +101,20 @@ exports.addStore = async (req, res) => {
  * @description Updates Store
  */
 exports.updateStore = async (req, res) => {
-  const store = req.body
-  delete req.body._id
-  delete req.body.createdAt
-  await Store.updateOne({ _id: req.params.id }, req.body)
-  res.status(200).json(store)
+  try {
+    const store = req.body
+    if (req.body._id) delete req.body._id
+    if (req.body.createdAt) delete req.body.createdAt
+    await Store.updateOne({ title: req.query.storeName }, req.body)
+    if (req.body.title) {
+      await Order.updateMany({ storeName: req.query.storeName }, { storeName: req.body.title })
+      await Product.updateMany({ storeName: req.query.storeName }, { storeName: req.body.title })
+      await User.updateMany({ storeName: req.query.storeName }, { storeName: req.body.title })
+    }
+    return res.status(200).json(store)
+  } catch (error) {
+    res.status(400).json({ msg: error.message })
+  }
 }
 
 /**
