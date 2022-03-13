@@ -12,7 +12,7 @@
     "
   >
     <h5 class="mb-14 text-6xl font-extrabold leading-none md:pl-2 text-center">
-      لماذا شوبي؟
+      لماذا السوق الإلكتروني؟
     </h5>
     <div class="grid gap-3 row-gap-3 lg:grid-cols-3">
       <ul v-for="(item, idx) in items" :key="'feat-ul' + idx" class="space-y-3">

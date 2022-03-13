@@ -1,7 +1,7 @@
 <template>
   <div class="navbar shadow-lg bg-neutral text-neutral-content">
     <div class="flex-1 px-2 mx-2">
-      <span class="text-lg font-bold"> لوجو </span>
+      <span class="text-lg font-bold"> السوق الإلكتروني </span>
     </div>
     <div class="flex-none hidden px-2 mx-2 lg:flex">
       <div class="flex items-stretch">
