@@ -20,7 +20,7 @@ const Schema = new mongoose.Schema({
   country: {
     type: String,
     enum: ['مصر', 'السعودية'],
-    required: true
+    default: 'مصر'
   },
   address: {
     type: String
@@ -58,7 +58,7 @@ function validate(user) {
     name: Joi.string().required(),
     email: Joi.string().email().required(),
     role: Joi.string(),
-    country: Joi.string().required(),
+    country: Joi.string(),
     address: Joi.string(),
     dob: Joi.date(),
     phone: Joi.string().required(),
