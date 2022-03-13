@@ -18,8 +18,14 @@ export const addOrder = async (req, res) => {
     const order = await Order.create(req.body)
     const user = await User.findById(req.user.id)
     user.orders.push(order._id)
+    for (let i = 0; i < req.body.items.length; i++) {
+      const item = req.body.items[i];
+      const productInDb = await Product.findById(item._id)
+      productInDb.ordered++
+      await productInDb.save()
+    }
     await user.save()
-    res.status(200).json(order)
+    return res.status(200).json(order)
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
