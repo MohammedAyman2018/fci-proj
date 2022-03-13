@@ -37,6 +37,14 @@
         label="رقم تليفون"
         placeholder="رقم تليفون"
       />
+
+      <FormulateInput
+        v-model="store.worksOn"
+        :options="categories"
+        type="checkbox"
+        label="ما المجالات التي تعمل بها"
+      />
+
       <FormulateInput
         v-model="store.contacts.whats"
         type="tel"
@@ -157,6 +165,7 @@ export default Vue.extend({
   layout: 'admin',
   data() {
     return {
+      categories: [],
       store: {
         contacts: {},
         social: {},
@@ -174,6 +183,8 @@ export default Vue.extend({
       const res = await this.$axios.get(
         `/stores/one/admin/${this.$route.params.storeName}`
       )
+      const categories = await this.$axios.get('/categories')
+      this.categories = categories.data.map(x => x.name)
       this.store = res.data
     } catch (error) {
       this.$notification('حدث خطأ ما', error)
