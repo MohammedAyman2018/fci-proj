@@ -29,6 +29,8 @@
     <vue-good-table
       :columns="[
         { label: 'اسم المتجر', field: 'title' },
+        { label: 'البريد الإلكتروني', field: 'contacts.email' },
+        { label: 'رقم الهاتف', field: 'contacts.phone' },
         { label: 'تاريخ الانشاء', field: 'createdAt' },
         { label: 'العمليات المتاحة', field: 'operations' },
       ]"
@@ -41,11 +43,17 @@
         <span v-if="props.column.field == 'createdAt'">
           <span>{{ props.row.createdAt.substr(0, 10) }}</span>
         </span>
+        <span v-if="props.column.field == 'email'">
+          <span>{{ props.row.contacts.email }}</span>
+        </span>
+        <span v-if="props.column.field == 'phone'">
+          <span>{{ props.row.contacts.phone }}</span>
+        </span>
 
-        <span v-else-if="props.column.field == 'operations'">
+        <span v-else-if="props.column.field == 'operations'" class="flex">
           <div
             data-tip="تعديل"
-            class="tooltip"
+            class="tooltip mx-1"
             @click="
               $router.push(
                 `/dashboard/${props.row.title}/edit/${props.row._id}`
