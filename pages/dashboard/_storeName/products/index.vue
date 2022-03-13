@@ -34,6 +34,10 @@
     <vue-good-table
       :columns="[
         { label: 'اسم المنتج', field: 'name' },
+        { label: 'السعر', field: 'price' },
+        { label: 'عدد الطلبات', field: 'ordered' },
+        { label: 'عدد الزيارات', field: 'views' },
+        { label: 'الكمية المتاحة', field: 'amount.available' },
         { label: 'تاريخ الانشاء', field: 'createdAt' },
         { label: 'العمليات المتاحة', field: 'operations' },
       ]"
@@ -43,11 +47,17 @@
       max-height="auto"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'createdAt'">
+        <span v-if="props.column.field == 'price'">
+          <span>{{ props.row.price }} جنيه</span>
+        </span>
+        <span v-else-if="props.column.field == 'amount.available'">
+          <span>{{ props.row.amount.available }} قطعة</span>
+        </span>
+        <span v-else-if="props.column.field == 'createdAt'">
           <span>{{ props.row.createdAt.substr(0, 10) }}</span>
         </span>
-        <span v-else-if="props.column.field == 'operations'">
-          <div data-tip="تعديل" class="tooltip">
+        <span v-else-if="props.column.field == 'operations'" class="flex">
+          <div data-tip="تعديل" class="tooltip mx-1">
             <button
               class="btn btn-warning btn-square btn-xs"
               @click="
