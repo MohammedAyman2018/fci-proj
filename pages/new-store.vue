@@ -17,12 +17,12 @@
         class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
       >
         <div class="flex flex-col md:flex-row">
-          <div class="h-32 md:h-auto md:w-1/2">
-            <img
-              class="object-cover w-full h-full"
-              src="@/assets/banner.jpeg"
-              alt="img"
-            />
+          <div class="h-32 md:h-auto md:w-1/2 flex justify-center items-center">
+            <video autoplay preload loop="true" width="100%" height="100%">
+              <source src="@/assets/videos/sign up.mp4" type="video/mp4" />
+
+              Sorry, your browser doesn't support embedded videos.
+            </video>
           </div>
           <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div class="w-full">
@@ -30,8 +30,8 @@
                 انشئ متجرك
               </h1>
               <FormulateForm
+                v-slot="{ isLoading }"
                 v-model="theStore"
-                #default="{ isLoading }"
                 @submit="createStore"
               >
                 <FormulateInput
@@ -46,13 +46,14 @@
                   name="desc"
                   label="نبذة مختصرة عن المتجر"
                 />
-                <FormulateInput
-                  name="location"
-                  label="عنوان المتجر"
-                  placeholder="عنوان المتجر"
-                  validation="required"
-                />
-
+              <FormulateInput
+                name="location"
+                type="select"
+                :options="locations"
+                label="عنوان المتجر"
+                placeholder="عنوان المتجر"
+                validation="required"
+              />
                 <FormulateInput
                   type="image"
                   name="files"
@@ -86,7 +87,7 @@
       </div>
     </div>
 
-    <div v-if="!storeSuccess || showNotReviewedMessage">
+    <div v-else-if="!storeSuccess || showNotReviewedMessage">
       <p class="text-xl mt-4 text-center">المتجر تحت المراجعة برجاء الانتظار</p>
     </div>
   </div>
@@ -106,6 +107,7 @@ export default Vue.extend({
   data() {
     return {
       showNotReviewedMessage: false,
+      locations: [],
       theStore: {
         title: '',
         desc: '',
@@ -114,6 +116,11 @@ export default Vue.extend({
       } as IStore,
       storeSuccess: false,
       storeEdit: false,
+    }
+  },
+  head () {
+    return {
+      title: 'إنشئ متجرك'
     }
   },
   computed: {
@@ -131,7 +138,10 @@ export default Vue.extend({
     },
   },
   async mounted() {
+
     if (this.$auth.loggedIn) {
+      const locations = await this.$axios.get('/locations')
+    this.locations = locations.data.map(x => { return { label: x.name, value: x._id  } })
       const validateStore: IStore = await this.$axios.$get(
         '/stores/check-if-validate'
       )
@@ -148,6 +158,7 @@ export default Vue.extend({
         this.showNotReviewedMessage = true
       }
     }
+
   },
   methods: {
     uploader,

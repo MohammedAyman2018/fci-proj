@@ -8,11 +8,11 @@ const Schema = new mongoose.Schema({
     required: true
   },
   lat: {
-    type: String,
+    type: Number,
     required: true
   },
   lng: {
-    type: String,
+    type: Number,
     required: true
   }
 },

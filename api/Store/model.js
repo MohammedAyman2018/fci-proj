@@ -9,8 +9,11 @@ const Schema = new mongoose.Schema({
   },
   logo: String,
   desc: String,
-  // location: { lng: String, lat: String },
-  location: { type: { lng: String, lat: String }, required: true },
+  location: {
+    type: mongoose.Types.ObjectId,
+    ref: 'locations',
+    required: true
+  },
   contacts: {
     type: {
       tel: String,
