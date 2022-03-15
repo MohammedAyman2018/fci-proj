@@ -6,11 +6,11 @@
       >
         <div class="flex flex-col md:flex-row">
           <div class="h-32 md:h-auto md:w-1/2">
-            <img
-              class="object-cover w-full h-full"
-              src="@/assets/banner.jpeg"
-              alt="img"
-            />
+             <video autoplay loop="true" width="100%" height="100%">
+              <source src="@/assets/videos/login.mp4" type="video/mp4" />
+
+              Sorry, your browser doesn't support embedded videos.
+            </video>
           </div>
           <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div class="w-full">
