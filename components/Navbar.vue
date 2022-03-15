@@ -84,9 +84,9 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            ['admin', 'owner'].includes($auth.user.role)
+            ['admin'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.storeName}/categories`"
+          :to="`/dashboard/categories`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           الفئات

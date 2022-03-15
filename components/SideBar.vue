@@ -62,6 +62,20 @@
             $auth.user.storeName &&
             ['admin', 'owner'].includes($auth.user.role)
           "
+          :to="`/dashboard/${$auth.user.storeName}/edit/`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          تعديل متجرك
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
+            ['admin', 'owner'].includes($auth.user.role)
+          "
           :to="`/dashboard/${$auth.user.storeName}/users`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
