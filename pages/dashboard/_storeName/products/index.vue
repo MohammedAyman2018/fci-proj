@@ -112,7 +112,7 @@ export default Vue.extend({
     },
     async getProducts() {
       await this.$axios
-        .$get(`/products?storeName=${this.$route.params.storeName}`)
+        .$get(`/products?storeName=${this.$route.params.storeName}`, { headers: { admin: true } })
         .then((res) => {
           this.products = res
         })
