@@ -30,7 +30,20 @@ const Schema = new mongoose.Schema({
       email: '',
     }
   },
-  workOn: [String],
+  workOn: {
+    type: [{
+      ref: 'categories',
+      type: mongoose.Types.ObjectId,
+    }],
+    validate: {
+      validator(arr) {
+        return arr.length >= 1
+      },
+      message: 'يجب اختيار فئة'
+    },
+
+    required: true
+  },
   social: {
     type: {
       insta: String,

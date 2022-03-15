@@ -187,7 +187,9 @@ export default Vue.extend({
         `/stores/one/admin/${this.$route.params.storeName}`
       )
       const categories = await this.$axios.get('/categories')
-      this.categories = categories.data.map((x) => x.name)
+      this.categories = categories.data.map((x) => {
+        return { label: x.name, value: x._id }
+      })
       const locations = await this.$axios.get('/locations')
       this.locations = locations.data.map((x) => {
         return { label: x.name, value: x._id }

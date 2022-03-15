@@ -1,14 +1,23 @@
 <template>
   <div class="container mx-auto">
-    <section>
+    <section v-if="store && store._id">
       <h1 class="text-xl font-bold my-4">متجر {{ $route.params.storeName }}</h1>
       <p class="my-2">{{ store.desc }}</p>
       <ul>
         <p class="font-bold">وسائل التواصل</p>
-        <li v-for="link in social" :key="link.key">
-          <i v-if="link.key !== 'tiktok'" :class="[`ri-${link.icon}`]"></i>
-          <img v-else class="inline" width="18px" src="@/assets/tik-tok.png" />
-          {{ link.name }}
+        <li v-for="link in socialr" :key="link.key">
+          <div v-if="store.social[link.key]">
+            <i v-if="link.key !== 'tiktok'" :class="[`ri-${link.icon}`]"></i>
+            <img v-else class="inline" width="18px" src="@/assets/tik-tok.png" />
+            <a target="_blank" :href="store.social[link.key]">{{ link.name }}</a>
+          </div>
+        </li>
+      </ul>
+
+      <ul>
+        <p class="font-bold">يعمل في</p>
+         <li v-for="link in store.workOn" :key="link">
+           {{link}}
         </li>
       </ul>
     </section>
@@ -23,7 +32,7 @@ export default {
   components: { productsPage },
   data() {
     return {
-      social: [
+      socialr: [
         { key: 'fb', name: 'فيس بوك', icon: 'facebook-circle-line' },
         { key: 'insta', name: 'انستجرام', icon: 'instagram-line' },
         { key: 'snap', name: 'سناب شات', icon: 'snapchat-line' },

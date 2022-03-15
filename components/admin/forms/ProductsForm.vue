@@ -9,8 +9,8 @@
       <div class="grid grid-cols-1 lg:grid-cols-3">
         <client-only>
           <FormulateInput
-            :value="oldProduct ? oldProduct.images : [{}]"
             :key="oldProduct ? oldProduct.images : 'this is the key'"
+            :value="oldProduct ? oldProduct.images : [{}]"
             type="image"
             name="files"
             label="صور المنتج"
@@ -53,18 +53,19 @@
           validation="required"
         />
 
-        <div class="md:col-span-3 my-3">
-          <div>
-            <FormulateInput
-              name="selectedCategories"
-              type="select"
-              :options="categories"
-              label="الفئات"
-              placeholder="اختر فئة المنتج"
-              validation="required"
-            />
-          </div>
-        </div>
+        <FormulateInput
+          v-if="store && store.workOn"
+          name="selectedCategories"
+          type="select"
+          :options="
+            store.workOn.map((x) => {
+              return { label: x.name, value: x._id }
+            })
+          "
+          label="الفئات"
+          placeholder="اختر فئة المنتج"
+          validation="required"
+        />
 
         <FormulateInput
           name="amountType"
@@ -139,6 +140,7 @@ export default Vue.extend({
   },
   data() {
     return {
+      store: {},
       images: [] as string[],
       product: {} as IProduct,
       formValues: {} as any,
@@ -177,12 +179,19 @@ export default Vue.extend({
   },
   mounted() {
     this.getCategories()
+    this.getStore()
   },
   methods: {
     uploader,
     reset() {
       this.formValues = {}
       this.product = {} as IProduct
+    },
+    async getStore() {
+      const res = await this.$axios.get(
+        `/stores/one/${this.$route.params.storeName}`
+      )
+      this.store = res.data
     },
     createProduct(data) {
       const images: string[] = []
@@ -243,5 +252,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
