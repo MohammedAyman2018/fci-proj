@@ -54,7 +54,6 @@
         />
 
         <div class="md:col-span-3 my-3">
-          <h4 class="text-lg my-3">الفئات</h4>
           <div>
             <FormulateInput
               name="selectedCategories"
