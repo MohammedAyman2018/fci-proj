@@ -73,7 +73,6 @@
     <vue-good-table
       :columns="[
         { label: 'اسم الفئة', field: 'name' },
-        { label: 'تاريخ الانشاء', field: 'createdAt' },
         { label: 'العمليات المتاحة', field: 'operations' },
       ]"
       :rows="categories"
@@ -82,11 +81,8 @@
       max-height="auto"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'createdAt'">
-          <span>{{ props.row.createdAt.substr(0, 10) }}</span>
-        </span>
-        <span v-else-if="props.column.field == 'operations'">
-          <div data-tip="تعديل" class="tooltip">
+        <span v-if="props.column.field == 'operations'" class="flex">
+          <div data-tip="تعديل" class="tooltip mx-1">
             <button
               class="btn btn-warning btn-square btn-xs"
               @click="openModal('edit-category', props.row)"
@@ -127,6 +123,11 @@ export default Vue.extend({
       edit: true,
     }
   },
+  head (){
+    return {
+      title: 'الفئات'
+    }
+  },
   computed: {
     valid(): boolean {
       return !!this.category.name
@@ -138,7 +139,7 @@ export default Vue.extend({
   methods: {
     async getCategories() {
       this.categories = await this.$axios
-        .$get(`/categories?storeName=${this.$route.params.storeName}`)
+        .$get(`/categories`)
         .catch((err) => {
           this.$notification('حدث خطأ ما', err.response.data.msg)
         })
@@ -149,10 +150,7 @@ export default Vue.extend({
     },
     async addCategory() {
       try {
-        await this.$axios.$post('/categories', {
-          ...this.category,
-          storeName: this.$route.params.storeName,
-        })
+        await this.$axios.$post('/categories', this.category)
         await this.getCategories()
         this.closeModal('edit-category')
         this.$notification('نجح الطلب', 'تمت إضافة الفئة بنجاح')
