@@ -43,10 +43,10 @@
         <span v-if="props.column.field == 'createdAt'">
           <span>{{ props.row.createdAt.substr(0, 10) }}</span>
         </span>
-        <span v-if="props.column.field == 'email'">
+        <span v-else-if="props.column.field == 'email'">
           <span>{{ props.row.contacts.email }}</span>
         </span>
-        <span v-if="props.column.field == 'phone'">
+        <span v-else-if="props.column.field == 'phone'">
           <span>{{ props.row.contacts.phone }}</span>
         </span>
 
@@ -56,7 +56,7 @@
             class="tooltip mx-1"
             @click="
               $router.push(
-                `/dashboard/${props.row.title}/edit/${props.row._id}`
+                `/dashboard/${props.row.title}/edit`
               )
             "
           >
