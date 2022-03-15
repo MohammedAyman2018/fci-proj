@@ -19,13 +19,16 @@
         placeholder="وصف المتجر"
         validation="required"
       />
-      <FormulateInput
-        v-model="store.location"
-        type="text"
-        name="location"
-        label="عنوان المتجر"
-        placeholder="عنوان المتجر"
-      />
+                    <FormulateInput
+                v-model="store.location"
+                name="location"
+                type="select"
+                :options="locations"
+                label="عنوان المتجر"
+                placeholder="عنوان المتجر"
+                validation="required"
+              />
+
     </div>
 
     <h3 class="text-xl mb-3">وسائل التواصل</h3>
@@ -165,6 +168,7 @@ export default Vue.extend({
   layout: 'admin',
   data() {
     return {
+      locations: [],
       categories: [],
       store: {
         contacts: {},
@@ -185,6 +189,8 @@ export default Vue.extend({
       )
       const categories = await this.$axios.get('/categories')
       this.categories = categories.data.map(x => x.name)
+      const locations = await this.$axios.get('/locations')
+      this.locations = locations.data.map(x => { return { label: x.name, value: x._id  } })
       this.store = res.data
     } catch (error) {
       this.$notification('حدث خطأ ما', error)
