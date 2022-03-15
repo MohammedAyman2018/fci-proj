@@ -19,16 +19,15 @@
         placeholder="وصف المتجر"
         validation="required"
       />
-                    <FormulateInput
-                v-model="store.location"
-                name="location"
-                type="select"
-                :options="locations"
-                label="عنوان المتجر"
-                placeholder="عنوان المتجر"
-                validation="required"
-              />
-
+      <FormulateInput
+        v-model="store.location"
+        name="location"
+        type="select"
+        :options="locations"
+        label="عنوان المتجر"
+        placeholder="عنوان المتجر"
+        validation="required"
+      />
     </div>
 
     <h3 class="text-xl mb-3">وسائل التواصل</h3>
@@ -42,7 +41,7 @@
       />
 
       <FormulateInput
-        v-model="store.worksOn"
+        v-model="store.workOn"
         :options="categories"
         type="checkbox"
         label="ما المجالات التي تعمل بها"
@@ -149,7 +148,7 @@
       />
     </div>
 
-    <button class="btn btn-primary" @click="editStore">تعديل</button>
+    <button class="btn btn-primary mb-36" @click="editStore">تعديل</button>
 
     <!-- <GmapMap
       :center="{ lat: 10, lng: 10 }"
@@ -188,9 +187,11 @@ export default Vue.extend({
         `/stores/one/admin/${this.$route.params.storeName}`
       )
       const categories = await this.$axios.get('/categories')
-      this.categories = categories.data.map(x => x.name)
+      this.categories = categories.data.map((x) => x.name)
       const locations = await this.$axios.get('/locations')
-      this.locations = locations.data.map(x => { return { label: x.name, value: x._id  } })
+      this.locations = locations.data.map((x) => {
+        return { label: x.name, value: x._id }
+      })
       this.store = res.data
     } catch (error) {
       this.$notification('حدث خطأ ما', error)
@@ -211,5 +212,4 @@ export default Vue.extend({
 })
 </script>
 
-<style>
-</style>
+<style></style>
