@@ -13,7 +13,7 @@ export const actions = {
   },
 }
 
-export const store = {
+export const mutations = {
   setStore(state, store) {
     state.store = store
   }
