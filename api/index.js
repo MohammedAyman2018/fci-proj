@@ -5,11 +5,11 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
-const swaggerUi = require('swagger-ui-express');
-const cors = require('cors');
+// const swaggerUi = require('swagger-ui-express');
+// const cors = require('cors');
 const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
-const swaggerDocument = require('./swagger.json');
+// const swaggerDocument = require('./swagger.json');
 
 require('dotenv')
 // Create express instance
@@ -22,11 +22,11 @@ app.use(helmet())
 app.use(logger('dev'))
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
-app.use(cors({
-  origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
-}));
+// app.use(cors({
+//   origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
+// }));
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // connect to db
 async function db() {
