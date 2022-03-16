@@ -11,6 +11,7 @@ const {
   getProductsByCategory,
   getAllProductsForAllStores,
   getProductsByCategoryForAll,
+  getProductsSorted,
   rateProduct
 } = require('./controller')
 
@@ -29,6 +30,7 @@ router
   .patch(auth, editProduct)
   .delete(auth, deleteProduct)
 
+router.get('/products/filter/home', getProductsSorted)
 router.get('/products/filter/all-category/:categoryName', getProductsByCategoryForAll)
 router.get('/products/filter/category', getProductsByCategory)
 router.get('/products/filter/name', searchProductsName)

@@ -2,6 +2,25 @@ import { getDeviceType, productProjection } from '../utils'
 
 const { Product, validate } = require('./model')
 
+export const getProductsSorted = async (req, res) => {
+  try {
+    const query = getDeviceType(req, res)
+    const sortInReq = req.query.sort
+    if (!req.query.storeName) return res.status(400).json({ msg: 'Provide Store Name query' })
+    if (!sortInReq) return res.status(400).json({ msg: 'Provide sort query' })
+    let sortQuery
+    if (sortInReq === 'mostViewedProducts') { sortQuery = { views: -1 } }
+    else if (sortInReq === 'mostOrderedProducts') { sortQuery = { ordered: -1 } }
+    else if (sortInReq === 'mostRatedProducts') { sortQuery = { actualRating: -1 } }
+    const products = await Product.find(
+      { ...query, storeName: req.query.storeName }, productProjection
+    ).sort(sortQuery).populate('category')
+    res.status(200).json(products)
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
+
 export const getAllProducts = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
@@ -108,7 +127,7 @@ export const getProductsByCategory = async (req, res) => {
     const products = await Product.find(
       { ...query, category: req.query.categoryId },
       productProjection
-    )
+    ).populate('category')
     res.status(200).json({ products })
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -128,7 +147,7 @@ export const searchProductsName = async (req, res) => {
         ],
       },
       productProjection
-    )
+    ).populate('category')
     return res.status(200).json({ products })
   } catch (err) {
     res.status(400).json({ msg: err.message })
