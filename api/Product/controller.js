@@ -5,7 +5,10 @@ const { Product, validate } = require('./model')
 export const getAllProducts = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    const products = await Product.find({ ...query, storeName: req.query.storeName }, req.get('admin') ? {} : productProjection).populate('category')
+    const products = await Product.find(
+      { ...query, storeName: req.query.storeName },
+      req.get('admin') ? {} : productProjection
+    ).populate('category')
     res.status(200).json(products)
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -15,18 +18,21 @@ export const getAllProducts = async (req, res) => {
 export const getAllProductsForAllStores = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    const products = await Product.find(query, productProjection).populate('category')
+    const products = await Product.find(query, productProjection).populate(
+      'category'
+    )
     res.status(200).json(products)
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
 }
 
-
 export const addProduct = async (req, res) => {
   try {
     const { error } = validate(req.body)
-    if (error) { return res.status(400).send({ msg: error.details[0].message }) }
+    if (error) {
+      return res.status(400).send({ msg: error.details[0].message })
+    }
     const product = await Product.create(req.body)
     res.status(200).json(product)
   } catch (err) {
@@ -64,8 +70,33 @@ export const deleteProduct = async (req, res) => {
 export const getProductsByCategoryForAll = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    const products = await Product.find({ ...query, 'category.name': req.params.categoryName }, productProjection)
-    res.status(200).json({ products })
+    const products = await Product.aggregate([
+      {
+        $lookup: {
+          from: 'categories',
+          localField: 'category',
+          foreignField: '_id',
+          as: 'category',
+        },
+      },
+      {
+        $match: {
+          'category.name': req.params.categoryName,
+          ...query
+        },
+      },
+      {
+        $unwind: {
+          path: '$category',
+          includeArrayIndex: 'name',
+          preserveNullAndEmptyArrays: false
+        }
+      },
+      {
+        $project: productProjection
+      }
+    ])
+    res.status(200).json(products)
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
@@ -74,7 +105,10 @@ export const getProductsByCategoryForAll = async (req, res) => {
 export const getProductsByCategory = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    const products = await Product.find({ ...query, category: req.query.categoryId }, productProjection)
+    const products = await Product.find(
+      { ...query, category: req.query.categoryId },
+      productProjection
+    )
     res.status(200).json({ products })
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -85,13 +119,16 @@ export const searchProductsName = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
     const text = req.query.text.replace(/-/g, ' ')
-    const products = await Product.find({
-      ...query,
-      $or: [
-        { 'title': { $regex: text, $options: 'i' } },
-        { 'desc': { $regex: text, $options: 'i' } },
-      ]
-    }, productProjection)
+    const products = await Product.find(
+      {
+        ...query,
+        $or: [
+          { title: { $regex: text, $options: 'i' } },
+          { desc: { $regex: text, $options: 'i' } },
+        ],
+      },
+      productProjection
+    )
     return res.status(200).json({ products })
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -103,7 +140,9 @@ export const rateProduct = async (req, res) => {
     const product = await Product.findById(req.params.id)
     if (req.body.rate > 5) req.body.rate = 5
     if (product) {
-      let userRatedBefore = product.rating.find(rate => rate.userId === req.body.userId)
+      let userRatedBefore = product.rating.find(
+        (rate) => rate.userId === req.body.userId
+      )
       if (userRatedBefore) {
         userRatedBefore.rate = req.body.rate
       } else {
@@ -121,8 +160,8 @@ export const rateProduct = async (req, res) => {
 
 function calcRating(rating) {
   let sd = 0
-  rating.forEach(el => {
+  rating.forEach((el) => {
     sd += el.rate
-  });
+  })
   return sd / rating.length
 }

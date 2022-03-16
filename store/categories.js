@@ -16,9 +16,9 @@ export const actions = {
       // TODO: Add error
     }
   },
-  async getStoreCategory({ commit }, storeName) {
+  async getStoreCategory({ commit }) {
     try {
-      const res = await this.$axios.get(`/categories?${storeName}`)
+      const res = await this.$axios.get(`/categories`)
       commit('setCategories', res.data)
     } catch (error) {
       // TODO: Add error
