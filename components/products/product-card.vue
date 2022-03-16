@@ -31,7 +31,7 @@
 
       <div class="product-card--info-footer">
         <div>
-          <nuxt-link to="/category">
+          <nuxt-link :to="`/store/category/${product.category.name}`">
             {{ product.category.name }}
           </nuxt-link>
           <p>{{ product.price }} جنيه</p>
