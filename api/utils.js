@@ -4,5 +4,20 @@ export function getDeviceType(req, res) {
   let query
   if (clientType === 'app') query = { 'visible.app': true }
   else if (clientType === 'web') query = { 'visible.store': true }
+  else return res.status(400).json({ msg: 'Provide Valid Clint Type' })
   return query
+}
+
+export const productProjection = {
+  visible: 0,
+  rating: 0,
+  updatedAt: 0,
+  createdAt: 0,
+  desc: 0,
+  'amount.alarm': 0,
+  'amount.alarmAmount': 0,
+  'amount._id': 0,
+  views: 0,
+  __v: 0,
+  ordered: 0,
 }
