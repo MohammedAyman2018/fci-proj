@@ -1,20 +1,7 @@
-import { getDeviceType } from '../utils'
+import { getDeviceType, productProjection } from '../utils'
 
 const { Product, validate } = require('./model')
 
-const productProjection = {
-  visible: 0,
-  rating: 0,
-  updatedAt: 0,
-  createdAt: 0,
-  desc: 0,
-  'amount.alarm': 0,
-  'amount.alarmAmount': 0,
-  'amount._id': 0,
-  views: 0,
-  __v: 0,
-  ordered: 0,
-}
 export const getAllProducts = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
@@ -74,10 +61,20 @@ export const deleteProduct = async (req, res) => {
   }
 }
 
+export const getProductsByCategoryForAll = async (req, res) => {
+  try {
+    const query = getDeviceType(req, res)
+    const products = await Product.find({ ...query, 'category.name': req.params.categoryName }, productProjection)
+    res.status(200).json({ products })
+  } catch (err) {
+    res.status(400).json({ msg: err.message })
+  }
+}
+
 export const getProductsByCategory = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    const products = await Product.find({ ...query, category: req.query.categoryId })
+    const products = await Product.find({ ...query, category: req.query.categoryId }, productProjection)
     res.status(200).json({ products })
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -94,8 +91,8 @@ export const searchProductsName = async (req, res) => {
         { 'title': { $regex: text, $options: 'i' } },
         { 'desc': { $regex: text, $options: 'i' } },
       ]
-    })
-    res.status(200).json({ products })
+    }, productProjection)
+    return res.status(200).json({ products })
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
@@ -123,7 +120,6 @@ export const rateProduct = async (req, res) => {
 }
 
 function calcRating(rating) {
-  console.log(rating)
   let sd = 0
   rating.forEach(el => {
     sd += el.rate
