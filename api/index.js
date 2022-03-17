@@ -5,11 +5,10 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
-// const swaggerUi = require('swagger-ui-express');
 // const cors = require('cors');
+const { token } = require('morgan')
 const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
-// const swaggerDocument = require('./swagger.json');
 
 require('dotenv')
 // Create express instance
@@ -19,14 +18,21 @@ const app = express()
 app.use(xss())
 app.use(mongoSanitize())
 app.use(helmet())
-app.use(logger('dev'))
+app.use(logger(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    token(req.body),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+}))
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
 // app.use(cors({
 //   origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
 // }));
-
-// app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // connect to db
 async function db() {
@@ -47,6 +53,7 @@ const stores = require('./Store/routes')
 const products = require('./Product/routes')
 const orders = require('./Orders/routes')
 const locations = require('./Locations/routes')
+const ContactUs = require('./ContactUs/routes')
 const home = require('./homePage')
 // Import API Routes
 app.use(users)
@@ -56,6 +63,7 @@ app.use(products)
 app.use(orders)
 app.use(locations)
 app.use(home)
+app.use(ContactUs)
 
 // Export express app
 module.exports = app
