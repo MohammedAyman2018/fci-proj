@@ -72,6 +72,7 @@ export default {
     'nuxt-vuex-localstorage',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
+    '@nuxtjs/toast',
     '@nuxtjs/auth-next'
   ],
 
