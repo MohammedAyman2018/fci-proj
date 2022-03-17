@@ -3,7 +3,7 @@
     <div class="container px-5 py-24 mx-auto">
       <div class="flex flex-col text-center w-full mb-12">
         <h1
-          class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900"
+          class="sm:text-3xl text-5xl font-black title-font mb-4 text-gray-900"
         >
           تواصل معنا
         </h1>
@@ -11,46 +11,54 @@
           خدمة عملاء متاحة 24 ساعة للرد على جميع استفساراتك
         </p>
       </div>
+          <FormulateForm v-slot="{ isLoading }" @submit="submitHandler">
+
       <div class="lg:w-1/2 md:w-2/3 mx-auto">
         <div class="flex flex-wrap -m-2">
           <div class="p-2 w-1/2">
             <div class="relative">
               <FormulateInput
-                name="اسمك"
+                name="name"
                 label="الاسم"
                 placeholder="ادخل اسمك"
                 validation="required"
               />
             </div>
           </div>
-          <div class="p-2 w-1/2">
-            <div class="relative">
+            <div class="p-2 w-1/2">
+              <div class="relative">
+                <FormulateInput
+                  name="email"
+                  label="البريد الالكتروني"
+                  placeholder="ادخل البريد الالكتروني"
+                  validation="required|email"
+                />
+              </div>
+            </div>
+            <div class="p-2 w-full">
+              <div class="relative">
+                <FormulateInput
+                  type="textarea"
+                  name="msg"
+                  label="رسالتك"
+                  placeholder="ادخل رسالتك"
+                  validation="required"
+                />
+              </div>
+            </div>
+            <div class="p-2 w-full">
               <FormulateInput
-                name="البريد الالكتروني"
-                label="البريد الالكتروني"
-                placeholder="ادخل البريد الالكتروني"
-                validation="required|email"
+                :wrapper-class="['w-full']"
+                :input-class="['btn-success', 'w-full', 'btn']"
+                :disabled="isLoading"
+                type="submit"
+                label="إرسال"
               />
             </div>
-          </div>
-          <div class="p-2 w-full">
-            <div class="relative">
-              <FormulateInput
-                type="textarea"
-                name="رسالتك"
-                label="رسالتك"
-                placeholder="ادخل رسالتك"
-                validation="required"
-              />
-            </div>
-          </div>
-          <div class="p-2 w-full">
-            <button class="btn btn-primary">إرسال</button>
-          </div>
           <div
             class="p-2 w-full pt-8 mt-8 border-t border-gray-200 text-center"
           >
-            <a class="text-indigo-500">example@email.com</a>
+            <a class="text-indigo-500">el- souq@elsouq.com</a>
             <p class="leading-normal my-5">49 شارع المهندسين مصر الجديدة</p>
             <span class="inline-flex">
               <a class="text-gray-500">
@@ -115,6 +123,8 @@
           </div>
         </div>
       </div>
+          </FormulateForm>
+
     </div>
   </section>
 </template>
@@ -122,8 +132,19 @@
 <script lang="ts">
 import Vue from 'vue'
 
-export default Vue.extend({})
+export default Vue.extend({
+  methods: {
+    async submitHandler (data) {
+      try {
+        const res = await this.$axios.$post('/contactUs', data)
+        this.$store.dispatch('showToast', { message: res.msg })
+
+      } catch (error) {
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    }
+  }
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
