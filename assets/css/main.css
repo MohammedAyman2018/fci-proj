@@ -90,3 +90,13 @@ textarea {
 button.w-full {
   width: 100% !important;
 }
+
+.carousel-wrapper {
+  padding: 40px;
+}
+.img-wrapper img {
+  margin: auto;
+  width: 200px;
+  height: 100px;
+  background-image: linear-gradient(gray 100%, transparent 0);
+}

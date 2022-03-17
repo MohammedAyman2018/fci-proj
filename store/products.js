@@ -17,6 +17,14 @@ export const actions = {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
+  async getProduct({ dispatch }, id) {
+    try {
+      const res = await this.$axios.get(`/products/${id}`)
+      return res.data
+    } catch (error) {
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
+    }
+  },
   async getCategoryProducts({ dispatch, commit }, categoryName) {
     try {
       const res = await this.$axios.get(`/products/filter/all-category/${categoryName}`)

@@ -21,7 +21,7 @@
     </div>
     <section class="product-card--info">
       <div class="product-card--info--header">
-        <h2>{{ product.name }}</h2>
+        <h2 class="cursor-pointer" @click="goToProduct">{{ product.name }}</h2>
         <nuxt-link :to="`/store/${product.storeName}/products`">
           <i class="ri-store-fill ri-1x" />
           {{ product.storeName }}
@@ -107,9 +107,18 @@ export default Vue.extend({
     removeFromCart(item) {
       this.$store.commit('localStorage/removeFromCart', item)
     },
+    goToProduct() {
+      this.$store.commit('localStorage/setSingleProductId', this.product._id)
+      this.$router.push(
+        `/store/product/${
+          this.product.url && this.product.url.length > 0
+            ? this.product.url
+            : this.product.name
+        }`
+      )
+    },
   },
 })
 </script>
 
-<style>
-</style>
+<style></style>

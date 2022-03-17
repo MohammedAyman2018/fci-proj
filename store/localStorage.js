@@ -1,9 +1,13 @@
 // store/localStorage.js
 export const state = () => ({
-  cart: []
+  cart: [],
+  singleProductId: '',
 })
 
 export const mutations = {
+  setSingleProductId(state, id) {
+    state.singleProductId = id
+  },
   addToCart(state, item) {
     state.cart.push(item)
   },

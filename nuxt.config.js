@@ -45,6 +45,7 @@ export default {
     { src: '~/plugins/notif', ssr: false },
     '~/plugins/v-tooltip',
     { src: '~/plugins/vue-google-maps', ssr: false },
+    { src: './plugins/vue-slick-carousel.js' },
     '~/plugins/Autocomplete',
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js'

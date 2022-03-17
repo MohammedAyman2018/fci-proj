@@ -27,6 +27,7 @@ export const actions = {
 }
 
 export const mutations = {
+
   setStore(state, store) {
     state.store = store
   }
