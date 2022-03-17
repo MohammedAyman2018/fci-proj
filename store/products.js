@@ -8,43 +8,43 @@ export const actions = {
     commit('setDisplayedProducts', [])
     commit('setProducts', [])
   },
-  async getProducts({ commit }) {
+  async getProducts({ dispatch, commit }) {
     try {
       const res = await this.$axios.get('/products/all/stores')
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
     } catch (error) {
-      // TODO: Add error
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
-  async getCategoryProducts({ commit }, categoryName) {
+  async getCategoryProducts({ dispatch, commit }, categoryName) {
     try {
       const res = await this.$axios.get(`/products/filter/all-category/${categoryName}`)
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
     } catch (error) {
-      // TODO: Add error
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
-  async getStoreProducts({ commit }, storeName) {
+  async getStoreProducts({ dispatch, commit }, storeName) {
     try {
       const res = await this.$axios.get(`/products?storeName=${storeName}`)
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
     } catch (error) {
-      // TODO: Add error
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
-  async addAndRemoveFromFav(_, productId) {
+  async addAndRemoveFromFav({ dispatch }, productId) {
     try {
       if (this.$auth.loggedIn) {
         await this.$axios.post('/users/fav/', { productId })
         this.$auth.fetchUser()
       } else {
-        alert('سجل دخول أولاً')
+        dispatch('showToast', { message: 'سجل دخول أولاً', type: 'error' }, { root: true })
       }
     } catch (error) {
-
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
   filterProducts({ commit, state }, categories) {
