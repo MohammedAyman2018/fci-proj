@@ -59,6 +59,23 @@ export const mutations = {
   setDisplayedProducts(state, products) {
     state.displayedProducts = products
   },
+  sortProducts(state, sortName) {
+    if (sortName === 'priceFromLowToHigh') {
+      state.displayedProducts.sort((a, b) => a.price - b.price)
+    } else if (sortName === 'priceFromHighToLow') {
+      state.displayedProducts.sort((a, b) => b.price - a.price)
+    } else if (sortName === 'rateFromLowToHigh') {
+      state.displayedProducts.sort((a, b) => a.actualRating - b.actualRating)
+    } else if (sortName === 'rateFromHighToLow') {
+      state.displayedProducts.sort((a, b) => b.actualRating - a.actualRating)
+    }
+  },
+  filterByStore(state, storeName) {
+    state.displayedProducts = storeName === 'all' ? state.products.filter(prod => prod.storeName === storeName) : state.products
+  },
+  // filterByName(state, name) {
+  //   state.displayedProducts = name.length > 0 ? state.displayedProducts.filter(prod => prod.name.includes(name)) : state.displayedProducts
+  // },
   setProducts(state, products) {
     state.products = products
   },

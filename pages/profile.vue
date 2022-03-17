@@ -110,7 +110,7 @@ export default Vue.extend({
       this.fav = res[0].data
       this.orders = res[1].data
     } catch (error) {
-      console.log(error)
+      this.$store.dispatch('showToast', { message: error, type: 'error' })
     }
   },
   methods: {
