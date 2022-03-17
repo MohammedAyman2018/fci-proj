@@ -11,7 +11,7 @@
       lg:px-8 lg:py-20
     "
   >
-    <h2 class="text-center text-6xl font-extrabold mb-14">إحصائيات</h2>
+    <h2 class="text-center text-4xl font-extrabold mb-14">إحصائيات</h2>
     <div class="grid gap-10 row-gap-8 lg:grid-cols-3">
       <div v-for="card in cards" :key="card.number">
         <div class="flex">
