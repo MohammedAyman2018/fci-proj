@@ -39,7 +39,7 @@
         <div>
           <div>
             <i class="ri-star-fill ri-1x text-yellow-500"></i>
-            <span>{{ product.rate || 0 }}</span>
+            <span>{{ product.actualRating || 0 }}</span>
           </div>
           <button
             v-if="!inCart(product)"
