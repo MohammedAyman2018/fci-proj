@@ -5,8 +5,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
-// const cors = require('cors');
-const { token } = require('morgan')
+const cors = require('cors');
 const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
 
@@ -18,21 +17,13 @@ const app = express()
 app.use(xss())
 app.use(mongoSanitize())
 app.use(helmet())
-app.use(logger(function (tokens, req, res) {
-  return [
-    tokens.method(req, res),
-    tokens.url(req, res),
-    tokens.status(req, res),
-    token(req.body),
-    tokens.res(req, res, 'content-length'), '-',
-    tokens['response-time'](req, res), 'ms'
-  ].join(' ')
-}))
+app.use(logger('dev'))
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
-// app.use(cors({
-//   origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
-// }));
+app.use(cors({
+  // origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
+  origin: '*'
+}));
 
 // connect to db
 async function db() {
