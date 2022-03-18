@@ -1,3 +1,4 @@
+const { Product } = require('../Product/model')
 const { User } = require('../Users/model')
 const { Order, validate } = require('./model')
 
