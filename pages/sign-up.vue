@@ -5,8 +5,8 @@
         class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
       >
         <div class="flex flex-col md:flex-row">
-          <div class="h-32 md:h-auto md:w-1/2">
-             <video autoplay loop="true" width="100%" height="100%">
+          <div class="md:h-32 md:w-1/2">
+            <video autoplay loop="true" width="100%" height="100%">
               <source src="@/assets/videos/login.mp4" type="video/mp4" />
 
               Sorry, your browser doesn't support embedded videos.
@@ -17,7 +17,7 @@
               <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
                 انشئ حساب
               </h1>
-              <FormulateForm @submit="createUser" #default="{ isLoading }">
+              <FormulateForm v-slot="{ isLoading }" @submit="createUser">
                 <FormulateInput
                   v-model="user.name"
                   name="اسمك"
@@ -88,6 +88,7 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  name: 'SignUpUser',
   data() {
     return {
       user: {
@@ -97,6 +98,11 @@ export default Vue.extend({
         email: '',
         password: '',
       },
+    }
+  },
+  head() {
+    return {
+      title: 'إنشاء حساب',
     }
   },
   computed: {
@@ -122,4 +128,3 @@ export default Vue.extend({
   },
 })
 </script>
-
