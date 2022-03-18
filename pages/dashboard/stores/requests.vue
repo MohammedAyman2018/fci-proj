@@ -36,7 +36,7 @@
         </div>
       </div>
       <div class="flex justify-between items-center text-xs">
-        <p>العنوان: {{ oneUser.location }}</p>
+        <p>العنوان: {{ oneUser.location.name }}</p>
       </div>
     </div>
 
@@ -95,7 +95,10 @@ export default Vue.extend({
   methods: {
     async getStores() {
       const res = await this.$axios.$get('/stores').catch((error: any) => {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       })
       this.stores = res
       this.filter('waiting')
@@ -114,9 +117,15 @@ export default Vue.extend({
         })
         await this.getStores()
         this.closeModal()
-        this.$notification('نجح الطلب', '')
+        this.$store.dispatch('showToast', {
+          message: 'نجح الطلب',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     filter(type: string): void {
@@ -140,5 +149,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

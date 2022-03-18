@@ -12,14 +12,14 @@ const { Store, validate } = require('./model')
  */
 exports.getAllStores = async (req, res) => {
   const query = req.query.approved ? { approved: Boolean(req.query.approved) } : {}
-  await Store.find(query).populate('workOn')
+  await Store.find(query).populate('workOn').populate('location')
     .then(stores => res.status(200).json(stores))
     .catch(err => res.status(400).json({ msg: err.message }))
 }
 
 exports.getStoreForEditAdmin = async (req, res) => {
   try {
-    const store = await Store.findOne({ title: req.params.storeName })
+    const store = await Store.findOne({ title: req.params.storeName }).populate('location')
     return res.status(200).json(store)
   } catch (error) {
     res.status(500).json({ msg: err.message, err })
@@ -40,7 +40,7 @@ exports.getStore = (req, res) => {
     otherLinks: 1,
     social: 1,
     workOn: 1,
-  }).populate('workOn')
+  }).populate('workOn').populate('location')
     .then(store => res.status(200).json(store))
     .catch(err => res.status(500).json({ msg: err.message, err }))
 }
