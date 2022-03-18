@@ -47,6 +47,8 @@ export const actions = {
     try {
       if (this.$auth.loggedIn) {
         await this.$axios.post('/users/fav/', { productId })
+        dispatch('showToast', { message: 'تم بنجاح', type: 'success' }, { root: true })
+
         this.$auth.fetchUser()
       } else {
         dispatch('showToast', { message: 'سجل دخول أولاً', type: 'error' }, { root: true })
@@ -79,7 +81,7 @@ export const mutations = {
     }
   },
   filterByStore(state, storeName) {
-    state.displayedProducts = storeName === 'all' ? state.products.filter(prod => prod.storeName === storeName) : state.products
+    state.displayedProducts = storeName !== 'all' ? state.products.filter(prod => prod.storeName === storeName) : state.products
   },
   // filterByName(state, name) {
   //   state.displayedProducts = name.length > 0 ? state.displayedProducts.filter(prod => prod.name.includes(name)) : state.displayedProducts

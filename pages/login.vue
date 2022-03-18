@@ -78,14 +78,19 @@ export default Vue.extend({
       try {
         await this.$auth.loginWith('local', { data: this.user })
         this.$router.push('/')
-        this.$notification('أهلا بك مجدداُ', 'تم تسجيل الدخول')
+        this.$store.dispatch('showToast', {
+          message: 'تم تسجيل الدخول',
+          type: 'success',
+        })
       } catch (err: any) {
-        this.$notification('حدث خطأ ما', err.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: err.response.data.msg,
+          type: 'error',
+        })
       }
     },
   },
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

@@ -16,9 +16,9 @@
       <div
         class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
       >
-        <div class="flex flex-col md:flex-row">
-          <div class="md:h-32 md:w-1/2 flex justify-center items-center">
-            <video autoplay preload loop="true" width="100%" height="100%">
+        <div class="flex items-center flex-col md:flex-row">
+          <div class="md:h-32 md:w-1/2">
+            <video autoplay loop="true" width="100%" height="100%">
               <source src="@/assets/videos/sign up.mp4" type="video/mp4" />
 
               Sorry, your browser doesn't support embedded videos.

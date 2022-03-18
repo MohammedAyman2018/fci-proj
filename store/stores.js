@@ -4,7 +4,7 @@ export const state = () => ({
 })
 
 export const actions = {
-  async getStores({ commit }) {
+  async getStores({ dispatch, commit }) {
     try {
       const res = await this.$axios.get(`/stores/clint/all?approved=true`)
       commit('setStores', res.data)
@@ -12,7 +12,7 @@ export const actions = {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
-  async getStore({ commit }, storeName) {
+  async getStore({ dispatch, commit }, storeName) {
     try {
       const res = await this.$axios.get(`/stores/one/${storeName}`)
       commit('setStore', res.data)

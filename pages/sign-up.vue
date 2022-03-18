@@ -119,10 +119,16 @@ export default Vue.extend({
     async createUser() {
       try {
         await this.$axios.$post('/users', this.user)
-        this.$notification('نجح الطلب', 'تم إنشاء الحساب بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم إنشاء الحساب بنجاح',
+          type: 'success',
+        })
         this.$router.push('/login')
       } catch (err: any) {
-        this.$notification('حدث خطأ ما', err.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: err.response.data.msg,
+          type: 'error',
+        })
       }
     },
   },

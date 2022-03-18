@@ -100,12 +100,20 @@ export default Vue.extend({
   methods: {
     addToCart(item) {
       this.$store.commit('localStorage/addToCart', { ...item, amount: 1 })
+      this.$store.dispatch('showToast', {
+        message: 'تمت الإضافة للسلة',
+        type: 'success',
+      })
     },
     addToFav(itemId) {
       this.$store.dispatch('products/addAndRemoveFromFav', itemId)
     },
     removeFromCart(item) {
       this.$store.commit('localStorage/removeFromCart', item)
+      this.$store.dispatch('showToast', {
+        message: 'تم الحذف من السلة',
+        type: 'success',
+      })
     },
     goToProduct() {
       this.$store.commit('localStorage/setSingleProductId', this.product._id)
