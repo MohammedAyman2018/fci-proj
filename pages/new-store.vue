@@ -17,7 +17,7 @@
         class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
       >
         <div class="flex flex-col md:flex-row">
-          <div class="h-32 md:h-auto md:w-1/2 flex justify-center items-center">
+          <div class="md:h-32 md:w-1/2 flex justify-center items-center">
             <video autoplay preload loop="true" width="100%" height="100%">
               <source src="@/assets/videos/sign up.mp4" type="video/mp4" />
 
@@ -42,18 +42,28 @@
                 />
 
                 <FormulateInput
+                  name="workOn"
+                  type="select"
+                  :options="categories"
+                  label="ما هو مجال عملك الأساسي"
+                  placeholder="اختر مجال عملك الرئيسي"
+                  validation="required"
+                />
+
+                <FormulateInput
                   type="textarea"
                   name="desc"
                   label="نبذة مختصرة عن المتجر"
                 />
-              <FormulateInput
-                name="location"
-                type="select"
-                :options="locations"
-                label="عنوان المتجر"
-                placeholder="عنوان المتجر"
-                validation="required"
-              />
+                <FormulateInput
+                  name="location"
+                  type="select"
+                  :options="locations"
+                  label="عنوان المتجر"
+                  placeholder="عنوان المتجر"
+                  validation="required"
+                />
+
                 <FormulateInput
                   type="image"
                   name="files"
@@ -107,6 +117,7 @@ export default Vue.extend({
   data() {
     return {
       showNotReviewedMessage: false,
+      categories: [] as any[],
       locations: [],
       theStore: {
         title: '',
@@ -118,9 +129,9 @@ export default Vue.extend({
       storeEdit: false,
     }
   },
-  head () {
+  head() {
     return {
-      title: 'إنشئ متجرك'
+      title: 'إنشئ متجرك',
     }
   },
   computed: {
@@ -138,17 +149,19 @@ export default Vue.extend({
     },
   },
   async mounted() {
-
     if (this.$auth.loggedIn) {
       const locations = await this.$axios.get('/locations')
-    this.locations = locations.data.map(x => { return { label: x.name, value: x._id  } })
+      this.getCategories()
+      this.locations = locations.data.map((x) => {
+        return { label: x.name, value: x._id }
+      })
       const validateStore: IStore = await this.$axios.$get(
         '/stores/check-if-validate'
       )
       if (validateStore === null) return
       if (validateStore.reviewed && validateStore.approved) {
         this.theStore = validateStore
-        this.$store.commit('setStore', validateStore)
+        this.$store.commit('stores/setStore', validateStore)
         // TODO: refresh token and get user again
         this.storeSuccess = true
       } else if (validateStore.reviewed && !validateStore.approved) {
@@ -158,10 +171,17 @@ export default Vue.extend({
         this.showNotReviewedMessage = true
       }
     }
-
   },
   methods: {
     uploader,
+    async getCategories() {
+      this.categories = await this.$axios.$get('/categories').catch((err) => {
+        this.$store.dispatch('showToast', { message: err, type: 'error' })
+      })
+      this.categories = this.categories.map((cat: any) => {
+        return { label: cat.name, value: cat._id }
+      })
+    },
     async createStore(data) {
       const files: string[] = []
       data.files.forEach((file: { url: string }[]) => files.push(file[0].url))
@@ -170,13 +190,20 @@ export default Vue.extend({
           desc: data.desc,
           files,
           location: data.location,
+          workOn: [data.workOn],
           title: data.title,
           owner: this.$auth.user!._id,
         })
         window.location.reload()
-        this.$notification('نجح الطلب', 'تم إنشاء الحساب بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم استقبال طلبك بنجاح',
+          type: 'success',
+        })
       } catch (err: any) {
-        this.$notification('حدث خطأ ما', err.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: err.response.data.msg,
+          type: 'error',
+        })
       }
     },
   },
