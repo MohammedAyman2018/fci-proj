@@ -6,8 +6,7 @@ const {
   addCategory,
   getOneCategory,
   editCategory,
-  deleteCategory,
-  getAllCategoriesForAllStores
+  deleteCategory
 } = require('./controller')
 
 const router = Router()
@@ -23,6 +22,5 @@ router
   .patch(auth, editCategory)
   .delete(auth, deleteCategory)
 
-router.get('/categories/all/stores', getAllCategoriesForAllStores)
 
 module.exports = router
