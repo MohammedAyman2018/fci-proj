@@ -9,8 +9,15 @@
           <li v-for="link in socialr" :key="link.key">
             <div v-if="store.social[link.key]">
               <i v-if="link.key !== 'tiktok'" :class="[`ri-${link.icon}`]"></i>
-              <img v-else class="inline" width="18px" src="@/assets/tik-tok.png" />
-              <a target="_blank" :href="store.social[link.key]">{{ link.name }}</a>
+              <img
+                v-else
+                class="inline"
+                width="18px"
+                src="@/assets/tik-tok.png"
+              />
+              <a target="_blank" :href="store.social[link.key]">{{
+                link.name
+              }}</a>
             </div>
           </li>
         </ul>
@@ -18,7 +25,9 @@
         <ul>
           <p class="font-bold">يعمل في</p>
           <li v-for="link in store.workOn" :key="link">
-            <nuxt-link :to="`/store/category/${link.name}`">{{ link.name }}</nuxt-link>
+            <nuxt-link :to="`/store/category/${link.name}`">{{
+              link.name
+            }}</nuxt-link>
           </li>
         </ul>
       </div>
@@ -59,21 +68,21 @@ export default {
   async beforeMount() {
     try {
       await this.getStore(this.$route.params.storeName)
-      await this.getStoreProducts(this.$route.params.storeName)
       await this.getStoreCategory(this.$route.params.storeName)
     } catch (error) {
-      console.log(error)
+      this.$store.dispatch('showToast', {
+        message: error.response.data.msg,
+        type: 'error',
+      })
     }
   },
   methods: {
     ...mapActions({
       getStore: 'stores/getStore',
-      getStoreProducts: 'products/getStoreProducts',
       getStoreCategory: 'categories/getStoreCategory',
     }),
   },
 }
 </script>
 
-<style>
-</style>
+<style></style>

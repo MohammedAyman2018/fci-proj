@@ -15,7 +15,9 @@ export const actions = {
   async getStore({ dispatch, commit }, storeName) {
     try {
       const res = await this.$axios.get(`/stores/one/${storeName}`)
-      commit('setStore', res.data)
+      commit('setStore', res.data.store)
+      commit('products/setProducts', res.data.products, { root: true })
+      commit('products/setDisplayedProducts', res.data.products, { root: true })
     } catch (error) {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
