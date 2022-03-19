@@ -191,7 +191,7 @@ export default Vue.extend({
       const res = await this.$axios.get(
         `/stores/one/${this.$route.params.storeName}`
       )
-      this.store = res.data
+      this.store = res.data.store
     },
     createProduct(data) {
       const images: string[] = []
