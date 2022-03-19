@@ -23,6 +23,9 @@ export const addOrder = async (req, res) => {
       const item = req.body.items[i];
       const productInDb = await Product.findById(item._id)
       productInDb.ordered++
+      if (productInDb.amount && productInDb.amount.amountType === 'limited') {
+        productInDb.amount.available -= item.amount
+      }
       await productInDb.save()
     }
     await user.save()
