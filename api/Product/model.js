@@ -66,6 +66,10 @@ const Schema = new mongoose.Schema({
     type: [{ userId: String, rate: Number }],
   },
   actualRating: { type: Number, default: 0 },
+  inFav: {
+    type: Number,
+    default: 0
+  },
   ordered: {
     type: Number,
     default: 0

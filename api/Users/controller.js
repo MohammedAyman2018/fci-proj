@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const { Product } = require('../Product/model')
 const { User, validate } = require('./model')
 require('dotenv').config()
 
@@ -46,13 +47,19 @@ exports.addProductToFav = async (req, res) => {
   await User.findOne({ _id: req.user.id })
     .then(async (user) => {
       const idx = user.fav.indexOf(productId)
+      const product = await Product.findById(productId)
+      if (!product) return
       if (idx === -1) {
         await user.fav.push(productId)
+        product.inFav++
+        await product.save()
         await user.save()
           .then(result => res.status(201).json(result))
           .catch(err => res.status(400).json({ msg: err.message, err }))
       } else {
         await user.fav.splice(idx, 1)
+        product.inFav--
+        await product.save()
         await user.save()
           .then(result => res.status(200).json(result))
           .catch(err => res.status(400).json({ msg: err.message, err }))
