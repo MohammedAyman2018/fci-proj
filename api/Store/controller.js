@@ -1,4 +1,5 @@
 
+import { getDeviceType, productProjection, storeProjection } from '../utils'
 require('dotenv').config()
 const { User } = require('../Users/model')
 const { Order } = require('../Orders/model')
@@ -31,18 +32,22 @@ exports.getStoreForEditAdmin = async (req, res) => {
  * @route GET /api/stores/me
  * @access Private
 */
-exports.getStore = (req, res) => {
-  Store.findOne({ title: req.params.storeName }, {
-    contacts: 1,
-    createdAt: 1,
-    desc: 1,
-    location: 1,
-    otherLinks: 1,
-    social: 1,
-    workOn: 1,
-  }).populate('workOn').populate('location')
-    .then(store => res.status(200).json(store))
-    .catch(err => res.status(500).json({ msg: err.message, err }))
+exports.getStore = async (req, res) => {
+  try {
+    const store = await Store.findOne({ title: req.params.storeName }, storeProjection)
+    .populate('workOn')
+    .populate('location')
+
+    const query = getDeviceType(req, res)
+    const products = await Product.find(
+      { ...query, storeName: req.params.storeName },
+      req.get('admin') ? {} : productProjection
+    ).populate('category')
+
+    return res.status(200).json({store, products})
+  } catch (error) {
+    return res.status(500).json({ msg: err.message, err })
+  }
 }
 
 exports.validateStore = async (req, res) => {

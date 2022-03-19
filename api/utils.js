@@ -21,3 +21,13 @@ export const productProjection = {
   __v: 0,
   ordered: 0,
 }
+
+export const storeProjection = {
+  contacts: 1,
+  createdAt: 1,
+  desc: 1,
+  location: 1,
+  otherLinks: 1,
+  social: 1,
+  workOn: 1,
+}
