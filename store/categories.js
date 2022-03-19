@@ -10,10 +10,10 @@ export const actions = {
   },
   async getCategories({ commit }) {
     try {
-      const res = await this.$axios.get('/categories/all/stores')
+      const res = await this.$axios.get('/categories')
       commit('setCategories', res.data)
     } catch (error) {
-      // TODO: Add error
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
   async getStoreCategory({ commit }) {
@@ -21,7 +21,7 @@ export const actions = {
       const res = await this.$axios.get(`/categories`)
       commit('setCategories', res.data)
     } catch (error) {
-      // TODO: Add error
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
   setSelectedCategories({ commit, dispatch }, categories) {
