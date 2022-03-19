@@ -161,7 +161,13 @@ exports.deleteUser = async (req, res) => {
 
 exports.getUserFav = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id, { password: 0 }).populate('fav')
+    const user = await User.findById(req.user.id, { password: 0 }).populate({
+      path : 'fav',
+      populate : {
+        path : 'category'
+      }
+    })
+    console.log(user)
     res.status(200).json(user.fav)
   } catch (err) {
     res.status(400).json({ msg: err.message })
