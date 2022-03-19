@@ -35,37 +35,46 @@
         <h2 class="text-xl font-bold">أضف فئة</h2>
 
         <div class="mt-5">
-          <FormulateInput
-            v-model="category.name"
-            name="اسم الفئة"
-            label="اسم الفئة"
-            placeholder="اسم الفئة"
-            validation="required"
-          />
-          <div class="flex justify-between items-center mt-4 mb-12">
-            <button
-              v-if="!edit"
-              :disabled="!valid"
-              class="btn btn-success btn-sm"
-              @click="addCategory"
-            >
-              أضافة
-            </button>
-            <button
-              v-else
-              :disabled="!valid"
-              class="btn btn-warning btn-sm"
-              @click="editCategory"
-            >
-              تعديل
-            </button>
-            <button
-              class="btn btn-ghost btn-sm"
-              @click="closeModal('edit-category')"
-            >
-              إلغاء
-            </button>
-          </div>
+          <FormulateForm
+            v-slot="{ isLoading }"
+            @submit="
+              ($event) =>
+                !edit ? this.addCategory($event) : this.editCategory($event)
+            "
+          >
+            <FormulateInput
+              v-model="category.name"
+              name="name"
+              label="اسم الفئة"
+              placeholder="اسم الفئة"
+              validation="required"
+            />
+            <client-only>
+              <FormulateInput
+                type="image"
+                name="img"
+                label="صورة الفئة"
+                :uploader="uploader"
+                upload-behavior="delayed"
+              />
+            </client-only>
+            <div class="flex justify-between items-center mt-4 mb-12">
+              <FormulateInput
+                type="submit"
+                :wrapper-class="['w-full']"
+                :input-class="['btn-success', 'w-full', 'btn']"
+                :disabled="isLoading || !valid"
+                :label="!isLoading ? (edit ? 'تعديل ' : 'أضافة') : 'جاري...'"
+              />
+
+              <button
+                class="btn btn-ghost btn-sm"
+                @click="closeModal('edit-category')"
+              >
+                إلغاء
+              </button>
+            </div>
+          </FormulateForm>
         </div>
       </div>
     </modal>
@@ -85,7 +94,10 @@
           <div data-tip="تعديل" class="tooltip mx-1">
             <button
               class="btn btn-warning btn-square btn-xs"
-              @click="openModal('edit-category', props.row)"
+              @click="
+                edit = true
+                openModal('edit-category', props.row)
+              "
             >
               <i class="ri-pencil-line"></i>
             </button>
@@ -112,6 +124,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import ICategory from '@/interfaces/category'
+import uploader from '~/utils/uploader'
 
 export default Vue.extend({
   name: 'CategoryPage',
@@ -137,6 +150,7 @@ export default Vue.extend({
     this.getCategories()
   },
   methods: {
+    uploader,
     async getCategories() {
       this.categories = await this.$axios.$get(`/categories`).catch((err) => {
         this.$store.dispatch('showToast', {
@@ -149,7 +163,8 @@ export default Vue.extend({
       this.category = category
       this.$modal.show(modalName)
     },
-    async addCategory() {
+    async addCategory(data) {
+      this.category.img = data.img[0][0].url
       try {
         await this.$axios.$post('/categories', this.category)
         await this.getCategories()
@@ -165,7 +180,8 @@ export default Vue.extend({
         })
       }
     },
-    async editCategory() {
+    async editCategory(data) {
+      this.category.img = data.img[0][0].url
       try {
         await this.$axios.$patch(
           `/categories/${this.category._id}`,
@@ -203,7 +219,7 @@ export default Vue.extend({
 
     closeModal(modalName) {
       this.category = {} as ICategory
-      this.edit = true
+      this.edit = false
       this.$modal.hide(modalName)
     },
   },
