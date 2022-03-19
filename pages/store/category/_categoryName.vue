@@ -10,8 +10,7 @@ import productsPage from '~/components/products/productsPage.vue'
 export default {
   components: { productsPage },
   data() {
-    return {
-    }
+    return {}
   },
   head() {
     return {
@@ -30,7 +29,10 @@ export default {
       await this.getCategoryProducts(this.$route.params.categoryName)
       await this.getStoreCategory(this.$route.params.storeName)
     } catch (error) {
-      console.log(error)
+      this.$store.dispatch('showToast', {
+        message: error.response.data.msg,
+        type: 'error',
+      })
     }
   },
   methods: {
@@ -42,5 +44,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

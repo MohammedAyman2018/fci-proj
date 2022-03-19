@@ -123,9 +123,9 @@ export default Vue.extend({
       edit: true,
     }
   },
-  head (){
+  head() {
     return {
-      title: 'الفئات'
+      title: 'الفئات',
     }
   },
   computed: {
@@ -138,11 +138,12 @@ export default Vue.extend({
   },
   methods: {
     async getCategories() {
-      this.categories = await this.$axios
-        .$get(`/categories`)
-        .catch((err) => {
-          this.$notification('حدث خطأ ما', err.response.data.msg)
+      this.categories = await this.$axios.$get(`/categories`).catch((err) => {
+        this.$store.dispatch('showToast', {
+          message: err.response.data.msg,
+          type: 'error',
         })
+      })
     },
     openModal(modalName, category) {
       this.category = category
@@ -153,9 +154,15 @@ export default Vue.extend({
         await this.$axios.$post('/categories', this.category)
         await this.getCategories()
         this.closeModal('edit-category')
-        this.$notification('نجح الطلب', 'تمت إضافة الفئة بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تمت إضافة الفئة بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     async editCategory() {
@@ -166,9 +173,15 @@ export default Vue.extend({
         )
         await this.getCategories()
         this.closeModal('edit-category')
-        this.$notification('نجح الطلب', 'تم التعديل بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم التعديل بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     async removeCategory() {
@@ -176,9 +189,15 @@ export default Vue.extend({
         await this.$axios.$delete(`/categories/${this.category._id}`)
         await this.getCategories()
         this.closeModal('delete-category')
-        this.$notification('نجح الطلب', 'تم حذف الفئة بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم حذف الفئة بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
 
@@ -191,5 +210,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
