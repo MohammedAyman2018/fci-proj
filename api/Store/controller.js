@@ -20,7 +20,7 @@ exports.getAllStores = async (req, res) => {
 
 exports.getStoreForEditAdmin = async (req, res) => {
   try {
-    const store = await Store.findOne({ title: req.params.storeName }).populate('location')
+    const store = await Store.findOne({ title: req.params.storeName })
     return res.status(200).json(store)
   } catch (error) {
     res.status(500).json({ msg: err.message, err })
