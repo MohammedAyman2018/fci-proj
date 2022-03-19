@@ -6,6 +6,10 @@
   font-family: 'Changa', sans-serif;
 }
 
+.vm--container {
+  z-index: 999999 !important;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;
