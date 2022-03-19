@@ -107,7 +107,7 @@ export const getProductsByCategoryForAll = async (req, res) => {
       {
         $unwind: {
           path: '$category',
-          includeArrayIndex: 'name',
+          includeArrayIndex: 'category.idx',
           preserveNullAndEmptyArrays: false
         }
       },
