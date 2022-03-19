@@ -136,13 +136,13 @@ export const getProductsByCategory = async (req, res) => {
 export const searchProductsName = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    const text = req.query.text.replace(/-/g, ' ')
+    if (req.query.text.length < 3) return res.status(400).json({ msg: 'يجب أن يكون على الأقل 3 حروف' })
     const products = await Product.find(
       {
         ...query,
         $or: [
-          { title: { $regex: text, $options: 'i' } },
-          { desc: { $regex: text, $options: 'i' } },
+          { name: { $regex: req.query.text, $options: 'i' } },
+          { desc: { $regex: req.query.text, $options: 'i' } },
         ],
       },
       productProjection
