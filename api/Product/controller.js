@@ -22,7 +22,8 @@ export const getProductsSorted = async (req, res) => {
 
 export const getAllProducts = async (req, res) => {
   try {
-    const query = getDeviceType(req, res)
+    const device = getDeviceType(req, res)
+    const query = req.query.storeName ? { ...device, storeName: req.query.storeName } : device
     const products = await Product.find(
       query,
       req.get('admin') ? {} : productProjection
