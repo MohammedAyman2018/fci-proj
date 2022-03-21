@@ -195,8 +195,11 @@ export default Vue.extend({
         return { label: x.name, value: x._id }
       })
       this.store = res.data
-    } catch (error) {
-      this.$notification('حدث خطأ ما', error)
+    } catch (error: any) {
+      this.$store.dispatch('showToast', {
+        message: error.response.data.msg,
+        type: 'error',
+      })
     }
   },
   methods: {
@@ -206,8 +209,11 @@ export default Vue.extend({
           `/stores/${this.$route.params.storeName}?storeName=${this.$route.params.storeName}`,
           this.store
         )
-      } catch (error) {
-        this.$notification('حدث خطأ ما', error)
+      } catch (error: any) {
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
   },

@@ -11,6 +11,5 @@ declare module 'vue/types/vue' {
     $router: VueRouter
     $route: Route
     $auth: any
-    $notification: any
   }
 }

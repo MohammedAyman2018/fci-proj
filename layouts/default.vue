@@ -9,7 +9,6 @@
           </client-only>
           <Nuxt />
           <!-- <main-footer /> -->
-          <div id="notifikation"></div>
         </div>
         <client-only>
           <side-bar />

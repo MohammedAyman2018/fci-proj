@@ -26,10 +26,12 @@ export default Vue.extend({
       )
       this.allOrders = res
     } catch (error: any) {
-      this.$notification('حدث خطأ ما', error.response.data.msg)
+      this.$store.dispatch('showToast', {
+        message: error.response.data.msg,
+        type: 'error',
+      })
     }
   },
 })
 </script>
-<style>
-</style>
+<style></style>

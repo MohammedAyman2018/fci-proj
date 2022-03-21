@@ -42,7 +42,6 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/vue-good-table', ssr: false },
-    { src: '~/plugins/notif', ssr: false },
     '~/plugins/v-tooltip',
     { src: '~/plugins/vue-google-maps', ssr: false },
     { src: './plugins/vue-slick-carousel.js' },

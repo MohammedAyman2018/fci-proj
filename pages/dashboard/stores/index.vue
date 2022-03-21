@@ -54,11 +54,7 @@
           <div
             data-tip="تعديل"
             class="tooltip mx-1"
-            @click="
-              $router.push(
-                `/dashboard/${props.row.title}/edit`
-              )
-            "
+            @click="$router.push(`/dashboard/${props.row.title}/edit`)"
           >
             <button class="btn btn-warning btn-square btn-xs">
               <i class="ri-pencil-line"></i>
@@ -104,7 +100,10 @@ export default Vue.extend({
       this.stores = await this.$axios
         .$get('/stores?approved=true')
         .catch((err) => {
-          this.$notification('حدث خطأ ما', err.response.data.msg)
+          this.$store.dispatch('showToast', {
+            message: err.response.data.msg,
+            type: 'error',
+          })
         })
     },
     openModal(modalName, store) {
@@ -116,10 +115,15 @@ export default Vue.extend({
         await this.$axios.$delete(`/stores/${this.store._id}`)
         await this.getStores()
         this.closeModal('delete-store')
-
-        this.$notification('نجح الطلب', 'تم حذف الفئة بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم حذف المتجر بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
 
@@ -131,5 +135,4 @@ export default Vue.extend({
 })
 </script>
 
-<style>
-</style>
+<style></style>

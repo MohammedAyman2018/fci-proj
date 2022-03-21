@@ -126,15 +126,6 @@
         />
 
         <FormulateInput
-          v-model="user.couuntry"
-          name="الدولة"
-          type="select"
-          placeholder="ادخل الدولة"
-          :options="{ مصر: 'مصر', السعودية: 'السعودية' }"
-          label="الدولة"
-          validation="required"
-        />
-        <FormulateInput
           v-model="user.role"
           name="وظيفة العميل"
           type="select"
@@ -209,7 +200,10 @@ export default Vue.extend({
         )
         this.displayedUsers = this.users
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     openModal(modalName, user) {
@@ -224,9 +218,15 @@ export default Vue.extend({
         })
         await this.getUsers()
         this.closeModal('edit-user')
-        this.$notification('نجح الطلب', 'تمت إضافة العميل بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تمت إضافة العميل بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     async editUser() {
@@ -237,9 +237,15 @@ export default Vue.extend({
         })
         await this.getUsers()
         this.closeModal('edit-user')
-        this.$notification('نجح الطلب', 'تم التعديل بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم التعديل بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     async removeUser() {
@@ -247,10 +253,15 @@ export default Vue.extend({
         await this.$axios.$delete(`/users/${this.user._id}`)
         await this.getUsers()
         this.closeModal('delete-user')
-
-        this.$notification('نجح الطلب', 'تم حذف العميل بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم حذف العميل بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     closeModal(modalName) {
@@ -262,5 +273,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

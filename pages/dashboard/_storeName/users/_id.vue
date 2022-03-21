@@ -60,7 +60,10 @@ export default Vue.extend({
     try {
       this.user = await this.$axios.$get(`/users/one/${this.$route.params.id}`)
     } catch (error: any) {
-      this.$notification('حدث خطأ ما', error.response.data.msg)
+      this.$store.dispatch('showToast', {
+        message: error.response.data.msg,
+        type: 'error',
+      })
     }
   },
 })

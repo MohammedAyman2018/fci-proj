@@ -7,19 +7,16 @@
       @submit="oldProduct ? editProduct($event) : addProduct($event)"
     >
       <div class="grid grid-cols-1 lg:grid-cols-3">
-        <client-only>
-          <FormulateInput
-            :key="oldProduct ? oldProduct.images : 'this is the key'"
-            :value="oldProduct ? oldProduct.images : [{}]"
-            type="image"
-            name="files"
-            label="صور المنتج"
-            validation="mime:image/jpeg,image/png,image/gif"
-            multiple
-            :uploader="uploader"
-            upload-behavior="delayed"
-          />
-        </client-only>
+        <FormulateInput
+          v-if="!oldProduct"
+          type="image"
+          name="files"
+          label="صور المنتج"
+          validation="mime:image/jpeg,image/png,image/gif"
+          multiple
+          :uploader="uploader"
+          upload-behavior="delayed"
+        />
         <FormulateInput
           name="name"
           type="text"
@@ -152,6 +149,7 @@ export default Vue.extend({
       }[],
       selectedCategories: {} as ICategory,
       productImages: '',
+      once: 0,
     }
   },
   watch: {
@@ -159,9 +157,8 @@ export default Vue.extend({
       deep: true,
       handler(val) {
         if (val) {
-          this.selectedCategories = val.category
           this.formValues = {
-            files: val.images,
+            selectedCategories: val.category._id,
             name: val.name,
             desc: val.desc,
             price: val.price,
@@ -223,9 +220,15 @@ export default Vue.extend({
         const product = this.createProduct(data)
         await this.$axios.$post('/products', product)
         this.reset()
-        this.$notification('نجح الطلب', 'تمت إضافة المنتج بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تمت إضافة المنتج بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     async editProduct(data) {
@@ -233,16 +236,25 @@ export default Vue.extend({
         const product = this.createProduct(data)
         await this.$axios.$patch(`/products/${this.$route.params.id}`, product)
         this.reset()
-        this.$notification('نجح الطلب', 'تم تعديل المنتج بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم تعديل المنتج بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
     async getCategories() {
       this.categories = await this.$axios
         .$get(`/categories?storeName=${this.$route.params.storeName}`)
         .catch((err) => {
-          this.$notification('حدث خطأ ما', err.response.data.msg)
+          this.$store.dispatch('showToast', {
+            message: err.response.data.msg,
+            type: 'error',
+          })
         })
       this.categories = this.categories.map((cat) => {
         return { label: cat.name!, value: cat._id! }

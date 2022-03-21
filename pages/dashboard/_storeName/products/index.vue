@@ -112,12 +112,17 @@ export default Vue.extend({
     },
     async getProducts() {
       await this.$axios
-        .$get(`/products?storeName=${this.$route.params.storeName}`, { headers: { admin: true } })
+        .$get(`/products?storeName=${this.$route.params.storeName}`, {
+          headers: { admin: true },
+        })
         .then((res) => {
           this.products = res
         })
         .catch((err) => {
-          this.$notification('حدث خطأ ما', err.response.data.msg)
+          this.$store.dispatch('showToast', {
+            message: err.response.data.msg,
+            type: 'error',
+          })
         })
     },
 
@@ -126,9 +131,15 @@ export default Vue.extend({
         await this.$axios.$delete(`/products/${this.product._id}`)
         await this.getProducts()
         this.closeModal('delete-product')
-        this.$notification('نجح الطلب', 'تم حذف المنتج بنجاح')
+        this.$store.dispatch('showToast', {
+          message: 'تم حذف المنتج بنجاح',
+          type: 'success',
+        })
       } catch (error: any) {
-        this.$notification('حدث خطأ ما', error.response.data.msg)
+        this.$store.dispatch('showToast', {
+          message: error.response.data.msg,
+          type: 'error',
+        })
       }
     },
 
@@ -141,5 +152,4 @@ export default Vue.extend({
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>
