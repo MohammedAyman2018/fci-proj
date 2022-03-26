@@ -2,13 +2,11 @@
   <div>
     <div class="container mx-auto">
       <div class="hero min-h-screen">
-        <div class="flex-col justify-center hero-content lg:flex-row">
-          <div class="text-center lg:text-right">
+        <div class="flex-col w-full justify-center hero-content lg:flex-row">
+          <div class="text-center flex-grow lg:text-right">
             <h1 class="mb-5 text-5xl font-bold">أهلا بيك</h1>
             <p class="mb-5">
-              لوريم ايبسوم دولار سيت أميت ,كونسيكتيتور أدايبا يسكينج أليايت,سيت
-              دو أيوسمود تيمبور أنكايديديونتيوت لابوري ات دولار ماجنا أليكيوا .
-              يوت
+              اشتري كل احتياجاتك بافضل سعر ف السوق.
             </p>
           </div>
           <div
