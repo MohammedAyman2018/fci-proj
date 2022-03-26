@@ -34,12 +34,12 @@
     <vue-good-table
       :columns="[
         { label: 'اسم المنتج', field: 'name' },
-        { label: 'السعر', field: 'price' },
-        { label: 'عدد الطلبات', field: 'ordered' },
-        { label: 'عدد الزيارات', field: 'views' },
-        { label: 'الكمية المتاحة', field: 'amount.available' },
-        { label: 'تاريخ الانشاء', field: 'createdAt' },
-        { label: 'العمليات المتاحة', field: 'operations' },
+        { label: 'السعر', field: 'price', type: 'number' },
+        { label: 'عدد الطلبات', field: 'ordered', type: 'number' },
+        { label: 'عدد الزيارات', field: 'views', type: 'number' },
+        { label: 'الكمية المتاحة', field: 'amount.available', type: 'number' },
+        { label: 'تاريخ الانشاء', field: 'createdAt', type:'date',  dateInputFormat: `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`, dateOutputFormat: 'MMM dd yyyy', },
+        { label: 'العمليات المتاحة', field: 'operations', sortable: false, globalSearchDisabled: true, },
       ]"
       :rows="products"
       :rtl="true"
