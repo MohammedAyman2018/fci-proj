@@ -8,6 +8,11 @@ const Schema = new mongoose.Schema({
     required: true
   },
   logo: String,
+  rating: {
+    type: [{ userId: String, comment: String, rate: Number }],
+    default: []
+  },
+  actualRating: { type: Number, default: 0 },
   desc: String,
   location: {
     type: mongoose.Types.ObjectId,
@@ -128,7 +133,13 @@ function validate(store) {
       apple: Joi.string()
     },
     files: Joi.array(),
-    owner: Joi.string()
+    owner: Joi.string(),
+    rating: {
+      userId: Joi.string(),
+      msg: Joi.string(),
+      rate: Joi.number()
+    },
+    actualRating: Joi.number()
   })
 
   return storeSchema.validate(store, { abortEarly: false })
