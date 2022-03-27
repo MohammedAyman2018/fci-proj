@@ -5,7 +5,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
-const cors = require('cors');
+const cors = require('cors')
 const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
 
@@ -20,18 +20,22 @@ app.use(helmet())
 app.use(logger('dev'))
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
-app.use(cors({
-  // origin: process.env.NODE_ENV !== 'production' ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/'] : ['https://fci-proj.herokuapp.com/']
-  origin: '*'
-}));
+app.use(
+  cors({
+    origin:
+      process.env.NODE_ENV !== 'production'
+        ? ['https://fci-proj.herokuapp.com/', 'http://localhost:3000/']
+        : ['https://fci-proj.herokuapp.com/'],
+  })
+)
 
 // connect to db
 async function db() {
   await mongoose.connect(process.env.DB_URL, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
   })
-};
+}
 db()
 
 /** Upload Image */
@@ -44,6 +48,7 @@ const stores = require('./Store/routes')
 const products = require('./Product/routes')
 const orders = require('./Orders/routes')
 const locations = require('./Locations/routes')
+const Coupon = require('./Coupon/routes')
 const ContactUs = require('./ContactUs/routes')
 const home = require('./homePage')
 // Import API Routes
@@ -54,6 +59,7 @@ app.use(products)
 app.use(orders)
 app.use(locations)
 app.use(home)
+app.use(Coupon)
 app.use(ContactUs)
 
 // Export express app
