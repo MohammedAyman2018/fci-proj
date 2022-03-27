@@ -143,6 +143,9 @@ export default {
 
   // PWA module configuration: https://go.nuxtjs.dev/pwa
   pwa: {
+    icon: {
+      fileName: 'logo.png',
+    },
     manifest: {
       lang: 'ar',
     },
