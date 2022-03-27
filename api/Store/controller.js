@@ -101,8 +101,12 @@ exports.addStore = async (req, res) => {
     if (store) {
       return res.status(400).json({ msg: 'هناك متجر بهذا الاسم بالفعل.' })
     }
-
-    store = new Store({ ...req.body, owner: req.user.id })
+    const user = await User.findById(req.user.id)
+    store = new Store({
+      ...req.body,
+      contacts: { phone: user.phone },
+      owner: req.user.id,
+    })
     await store.save().then((result) => res.status(200).json(result))
   } catch (err) {
     res.status(400).json({ msg: err.message })
