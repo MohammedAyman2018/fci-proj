@@ -30,9 +30,9 @@
       :columns="[
         { label: 'اسم المتجر', field: 'title' },
         { label: 'البريد الإلكتروني', field: 'contacts.email' },
-        { label: 'رقم الهاتف', field: 'contacts.phone' },
-        { label: 'تاريخ الانشاء', field: 'createdAt' },
-        { label: 'العمليات المتاحة', field: 'operations' },
+        { label: 'رقم الهاتف', field: 'contacts.phone', sortable: false, },
+        { label: 'تاريخ الانشاء', field: 'createdAt', type: 'date', dateInputFormat: `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`, dateOutputFormat: 'yyyy-MM-dd' },
+        { label: 'العمليات المتاحة', field: 'operations', sortable: false, globalSearchDisabled: true,  },
       ]"
       :rows="stores"
       :rtl="true"
@@ -40,10 +40,7 @@
       max-height="auto"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'createdAt'">
-          <span>{{ props.row.createdAt.substr(0, 10) }}</span>
-        </span>
-        <span v-else-if="props.column.field == 'email'">
+        <span v-if="props.column.field == 'email'">
           <span>{{ props.row.contacts.email }}</span>
         </span>
         <span v-else-if="props.column.field == 'phone'">
