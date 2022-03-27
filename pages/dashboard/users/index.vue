@@ -12,21 +12,44 @@
         أضف عميل
       </button>
     </div>
-    <div v-for="oneUser in displayedUsers" :key="oneUser._id" class="oneUser">
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg">{{ oneUser.name }}</h3>
-        <div>
+    <vue-good-table
+      :columns="[
+        { label: 'الاسم', field: 'name' },
+        { label: 'البريد الإلكتروني', field: 'email' },
+        { label: 'رقم الهاتف', field: 'phone', sortable: false },
+        { label: 'اسم المتجر', field: 'storeName' },
+        {
+          label: 'تاريخ الانشاء',
+          field: 'createdAt',
+          type: 'date',
+          dateInputFormat: `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`,
+          dateOutputFormat: 'yyyy-MM-dd',
+        },
+        {
+          label: 'العمليات المتاحة',
+          field: 'operations',
+          sortable: false,
+          globalSearchDisabled: true,
+        },
+      ]"
+      :rows="displayedUsers"
+      :rtl="true"
+      :search-options="{ enabled: true, placeholder: 'ابحث في الجدول' }"
+      max-height="auto"
+    >
+      <template slot="table-row" slot-scope="props">
+        <span v-if="props.column.field == 'operations'" class="flex">
           <div data-tip="تعديل" class="tooltip">
             <button
               class="btn btn-warning btn-square btn-xs"
-              @click="openModal('edit-user', oneUser)"
+              @click="openModal('edit-user', props.row)"
             >
               <i class="ri-pencil-line"></i>
             </button>
           </div>
-          <div data-tip="تفاصيل أكثر" class="tooltip">
+          <div data-tip="تفاصيل أكثر" class="tooltip mx-3">
             <nuxt-link
-              :to="`${$route.path}/${oneUser._id}`"
+              :to="`${$route.path}/${props.row._id}`"
               class="btn btn-danger btn-square btn-xs"
             >
               <i class="ri-more-line"></i>
@@ -35,21 +58,21 @@
           <div data-tip="حذف" class="tooltip">
             <button
               class="btn btn-error btn-square btn-xs"
-              @click="openModal('delete-user', oneUser)"
+              @click="openModal('delete-user', props.row)"
             >
               <i class="ri-delete-bin-line"></i>
             </button>
           </div>
-        </div>
-      </div>
-      <div class="flex justify-between items-center text-xs">
-        <p>الدولة: {{ oneUser.country }}</p>
-        <p>البريد الالكتروني: {{ oneUser.email }}</p>
-        <p>
-          رقم الهاتف: <bdi>{{ oneUser.phone }}</bdi>
-        </p>
-      </div>
-    </div>
+        </span>
+        <span v-else>
+          {{ props.formattedRow[props.column.field] }}
+        </span>
+      </template>
+
+      <div slot="emptystate">لا توجد فئات حتى الآن</div>
+    </vue-good-table>
+
+
     <modal name="delete-user" scrollable height="auto">
       <div class="p-4">
         <h2 class="text-xl font-bold">حذف العميل</h2>
@@ -76,86 +99,86 @@
     >
       <div class="p-4 space-y-1">
         <h2 class="text-xl font-bold">{{ edit ? 'تعديل' : 'أضف' }} العميل</h2>
-        <FormulateInput
-          v-model="user.name"
-          name="اسم العميل"
-          label="اسم العميل"
-          placeholder="ادخل اسم العميل"
-          validation="required"
-        />
+        <FormulateForm
+          v-slot="{ isLoading }"
+          :values="cloneDeep(user)"
+          @submit="!edit ? addUser : editUser"
+        >
 
-        <FormulateInput
-          v-model="user.address"
-          name="عنوان العميل"
-          label="عنوان العميل"
-          placeholder="ادخل عنوان العميل"
-          validation="required"
-        />
+          <FormulateInput
+            name="name"
+            label="اسم العميل"
+            placeholder="ادخل اسم العميل"
+            validation="required"
+            validation‑name="اسم العميل"
+          />
 
-        <FormulateInput
-          v-model="user.dob"
-          type="date"
-          name="تاريخ ميلاد العميل"
-          label="تاريخ ميلاد العميل"
-          validation="required"
-        />
+          <FormulateInput
+            name="address"
+            validation‑name="عنوان العميل"
+            label="عنوان العميل"
+            placeholder="ادخل عنوان العميل"
+            validation="required"
+          />
 
-        <FormulateInput
-          v-model="user.email"
-          name="البريد الإلكتروني"
-          placeholder="البريد الإلكتروني"
-          label="البريد الإلكتروني"
-          validation="required|email"
-        />
-        <FormulateInput
-          v-model="user.password"
-          type="password"
-          name="كلمة المرور"
-          placeholder="ادخل كلمة المرور"
-          label="كلمة المرور"
-          validation="required"
-        />
+          <FormulateInput
+            type="date"
+            validation‑name="تاريخ ميلاد العميل"
+            name="dob"
+            label="تاريخ ميلاد العميل"
+            validation="required"
+          />
 
-        <FormulateInput
-          v-model="user.phone"
-          name="رقم الجوال"
-          type="tel"
-          placeholder="ادخل رقم الجوال"
-          label="رقم الجوال"
-          validation="required"
-        />
+          <FormulateInput
+            validation‑name="البريد الإلكتروني"
+            name="email"
+            type="email"
+            placeholder="البريد الإلكتروني"
+            label="البريد الإلكتروني"
+            validation="required|email"
+          />
+          <FormulateInput
+            type="password"
+            validation‑name="كلمة المرور"
+            name="password"
+            placeholder="ادخل كلمة المرور"
+            label="كلمة المرور"
+            validation="required"
+          />
 
-        <FormulateInput
-          v-model="user.role"
-          name="وظيفة العميل"
-          type="select"
-          placeholder="اختر وظيفة العميل"
-          :options="{ client: 'عميل', admin: 'أدمن' }"
-          label="وظيفة العميل"
-          validation="required"
-        />
+          <FormulateInput
+            validation‑name="رقم الجوال"
+            name="phone"
+            type="tel"
+            placeholder="ادخل رقم الجوال"
+            label="رقم الجوال"
+            validation="required"
+          />
 
-        <div class="flex justify-between items-center mt-4 mb-12">
-          <button
-            v-if="!edit"
-            :disabled="!valid"
-            class="btn btn-success btn-sm"
-            @click="addUser"
-          >
-            أضافة
-          </button>
-          <button
-            v-else
-            :disabled="!valid"
-            class="btn btn-warning btn-sm"
-            @click="editUser"
-          >
-            تعديل
-          </button>
-          <button class="btn btn-ghost btn-sm" @click="closeModal('edit-user')">
-            إلغاء
-          </button>
-        </div>
+          <FormulateInput
+            validation‑name="وظيفة العميل"
+            name="role"
+            type="select"
+            placeholder="اختر وظيفة العميل"
+            :options="{ client: 'عميل', admin: 'أدمن' }"
+            label="وظيفة العميل"
+            validation="required"
+          />
+
+          <div class="flex justify-between items-center mt-4 mb-12">
+             <FormulateInput
+              v-if="!edit"
+                :wrapper-class="['w-full']"
+                :input-class="['btn-success', 'w-full', 'btn']"
+                :disabled="isLoading || !valid"
+                type="submit"
+                :label="!edit ? 'أضافة' : 'تعديل'"
+              />
+            <button class="btn btn-ghost btn-sm" @click="closeModal('edit-user')">
+              إلغاء
+            </button>
+          </div>
+        </FormulateForm>
       </div>
     </modal>
   </div>
@@ -163,6 +186,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
+import cloneDeep from 'lodash.clonedeep'
 import IUser from '@/interfaces/user'
 export default Vue.extend({
   name: 'UsersDashBoard',
@@ -176,13 +200,17 @@ export default Vue.extend({
       displayedUsers: [] as IUser[],
     }
   },
+  head () {
+    return {
+      title: 'العملاء'
+    }
+  },
   computed: {
     valid(): Boolean {
       return (
         !!this.user.name &&
         !!this.user.email &&
         !!this.user.phone &&
-        !!this.user.password &&
         !!this.user.address &&
         !!this.user.dob &&
         !!this.user.role
@@ -193,11 +221,10 @@ export default Vue.extend({
     await this.getUsers()
   },
   methods: {
+    cloneDeep,
     async getUsers() {
       try {
-        this.users = await this.$axios.$get(
-          `/users?store=${this.$route.params.storeName}`
-        )
+        this.users = await this.$axios.$get(`/users`)
         this.displayedUsers = this.users
       } catch (error: any) {
         this.$store.dispatch('showToast', {
