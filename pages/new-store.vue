@@ -140,8 +140,8 @@ export default Vue.extend({
         !!this.theStore.title &&
         !!this.theStore.desc &&
         !!this.theStore.location &&
-        this.theStore.files.files &&
-        this.theStore.files.files.length >= 3
+        this.theStore.files.files! &&
+        this.theStore.files.files!.length >= 3
       )
     },
     filesError(): boolean {
@@ -162,7 +162,10 @@ export default Vue.extend({
       if (validateStore.reviewed && validateStore.approved) {
         this.theStore = validateStore
         this.$store.commit('stores/setStore', validateStore)
-        // TODO: refresh token and get user again
+        if(this.$auth.user.role !== 'owner') {
+          await this.$auth.logout()
+          this.$store.dispatch('showToast', { message: 'تم قبول متجرك رجاء تسجيل الدخول مرة أخرى.', type: 'success' })
+        }
         this.storeSuccess = true
       } else if (validateStore.reviewed && !validateStore.approved) {
         this.theStore = validateStore
