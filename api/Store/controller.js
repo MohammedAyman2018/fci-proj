@@ -1,10 +1,8 @@
-
 import { getDeviceType, productProjection, storeProjection } from '../utils'
 require('dotenv').config()
 const { User } = require('../Users/model')
 const { Order } = require('../Orders/model')
 const { Product } = require('../Product/model')
-const { Category } = require('../Category/model')
 const { Store, validate } = require('./model')
 
 /**
@@ -12,10 +10,14 @@ const { Store, validate } = require('./model')
  * @returns { Array } Stores
  */
 exports.getAllStores = async (req, res) => {
-  const query = req.query.approved ? { approved: Boolean(req.query.approved) } : {}
-  await Store.find(query).populate('workOn').populate('location')
-    .then(stores => res.status(200).json(stores))
-    .catch(err => res.status(400).json({ msg: err.message }))
+  const query = req.query.approved
+    ? { approved: Boolean(req.query.approved) }
+    : {}
+  await Store.find(query)
+    .populate('workOn')
+    .populate('location')
+    .then((stores) => res.status(200).json(stores))
+    .catch((err) => res.status(400).json({ msg: err.message }))
 }
 
 exports.getStoreForEditAdmin = async (req, res) => {
@@ -31,12 +33,15 @@ exports.getStoreForEditAdmin = async (req, res) => {
  * @desc Get a store
  * @route GET /api/stores/me
  * @access Private
-*/
+ */
 exports.getStore = async (req, res) => {
   try {
-    const store = await Store.findOne({ title: req.params.storeName }, storeProjection)
-    .populate('workOn')
-    .populate('location')
+    const store = await Store.findOne(
+      { title: req.params.storeName },
+      storeProjection
+    )
+      .populate('workOn')
+      .populate('location')
 
     const query = getDeviceType(req, res)
     const products = await Product.find(
@@ -44,7 +49,7 @@ exports.getStore = async (req, res) => {
       req.get('admin') ? {} : productProjection
     ).populate('category')
 
-    return res.status(200).json({store, products})
+    return res.status(200).json({ store, products })
   } catch (error) {
     return res.status(500).json({ msg: err.message, err })
   }
@@ -69,7 +74,6 @@ exports.validateStore = async (req, res) => {
   }
 }
 
-
 exports.checkIfValidated = async (req, res) => {
   try {
     const store = await Store.findOne({ owner: req.user.id })
@@ -83,19 +87,23 @@ exports.checkIfValidated = async (req, res) => {
 }
 
 /**
-  * @desc  Create a Store
-  * @route POST /api/stores
-  * @access Public
-*/
+ * @desc  Create a Store
+ * @route POST /api/stores
+ * @access Public
+ */
 exports.addStore = async (req, res) => {
   try {
     const { error } = validate(req.body)
-    if (error) { return res.status(400).send({ msg: error.details[0].message }) }
+    if (error) {
+      return res.status(400).send({ msg: error.details[0].message })
+    }
     let store = await Store.findOne({ title: req.body.title })
-    if (store) { return res.status(400).json({ msg: 'هناك متجر بهذا الاسم بالفعل.' }) }
+    if (store) {
+      return res.status(400).json({ msg: 'هناك متجر بهذا الاسم بالفعل.' })
+    }
 
     store = new Store({ ...req.body, owner: req.user.id })
-    await store.save().then(result => res.status(200).json(result))
+    await store.save().then((result) => res.status(200).json(result))
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
@@ -112,9 +120,18 @@ exports.updateStore = async (req, res) => {
     if (req.body.createdAt) delete req.body.createdAt
     await Store.updateOne({ title: req.query.storeName }, req.body)
     if (req.body.title) {
-      await Order.updateMany({ storeName: req.query.storeName }, { storeName: req.body.title })
-      await Product.updateMany({ storeName: req.query.storeName }, { storeName: req.body.title })
-      await User.updateMany({ storeName: req.query.storeName }, { storeName: req.body.title })
+      await Order.updateMany(
+        { storeName: req.query.storeName },
+        { storeName: req.body.title }
+      )
+      await Product.updateMany(
+        { storeName: req.query.storeName },
+        { storeName: req.body.title }
+      )
+      await User.updateMany(
+        { storeName: req.query.storeName },
+        { storeName: req.body.title }
+      )
     }
     return res.status(200).json(store)
   } catch (error) {
@@ -129,10 +146,9 @@ exports.updateStore = async (req, res) => {
 exports.deleteStore = async (req, res) => {
   try {
     await Store.findOneAndDelete({ _id: req.params.id })
-    await Order.deleteMany({ storeName: req.params.storeName })
-    await Product.deleteMany({ storeName: req.params.storeName })
-    await Category.deleteMany({ storeName: req.params.storeName })
-    await User.deleteMany({ storeName: req.params.storeName })
+    await Order.deleteMany({ storeName: req.query.storeName })
+    await Product.deleteMany({ storeName: req.query.storeName })
+    await User.deleteMany({ storeName: req.query.storeName })
     res.status(200).json({ msg: 'Deleted Successfully' })
   } catch (err) {
     res.status(400).json({ msg: err.message })
