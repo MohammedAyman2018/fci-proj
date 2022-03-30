@@ -74,12 +74,26 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            ['admin', 'owner'].includes($auth.user.role)
+            ['admin'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.storeName}/users`"
+          :to="`/dashboard/users`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
           العملاء
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
+            ['admin', 'owner'].includes($auth.user.role)
+          "
+          :to="`/dashboard/${$auth.user.storeName}/orders`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          الطلبيات
         </nuxt-link>
       </li>
       <li>

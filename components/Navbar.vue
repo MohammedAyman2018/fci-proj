@@ -84,6 +84,18 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
+            ['admin', 'owner'].includes($auth.user.role)
+          "
+          :to="`/dashboard/${$auth.user.storeName}/orders`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          الطلبيات
+        </nuxt-link>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
             ['admin'].includes($auth.user.role)
           "
           :to="`/dashboard/categories`"
