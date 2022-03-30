@@ -64,9 +64,6 @@
             </button>
           </div>
         </span>
-        <span v-else>
-          {{ props.formattedRow[props.column.field] }}
-        </span>
       </template>
 
       <div slot="emptystate">لا توجد فئات حتى الآن</div>

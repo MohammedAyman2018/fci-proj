@@ -28,8 +28,10 @@
 
     <vue-good-table
       :columns="[
-        { label: 'اسم المتجر', field: 'title' },
-        { label: 'البريد الإلكتروني', field: 'contacts.email' },
+        { label: 'اسم', field: 'title' },
+        { label: 'وصف', field: 'desc' },
+        { label: 'البلد', field: 'location.name' },
+        { label: 'البريد', field: 'contacts.email' },
         { label: 'رقم الهاتف', field: 'contacts.phone', sortable: false, },
         { label: 'تاريخ الانشاء', field: 'createdAt', type: 'date', dateInputFormat: `yyyy-MM-dd'T'HH:mm:ss.SSS'Z'`, dateOutputFormat: 'yyyy-MM-dd' },
         { label: 'العمليات المتاحة', field: 'operations', sortable: false, globalSearchDisabled: true,  },
@@ -40,14 +42,8 @@
       max-height="auto"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'email'">
-          <span>{{ props.row.contacts.email }}</span>
-        </span>
-        <span v-else-if="props.column.field == 'phone'">
-          <span>{{ props.row.contacts.phone }}</span>
-        </span>
 
-        <span v-else-if="props.column.field == 'operations'" class="flex">
+        <span v-if="props.column.field == 'operations'" class="flex">
           <div
             data-tip="تعديل"
             class="tooltip mx-1"
