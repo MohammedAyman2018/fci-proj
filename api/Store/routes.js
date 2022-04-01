@@ -9,7 +9,7 @@ const {
   checkIfValidated,
   validateStore,
   getStoreForEditAdmin,
-  updateStore
+  updateStore,
 } = require('./controller')
 
 const router = Router()
