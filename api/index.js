@@ -48,7 +48,6 @@ const stores = require('./Store/routes')
 const products = require('./Product/routes')
 const orders = require('./Orders/routes')
 const locations = require('./Locations/routes')
-const Coupon = require('./Coupon/routes')
 const ContactUs = require('./ContactUs/routes')
 const home = require('./homePage')
 // Import API Routes
@@ -59,7 +58,6 @@ app.use(products)
 app.use(orders)
 app.use(locations)
 app.use(home)
-app.use(Coupon)
 app.use(ContactUs)
 
 // Export express app
