@@ -8,12 +8,16 @@ export const getProductsSorted = async (req, res) => {
     const sortInReq = req.query.sort
     if (!sortInReq) return res.status(400).json({ msg: 'Provide sort query' })
     let sortQuery
-    if (sortInReq === 'mostViewedProducts') { sortQuery = { views: -1 } }
-    else if (sortInReq === 'mostOrderedProducts') { sortQuery = { ordered: -1 } }
-    else if (sortInReq === 'mostRatedProducts') { sortQuery = { actualRating: -1 } }
-    const products = await Product.find(
-      query, productProjection
-    ).sort(sortQuery).populate('category')
+    if (sortInReq === 'mostViewedProducts') {
+      sortQuery = { views: -1 }
+    } else if (sortInReq === 'mostOrderedProducts') {
+      sortQuery = { ordered: -1 }
+    } else if (sortInReq === 'mostRatedProducts') {
+      sortQuery = { actualRating: -1 }
+    }
+    const products = await Product.find(query, productProjection)
+      .sort(sortQuery)
+      .populate('category')
     res.status(200).json(products)
   } catch (err) {
     res.status(400).json({ msg: err.message })
@@ -23,7 +27,9 @@ export const getProductsSorted = async (req, res) => {
 export const getAllProducts = async (req, res) => {
   try {
     const device = getDeviceType(req, res)
-    const query = req.query.storeName ? { ...device, storeName: req.query.storeName } : device
+    const query = req.query.storeName
+      ? { ...device, storeName: req.query.storeName }
+      : device
     const products = await Product.find(
       query,
       req.get('admin') ? {} : productProjection
@@ -61,7 +67,9 @@ export const addProduct = async (req, res) => {
 
 export const getOneProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id).populate('category')
+    const product = await Product.findById(req.params.id)
+      .populate('category')
+      .populate({ path: 'rating.userId', options: { select: 'name' } })
     product.views++
     await product.save()
     res.status(200).json(product)
@@ -101,19 +109,19 @@ export const getProductsByCategoryForAll = async (req, res) => {
       {
         $match: {
           'category.name': req.params.categoryName,
-          ...query
+          ...query,
         },
       },
       {
         $unwind: {
           path: '$category',
           includeArrayIndex: 'category.idx',
-          preserveNullAndEmptyArrays: false
-        }
+          preserveNullAndEmptyArrays: false,
+        },
       },
       {
-        $project: productProjection
-      }
+        $project: productProjection,
+      },
     ])
     res.status(200).json(products)
   } catch (err) {
@@ -137,7 +145,8 @@ export const getProductsByCategory = async (req, res) => {
 export const searchProductsName = async (req, res) => {
   try {
     const query = getDeviceType(req, res)
-    if (req.query.text.length < 3) return res.status(400).json({ msg: 'يجب أن يكون على الأقل 3 حروف' })
+    if (req.query.text.length < 3)
+      return res.status(400).json({ msg: 'يجب أن يكون على الأقل 3 حروف' })
     const products = await Product.find(
       {
         ...query,
@@ -164,6 +173,7 @@ export const rateProduct = async (req, res) => {
       )
       if (userRatedBefore) {
         userRatedBefore.rate = req.body.rate
+        userRatedBefore.comment = req.body.comment
       } else {
         userRatedBefore = req.body
         product.rating.push(userRatedBefore)
