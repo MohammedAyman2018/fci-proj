@@ -23,7 +23,7 @@ router.patch('/stores/:id', auth, updateStore)
 router.delete('/stores/:id', auth, deleteStore)
 router.post('/stores/', clientAuth, addStore)
 
-router.patch('/stores/rate/:id', auth, rateStore)
+router.patch('/stores/rate/:id', clientAuth, rateStore)
 
 router.get('/stores/check-if-validate', clientAuth, checkIfValidated)
 router.post('/stores/validate/:storeId', auth, validateStore)
