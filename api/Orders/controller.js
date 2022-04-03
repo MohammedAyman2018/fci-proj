@@ -27,6 +27,7 @@ export const addOrder = async (req, res) => {
     for (const store in grouped) {
       if (Object.hasOwnProperty.call(grouped, store)) {
         const arrOfItems = grouped[store]
+        req.body.user._id = req.user.id
         // create order
         let order = {
           state: req.body.state,
