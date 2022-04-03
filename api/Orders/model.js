@@ -30,6 +30,7 @@ const Schema = new mongoose.Schema(
           storeName: { type: String, required: true },
           name: { type: String, required: true },
           amount: { type: Number, required: true },
+          offerAmount: { type: Number, default: 0 },
           price: { type: Number, required: true },
           img: { type: String, required: true },
         },
