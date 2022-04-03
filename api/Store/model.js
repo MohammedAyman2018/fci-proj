@@ -1,106 +1,116 @@
 const mongoose = require('mongoose')
 const Joi = require('joi')
 
-const Schema = new mongoose.Schema({
-  title: {
-    type: String,
-    unique: true,
-    required: true
-  },
-  logo: String,
-  rating: {
-    type: [{ userId: String, comment: String, rate: Number }],
-    default: []
-  },
-  actualRating: { type: Number, default: 0 },
-  desc: String,
-  location: {
-    type: mongoose.Types.ObjectId,
-    ref: 'locations',
-    required: true
-  },
-  contacts: {
-    type: {
-      tel: String,
-      whats: String,
-      phone: String,
-      telegram: String,
-      email: String
+const Schema = new mongoose.Schema(
+  {
+    title: {
+      type: String,
+      unique: true,
+      required: true,
     },
-    default: {
-      tel: '',
-      whats: '',
-      phone: '',
-      telegram: '',
-      email: '',
-    }
-  },
-  workOn: {
-    type: [{
-      ref: 'categories',
+    logo: String,
+    rating: {
+      type: [
+        {
+          userId: { ref: 'users', type: mongoose.Types.ObjectId },
+          comment: String,
+          rate: Number,
+        },
+      ],
+      default: [],
+    },
+    actualRating: { type: Number, default: 0 },
+    desc: String,
+    location: {
       type: mongoose.Types.ObjectId,
-    }],
-    validate: {
-      validator(arr) {
-        return arr.length >= 1
+      ref: 'locations',
+      required: true,
+    },
+    contacts: {
+      type: {
+        tel: String,
+        whats: String,
+        phone: String,
+        telegram: String,
+        email: String,
       },
-      message: 'يجب اختيار فئة'
+      default: {
+        tel: '',
+        whats: '',
+        phone: '',
+        telegram: '',
+        email: '',
+      },
     },
+    workOn: {
+      type: [
+        {
+          ref: 'categories',
+          type: mongoose.Types.ObjectId,
+        },
+      ],
+      validate: {
+        validator(arr) {
+          return arr.length >= 1
+        },
+        message: 'يجب اختيار فئة',
+      },
 
-    required: true
-  },
-  social: {
-    type: {
-      insta: String,
-      twitter: String,
-      fb: String,
-      yt: String,
-      snap: String,
-      tiktok: String,
+      required: true,
     },
-    default: {
-      insta: '',
-      twitter: '',
-      fb: '',
-      yt: '',
-      snap: '',
-      tiktok: '',
-    }
-  },
-  otherLinks: {
-    type: {
-      link: String,
-      android: String,
-      apple: String
+    social: {
+      type: {
+        insta: String,
+        twitter: String,
+        fb: String,
+        yt: String,
+        snap: String,
+        tiktok: String,
+      },
+      default: {
+        insta: '',
+        twitter: '',
+        fb: '',
+        yt: '',
+        snap: '',
+        tiktok: '',
+      },
     },
-    default: {
-      link: '',
-      android: '',
-      apple: '',
-    }
+    otherLinks: {
+      type: {
+        link: String,
+        android: String,
+        apple: String,
+      },
+      default: {
+        link: '',
+        android: '',
+        apple: '',
+      },
+    },
+    approved: {
+      type: Boolean,
+      default: false,
+    },
+    rejectMessage: {
+      type: String,
+    },
+    reviewed: {
+      type: Boolean,
+      default: false,
+    },
+    files: {
+      type: [String],
+      required: true,
+    },
+    owner: {
+      type: mongoose.Types.ObjectId,
+      ref: 'users',
+      required: true,
+    },
   },
-  approved: {
-    type: Boolean,
-    default: false
-  },
-  rejectMessage: {
-    type: String,
-  },
-  reviewed: {
-    type: Boolean,
-    default: false
-  },
-  files: {
-    type: [String],
-    required: true
-  },
-  owner: {
-    type: mongoose.Types.ObjectId,
-    ref: 'users',
-    required: true
-  }
-},
-  { timestamps: true })
+  { timestamps: true }
+)
 
 const Store = mongoose.model('store', Schema)
 
@@ -116,7 +126,7 @@ function validate(store) {
       whats: Joi.string(),
       phone: Joi.string(),
       telegram: Joi.string(),
-      email: Joi.string()
+      email: Joi.string(),
     },
     workOn: Joi.array(),
     social: {
@@ -130,20 +140,20 @@ function validate(store) {
     otherLinks: {
       link: Joi.string(),
       android: Joi.string(),
-      apple: Joi.string()
+      apple: Joi.string(),
     },
     files: Joi.array(),
     owner: Joi.string(),
     rating: {
       userId: Joi.string(),
       msg: Joi.string(),
-      rate: Joi.number()
+      rate: Joi.number(),
     },
-    actualRating: Joi.number()
+    actualRating: Joi.number(),
   })
 
   return storeSchema.validate(store, { abortEarly: false })
-};
+}
 
 module.exports.storeSchema = Schema
 module.exports.Store = Store

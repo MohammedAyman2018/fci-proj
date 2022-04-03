@@ -158,3 +158,35 @@ exports.deleteStore = async (req, res) => {
     res.status(400).json({ msg: err.message })
   }
 }
+
+export const rateStore = async (req, res) => {
+  try {
+    const store = await Store.findById(req.params.id)
+    if (req.body.rate > 5) req.body.rate = 5
+    if (store) {
+      let userRatedBefore = store.rating.find(
+        (rate) => rate.userId === req.body.userId
+      )
+      if (userRatedBefore) {
+        userRatedBefore.rate = req.body.rate
+        userRatedBefore.comment = req.body.comment
+      } else {
+        userRatedBefore = req.body
+        store.rating.push(userRatedBefore)
+      }
+      store.actualRating = calcRating(store.rating)
+      await store.save()
+      res.status(200).json({ rate: store.actualRating })
+    }
+  } catch (error) {
+    res.status(400).json({ msg: error.message })
+  }
+}
+
+function calcRating(rating) {
+  let sd = 0
+  rating.forEach((el) => {
+    sd += el.rate
+  })
+  return sd / rating.length
+}
