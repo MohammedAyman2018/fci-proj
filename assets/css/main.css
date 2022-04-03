@@ -5,6 +5,10 @@
 * {
   font-family: 'Changa', sans-serif;
 }
+.make-rtl {
+  direction: ltr;
+  height: 43px;
+}
 
 /* i[class*='ri-'] {
   @apply flex justify-center items-center;

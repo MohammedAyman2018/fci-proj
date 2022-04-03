@@ -20,5 +20,7 @@ export default interface IProduct {
     store: boolean
     app: boolean
   }
+  hasOffer: boolean
+  offerAmount?: number
   storeName: string
 }

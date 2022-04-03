@@ -82,6 +82,8 @@ const Schema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    hasOffer: { type: Boolean, default: false },
+    offerAmount: { type: Number, default: 0 },
     storeName: {
       required: true,
       type: String,
@@ -110,6 +112,8 @@ function validate(product) {
     },
     url: Joi.string(),
     views: Joi.number(),
+    hasOffer: Joi.boolean(),
+    offerAmount: Joi.number(),
     visible: {
       store: Joi.boolean(),
       app: Joi.boolean(),
