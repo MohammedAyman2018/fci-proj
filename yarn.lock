@@ -11052,6 +11052,11 @@ vuelidate@^0.7.6:
   resolved "https://registry.npmjs.org/vuelidate/-/vuelidate-0.7.6.tgz"
   integrity sha512-suzIuet1jGcyZ4oUSW8J27R2tNrJ9cIfklAh63EbAkFjE380iv97BAiIeolRYoB9bF9usBXCu4BxftWN1Dkn3g==
 
+vuescroll@^4.17.3:
+  version "4.17.3"
+  resolved "https://registry.yarnpkg.com/vuescroll/-/vuescroll-4.17.3.tgz#e1c29372a007e0dff0cee6b4515783d43924f9e1"
+  integrity sha512-5P3hje/fYjo1eAB0Y8zboLbaq/mnPNczYyZ1aPHHM6wIFKcqal9Mi42CBCZizUnEtoXtbsGlnyLcVbnalTNptA==
+
 vuex@^3.6.2:
   version "3.6.2"
   resolved "https://registry.npmjs.org/vuex/-/vuex-3.6.2.tgz"

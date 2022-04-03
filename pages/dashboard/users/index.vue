@@ -94,8 +94,12 @@
       scrollable
       @closed="closeModal('edit-user')"
     >
+     <vuescroll>
       <div class="p-4 space-y-1">
+        <div class="flex justify-between items-center">
         <h2 class="text-xl font-bold">{{ edit ? 'تعديل' : 'أضف' }} العميل</h2>
+           <i class="ri-close-fill" @click="closeModal('edit-user')"></i>
+        </div>
         <FormulateForm
           v-slot="{ isLoading }"
           :values="cloneDeep(user)"
@@ -107,12 +111,10 @@
             label="اسم العميل"
             placeholder="ادخل اسم العميل"
             validation="required"
-            validation‑name="اسم العميل"
           />
 
           <FormulateInput
             name="address"
-            validation‑name="عنوان العميل"
             label="عنوان العميل"
             placeholder="ادخل عنوان العميل"
             validation="required"
@@ -120,14 +122,12 @@
 
           <FormulateInput
             type="date"
-            validation‑name="تاريخ ميلاد العميل"
             name="dob"
             label="تاريخ ميلاد العميل"
             validation="required"
           />
 
           <FormulateInput
-            validation‑name="البريد الإلكتروني"
             name="email"
             type="email"
             placeholder="البريد الإلكتروني"
@@ -136,7 +136,6 @@
           />
           <FormulateInput
             type="password"
-            validation‑name="كلمة المرور"
             name="password"
             placeholder="ادخل كلمة المرور"
             label="كلمة المرور"
@@ -144,7 +143,6 @@
           />
 
           <FormulateInput
-            validation‑name="رقم الجوال"
             name="phone"
             type="tel"
             placeholder="ادخل رقم الجوال"
@@ -153,7 +151,6 @@
           />
 
           <FormulateInput
-            validation‑name="وظيفة العميل"
             name="role"
             type="select"
             placeholder="اختر وظيفة العميل"
@@ -164,7 +161,6 @@
 
           <div class="flex justify-between items-center mt-4 mb-12">
              <FormulateInput
-              v-if="!edit"
                 :wrapper-class="['w-full']"
                 :input-class="['btn-success', 'w-full', 'btn']"
                 :disabled="isLoading || !valid"
@@ -177,6 +173,7 @@
           </div>
         </FormulateForm>
       </div>
+     </vuescroll>
     </modal>
   </div>
 </template>
@@ -184,9 +181,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import cloneDeep from 'lodash.clonedeep'
+  import vuescroll from 'vuescroll';
 import IUser from '@/interfaces/user'
+
 export default Vue.extend({
   name: 'UsersDashBoard',
+  components: {
+      vuescroll
+    },
 
   layout: 'admin',
   data() {
