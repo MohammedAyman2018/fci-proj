@@ -25,8 +25,6 @@
     <WhyUs />
 
     <OurFeatures />
-
-    <contact-us />
   </div>
 </template>
 
@@ -34,12 +32,10 @@
 import Vue from 'vue'
 import WhyUs from '@/components/Home/WhyUs.vue'
 import OurFeatures from '@/components/Home/OurFeatures.vue'
-import ContactUs from '~/components/Home/ContactUs.vue'
 export default Vue.extend({
   components: {
     WhyUs,
     OurFeatures,
-    ContactUs,
   },
 })
 </script>
