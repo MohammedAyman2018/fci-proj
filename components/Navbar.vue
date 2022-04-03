@@ -41,7 +41,7 @@
           :to="`/dashboard/users`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          العملاء
+          إدارة العملاء
         </nuxt-link>
         <nuxt-link
           v-if="
@@ -53,7 +53,7 @@
           :to="`/dashboard/stores`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          المتاجر
+          إدارة المتاجر
         </nuxt-link>
         <nuxt-link
           v-if="
@@ -77,7 +77,7 @@
           :to="`/dashboard/${$auth.user.storeName}/products`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          المنتجات
+          إدارة المنتجات
         </nuxt-link>
         <nuxt-link
           v-if="
@@ -89,7 +89,7 @@
           :to="`/dashboard/${$auth.user.storeName}/orders`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          الطلبيات
+           إدارة الطلبيات
         </nuxt-link>
         <nuxt-link
           v-if="
@@ -101,7 +101,7 @@
           :to="`/dashboard/categories`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          الفئات
+          إدارة الفئات
         </nuxt-link>
         <nuxt-link
           v-show="!$auth.loggedIn"

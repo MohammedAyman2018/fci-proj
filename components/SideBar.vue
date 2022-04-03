@@ -11,6 +11,14 @@
       </div>
       <li>
         <nuxt-link
+          to="/"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+          الرئيسية
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
           v-if="$auth && $auth.loggedIn"
           to="/profile"
           class="btn btn-ghost btn-sm rounded-btn"
@@ -46,20 +54,6 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            $auth.user.role === 'admin'
-          "
-          :to="`/dashboard/stores/`"
-          class="btn btn-ghost btn-sm rounded-btn"
-        >
-          المتاجر
-        </nuxt-link>
-      </li>
-      <li>
-        <nuxt-link
-          v-if="
-            $auth &&
-            $auth.loggedIn &&
-            $auth.user.storeName &&
             ['admin', 'owner'].includes($auth.user.role)
           "
           :to="`/dashboard/${$auth.user.storeName}/edit/`"
@@ -74,12 +68,26 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
+            $auth.user.role === 'admin'
+          "
+          :to="`/dashboard/stores/`"
+          class="btn btn-ghost btn-sm rounded-btn"
+        >
+           إدارة المتاجر
+        </nuxt-link>
+      </li>
+      <li>
+        <nuxt-link
+          v-if="
+            $auth &&
+            $auth.loggedIn &&
+            $auth.user.storeName &&
             ['admin'].includes($auth.user.role)
           "
           :to="`/dashboard/users`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          العملاء
+          إدارة العملاء
         </nuxt-link>
       </li>
       <li>
@@ -93,7 +101,7 @@
           :to="`/dashboard/${$auth.user.storeName}/orders`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          الطلبيات
+          إدارة الطلبيات
         </nuxt-link>
       </li>
       <li>
@@ -107,7 +115,7 @@
           :to="`/dashboard/${$auth.user.storeName}/products`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          المنتجات
+          إدارة المنتجات
         </nuxt-link>
       </li>
       <li>
@@ -116,12 +124,12 @@
             $auth &&
             $auth.loggedIn &&
             $auth.user.storeName &&
-            ['admin', 'owner'].includes($auth.user.role)
+            ['admin'].includes($auth.user.role)
           "
-          :to="`/dashboard/${$auth.user.storeName}/categories`"
+          :to="`/dashboard/categories`"
           class="btn btn-ghost btn-sm rounded-btn"
         >
-          الفئات
+          إدارة الفئات
         </nuxt-link>
       </li>
       <li>
