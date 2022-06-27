@@ -1,16 +1,18 @@
 <template>
   <div class="container mx-auto px-2">
-    <div class="justify-between flex items-center my-3">
+    <div
+      class="is-justify-content-space-between is-flex is-align-items-center my-3"
+    >
       <h2 class="text-2xl mb-3">كل الفئات</h2>
-      <button
-        class="btn btn-primary btn-sm"
+      <b-button
+        type="is-primary"
         @click="
           edit = false
           openModal('edit-category', {})
         "
       >
         أضف فئة
-      </button>
+      </b-button>
     </div>
     <modal name="delete-category" scrollable height="auto">
       <div class="p-4">
@@ -90,26 +92,25 @@
       max-height="auto"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'operations'" class="flex">
-          <div data-tip="تعديل" class="tooltip mx-1">
-            <button
-              class="btn btn-warning btn-square btn-xs"
+        <span v-if="props.column.field == 'operations'" class="is-flex">
+          <b-tooltip label="تعديل">
+            <b-button
+              icon-left="pen"
+              type="is-warning"
+              class="mx-1"
               @click="
                 edit = true
                 openModal('edit-category', props.row)
               "
-            >
-              <i class="ri-pencil-line"></i>
-            </button>
-          </div>
-          <div data-tip="حذف" class="tooltip">
-            <button
-              class="btn btn-error btn-square btn-xs"
+            />
+          </b-tooltip>
+          <b-tooltip label="حذف">
+            <b-button
+              icon-left="delete"
+              type="is-danger"
               @click="openModal('delete-category', props.row)"
-            >
-              <i class="ri-delete-bin-line"></i>
-            </button>
-          </div>
+            />
+          </b-tooltip>
         </span>
         <span v-else>
           {{ props.formattedRow[props.column.field] }}

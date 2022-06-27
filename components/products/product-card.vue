@@ -1,65 +1,82 @@
 <template>
-  <div class="product-card">
-    <button
-      v-if="checkInFav(product._id)"
-      v-tooltip="'حذف من المفضلة'"
-      class="like-btn btn btn-circle"
-      @click="addToFav(product._id)"
-    >
-      <i class="ri-dislike-line ri-2x"></i>
-    </button>
-    <button
-      v-else
-      v-tooltip="'أضف للمفضلة'"
-      class="like-btn btn btn-circle bg-red-600 hover:bg-red-600"
-      @click="addToFav(product._id)"
-    >
-      <i class="ri-heart-line ri-2x"></i>
-    </button>
-    <div class="product-card--image">
-      <img :src="product.images[0]" :alt="product.name" />
+  <div class="card">
+    <b-tag v-if="product.hasOffer" type="is-success is-light">
+      <bdi>-{{ product.offerAmount }}% </bdi>
+    </b-tag>
+    <div class="card-image">
+      <b-carousel :autoplay="false">
+        <b-carousel-item v-for="(item, i) in product.images" :key="i">
+          <b-image lazy ratio="1by1" :src="item" />
+        </b-carousel-item>
+      </b-carousel>
     </div>
-    <section class="product-card--info">
-      <div class="product-card--info--header">
-        <h2 class="cursor-pointer" @click="goToProduct">{{ product.name }}</h2>
-        <nuxt-link :to="`/store/${product.storeName}/products`">
-          <i class="ri-store-fill ri-1x" />
-          {{ product.storeName }}
-        </nuxt-link>
+    <div class="card-content">
+      <div class="media">
+        <div class="media-content">
+          <p class="title is-4" style="cursor: pointer" @click="goToProduct">
+            {{ product.name }}
+          </p>
+          <p class="subtitle is-6">
+            <nuxt-link :to="`/store/${product.storeName}/products`">
+              <i class="ri-store-fill ri-1x" />
+              {{ product.storeName }}
+            </nuxt-link>
+          </p>
+        </div>
       </div>
-      <!-- Add Link To One Store In Here -->
 
-      <div class="product-card--info-footer">
-        <div>
-          <nuxt-link :to="`/store/category/${product.category.name}`">
-            {{ product.category.name }}
-          </nuxt-link>
-          <p>{{ product.price }} جنيه</p>
-        </div>
-        <div>
+      <div class="content">
+        <div class="product-card--info-footer">
           <div>
-            <i class="ri-star-fill ri-1x text-yellow-500"></i>
-            <span>{{ product.actualRating || 0 }}</span>
+            <nuxt-link :to="`/store/category/${product.category.name}`">
+              {{ product.category.name }}
+            </nuxt-link>
+            <p>
+              {{
+                product.hasOffer
+                  ? Math.ceil(
+                      product.price -
+                        product.price * (product.offerAmount / 100)
+                    ).toFixed(2)
+                  : product.price
+              }}
+              جنيه
+            </p>
           </div>
-          <button
-            v-if="!inCart(product)"
-            v-tooltip="'أضف للسلة'"
-            class="btn btn-success btn-sm btn-square"
-            @click="addToCart(product)"
-          >
-            <i class="ri-add-line ri-1x"></i>
-          </button>
-          <button
-            v-else
-            v-tooltip="'حذف من السلة'"
-            class="btn btn-success btn-sm btn-square"
-            @click="removeFromCart(product)"
-          >
-            <i class="ri-close-fill ri-1x"></i>
-          </button>
+          <div>
+            <b-rate :value="product.actualRating" disabled></b-rate>
+            <div class="is-flex is-justify-content-end is-align-items-center">
+              <b-tooltip
+                :label="
+                  checkInFav(product._id) ? 'حذف من المفضلة' : 'أضف للمفضلة'
+                "
+              >
+                <b-button
+                  type="is-danger is-light"
+                  :icon-left="
+                    checkInFav(product._id) ? 'cards-heart' : 'heart-outline'
+                  "
+                  @click="addToFav(product._id)"
+                />
+              </b-tooltip>
+              <b-tooltip
+                :label="inCart(product) ? 'حذف من السلة' : 'أضف للسلة'"
+              >
+                <b-button
+                  :icon-left="inCart(product) ? 'cart-minus' : 'cart-plus'"
+                  class="mx-1"
+                  @click="
+                    inCart(product)
+                      ? removeFromCart(product)
+                      : addToCart(product)
+                  "
+                />
+              </b-tooltip>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
+    </div>
   </div>
 </template>
 
@@ -129,4 +146,26 @@ export default Vue.extend({
 })
 </script>
 
-<style></style>
+<style scoped>
+.card {
+  position: relative;
+}
+.card .tag {
+  position: absolute;
+  z-index: 999;
+  left: 10%;
+  top: 10px;
+}
+.product-card--info-footer {
+  display: flex;
+  margin-top: 15px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.product-card--info-footer a,
+.card-content .subtitle a {
+  color: gray;
+  font-size: 12px;
+}
+</style>

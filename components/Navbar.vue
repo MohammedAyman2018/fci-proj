@@ -1,72 +1,132 @@
 <template>
-  <div class="navbar shadow-lg bg-neutral text-neutral-content">
-    <div class="flex-1 px-2 mx-2">
-      <span class="text-lg font-bold"> السوق الإلكتروني </span>
-    </div>
-    <div class="flex-none hidden px-2 mx-2 lg:flex">
-      <div class="flex items-stretch">
-        <nuxt-link to="/" class="btn btn-ghost btn-sm rounded-btn">
-          الرئيسية
-        </nuxt-link>
-        <nuxt-link
-          to="/store/products"
-          class="btn btn-ghost btn-sm rounded-btn"
-        >
-          تصفح المنتجات
-        </nuxt-link>
-        <nuxt-link to="/store/cart" class="btn btn-ghost btn-sm rounded-btn">
-          السلة
-        </nuxt-link>
-        <nuxt-link
-          v-if="$auth && $auth.loggedIn"
-          to="/profile"
-          class="btn btn-ghost btn-sm rounded-btn"
-        >
-          {{ $auth.user.name }}
-        </nuxt-link>
-        <nuxt-link
-          v-if="$auth && $auth.loggedIn && $auth.user.role === 'client'"
-          to="/new-store"
-          class="btn btn-ghost btn-sm rounded-btn"
-        >
-          انشئ متجرك
-        </nuxt-link>
-        <nuxt-link
-          v-show="!$auth.loggedIn"
-          to="/login"
-          class="btn btn-ghost btn-sm rounded-btn"
-        >
-          تسجيل دخول
-        </nuxt-link>
-        <nuxt-link
-          v-show="!$auth.loggedIn"
-          to="/sign-up"
-          class="btn btn-ghost btn-sm rounded-btn"
-        >
-          إنشاء حساب
-        </nuxt-link>
-        <button
-          v-show="$auth.loggedIn"
-          class="btn btn-danger btn-sm rounded-btn text-red-500"
-          @click="$auth.logout()"
-        >
-          تسجيل خروج
-        </button>
-      </div>
-    </div>
-    <div class="flex-none">
-      <label for="my-drawer-3" class="btn btn-square btn-ghost">
-        <i class="ri-menu-line"></i>
-      </label>
-    </div>
-  </div>
+  <b-navbar>
+    <template #brand>
+      <b-navbar-item tag="router-link" :to="{ path: '/' }">
+        <span class="text-lg font-bold"> السوق الإلكتروني </span>
+      </b-navbar-item>
+    </template>
+
+    <template #start>
+      <span v-for="link in links" :key="link.link" class="is-flex">
+        <b-navbar-item
+          v-if="link.display"
+          tag="router-link"
+          :to="link.link"
+          v-text="link.text"
+        />
+      </span>
+    </template>
+    <template #end>
+      <b-navbar-dropdown
+        v-if="
+          $auth &&
+          $auth.loggedIn &&
+          ['owner', 'admin'].includes($auth.user.role)
+        "
+        label="لوحة التحكم"
+      >
+        <span v-for="link in adminLinks" :key="link.link" class="is-flex">
+          <b-navbar-item
+            v-if="link.display"
+            tag="router-link"
+            class="flex-grow"
+            :to="link.link"
+            v-text="link.text"
+          />
+        </span>
+      </b-navbar-dropdown>
+      <b-navbar-item tag="div">
+        <div class="buttons">
+          <b-button
+            v-show="$auth.loggedIn"
+            type="is-danger"
+            @click="$auth.logout()"
+          >
+            <strong>تسجيل خروج</strong>
+          </b-button>
+        </div>
+      </b-navbar-item>
+    </template>
+  </b-navbar>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 
-export default Vue.extend({})
+export default Vue.extend({
+  name: 'Navbar',
+  data() {
+    return {}
+  },
+  computed: {
+    links() {
+      return [
+        { text: 'الرئيسية', link: '/', display: true },
+        { text: 'تصفح المنتجات', link: '/store/products', display: true },
+        { text: 'السلة', link: '/store/cart', display: true },
+        {
+          display: this.$auth && this.$auth.loggedIn,
+          text: this.$auth && this.$auth.loggedIn ? this.$auth.user.name : '',
+          link: '/profile',
+        },
+        {
+          text: 'انشئ متجرك',
+          link: '/new-store',
+          display:
+            this.$auth &&
+            this.$auth.loggedIn &&
+            this.$auth.user.role === 'client',
+        },
+        { text: 'تسجيل دخول', link: '/login', display: !this.$auth.loggedIn },
+        { text: 'إنشاء حساب', link: '/sign-up', display: !this.$auth.loggedIn },
+      ]
+    },
+    adminLinks() {
+      const auth =
+        this.$auth && this.$auth.loggedIn && this.$auth.user.storeName
+      const owner = ['admin', 'owner'].includes(this.$auth.user.role)
+      const admin = this.$auth.user.role === 'admin'
+      const store = this.$auth.user.storeName
+      return [
+        {
+          text: 'إحصائيات',
+          link: `/dashboard/${store}`,
+          display: auth && owner,
+        },
+        {
+          text: 'تعديل متجرك',
+          link: `/dashboard/${store}/edit/`,
+          display: auth && owner,
+        },
+        {
+          text: 'إدارة المتاجر',
+          link: `/dashboard/stores/`,
+          display: auth && admin,
+        },
+        {
+          text: 'إدارة العملاء',
+          link: `/dashboard/users/`,
+          display: auth && admin,
+        },
+        {
+          text: 'إدارة الطلبيات',
+          link: `/dashboard/${store}/orders/`,
+          display: auth && owner,
+        },
+        {
+          text: 'إدارة المنتجات',
+          link: `/dashboard/${store}/products/`,
+          display: auth && owner,
+        },
+        {
+          text: 'إدارة الفئات',
+          link: `/dashboard/categories/`,
+          display: auth && admin,
+        },
+      ]
+    },
+  },
+})
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

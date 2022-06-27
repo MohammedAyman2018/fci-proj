@@ -94,15 +94,11 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ['~/assets/css/main.css'],
+  css: ['~/assets/css/main.css', '~/assets/css/main.scss'],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     { src: '~/plugins/vue-good-table', ssr: false },
-    '~/plugins/v-tooltip',
-    { src: '~/plugins/vue-google-maps', ssr: false },
-    { src: './plugins/vue-slick-carousel.js' },
-    '~/plugins/Autocomplete',
     '~/plugins/vuelidate',
     '~/plugins/vue-js-modal.js',
   ],
@@ -114,8 +110,6 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
-    // https://go.nuxtjs.dev/tailwindcss
-    '@nuxtjs/tailwindcss',
     '@braid/vue-formulate/nuxt',
   ],
   formulate: {
@@ -131,6 +125,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/toast',
     '@nuxtjs/auth-next',
+    ['nuxt-buefy', { css: false }],
   ],
 
   // Axios module configuration: https://go.nuxtjs.dev/config-axios

@@ -1,0 +1,13 @@
+// Import Bulma's core
+@import '~bulma/sass/utilities/_all';
+$rtl: true;
+$primary: #48d719;
+
+@include desktop {
+  // Styles applied
+  // above $desktop
+}
+
+// Import Bulma and Buefy styles
+@import '~bulma';
+@import '~buefy/src/scss/buefy';

@@ -1,7 +1,7 @@
 @import url('./font/main.css');
 @import url('./tooltip.css');
 @import url('./filter-drawer.css');
-@import url('./product-card.css');
+
 * {
   font-family: 'Changa', sans-serif;
 }
@@ -93,4 +93,15 @@ button.w-full {
   width: 200px;
   height: 100px;
   background-image: linear-gradient(gray 100%, transparent 0);
+}
+
+.b-checkbox.checkbox input[type='checkbox'] + .check,
+.b-radio.radio input[type='radio'] + .check {
+  margin-left: 10px !important;
+}
+
+.force-overflow .modal-card {
+  overflow-y: scroll !important;
+  max-height: auto;
+  height: 100%;
 }

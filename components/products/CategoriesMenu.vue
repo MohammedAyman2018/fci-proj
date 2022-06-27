@@ -1,115 +1,118 @@
 <template>
-  <div class="filters-drawer">
-    <input id="my-drawer-4" type="checkbox" class="drawer-toggle" />
-    <div class="drawer-side">
-      <label for="my-drawer-4" class="drawer-overlay"></label>
-
-      <ul class="menu p-4 overflow-y-auto w-80 bg-base-100 text-base-content">
-        <div class="flex justify-end items-center">
-          <label for="my-drawer-4"> <i class="ri-close-fill"></i></label>
-        </div>
-
-        <!-- <div class="form-control w-full max-w-xs">
-          <label class="label">
-            <span class="label-text">ابحث عن منتج بالاسم</span>
-          </label>
-          <input
-            v-model="search"
-            type="search"
-            placeholder="اكتب ثلاث حروف على الأقل"
-            class="input input-bordered w-full max-w-xs"
-            @input="$store.commit('products/filterByName', search)"
-          />
-        </div> -->
-        <!-- show with categories -->
-        <div tabindex="0" class="collapse collapse-plus">
-          <input type="checkbox" />
-          <div class="collapse-title text-xl font-medium">التصنيفات</div>
-          <div class="collapse-content">
-            <!-- Sidebar content here -->
-            <li v-for="category in categories" :key="category._id">
-              <div class="form-control">
-                <label class="cursor-pointer label">
-                  <span class="label-text">{{ category.name }}</span>
-                  <input
-                    v-model="selectedCategories"
-                    type="checkbox"
-                    :value="category._id"
-                    class="checkbox checkbox-primary"
-                  />
-                </label>
-              </div>
-            </li>
-          </div>
-        </div>
-        <!-- sort products -->
-        <div tabindex="0" class="collapse collapse-plus">
-          <input type="checkbox" />
-          <div class="collapse-title text-xl font-medium">ترتيب</div>
-          <div class="collapse-content">
-            <!-- Sidebar content here -->
-            <li v-for="sort in sorting" :key="sort.name">
-              <div class="form-control">
-                <label class="label cursor-pointer">
-                  <span class="label-text">{{ sort.name }}</span>
-                  <input
-                    type="radio"
-                    name="sort"
-                    class="radio checked:bg-red-500"
-                    @change="
-                      $store.commit('products/sortProducts', sort.srotName)
-                    "
-                  />
-                </label>
-              </div>
-            </li>
-          </div>
-        </div>
-        <!-- Filter with store -->
-        <div tabindex="0" class="collapse collapse-plus">
-          <input type="checkbox" />
-          <div class="collapse-title text-xl font-medium">المتجر</div>
-          <div class="collapse-content">
-            <!-- Sidebar content here -->
-            <li>
-              <div class="form-control">
-                <label class="label cursor-pointer">
-                  <span class="label-text">الكل</span>
-                  <input
-                    type="radio"
-                    name="sort"
-                    class="radio checked:bg-red-500"
-                    @change="$store.commit('products/filterByStore', 'all')"
-                  />
-                </label>
-              </div>
-            </li>
-            <li v-for="store in stores" :key="store._id">
-              <div class="form-control">
-                <label class="label cursor-pointer">
-                  <span class="label-text">{{ store.title }}</span>
-                  <input
-                    type="radio"
-                    name="sort"
-                    class="radio checked:bg-red-500"
-                    @change="
-                      $store.commit('products/filterByStore', store.title)
-                    "
-                  />
-                </label>
-              </div>
-            </li>
-          </div>
-        </div>
-      </ul>
-    </div>
+  <div>
+    <b-sidebar
+      :open.sync="open"
+      type="is-light"
+      mobile="fullwidth"
+      fullheight
+      overlay
+      right
+      @close="$emit('close')"
+    >
+      <div class="p-1">
+        <b-menu :activable="false">
+          <b-menu-list label="الفلاتر">
+            <!-- Categories -->
+            <b-menu-item>
+              <template #label="props">
+                التصنيفات
+                <b-icon
+                  class="is-pulled-right"
+                  :icon="props.expanded ? 'menu-down' : 'menu-up'"
+                ></b-icon>
+              </template>
+              <b-menu-item v-for="category in categories" :key="category._id">
+                <template #label>
+                  <b-field>
+                    <b-checkbox
+                      v-model="selectedCategories"
+                      :native-value="category._id"
+                      >{{ category.name }}</b-checkbox
+                    >
+                  </b-field>
+                </template>
+              </b-menu-item>
+            </b-menu-item>
+            <!-- Sort -->
+            <b-menu-item>
+              <template #label="props">
+                ترتيب
+                <b-icon
+                  class="is-pulled-right"
+                  :icon="props.expanded ? 'menu-down' : 'menu-up'"
+                ></b-icon>
+              </template>
+              <b-menu-item v-for="sort in sorting" :key="sort.name">
+                <template #label>
+                  <b-field>
+                    <b-radio
+                      v-model="sortList"
+                      :native-value="sort.srotName"
+                      @input="
+                        $store.commit('products/sortProducts', sort.srotName)
+                      "
+                      >{{ sort.name }}</b-radio
+                    >
+                  </b-field>
+                </template>
+              </b-menu-item>
+            </b-menu-item>
+            <!-- Sort -->
+            <b-menu-item>
+              <template #label="props">
+                المتجر
+                <b-icon
+                  class="is-pulled-right"
+                  :icon="props.expanded ? 'menu-down' : 'menu-up'"
+                ></b-icon>
+              </template>
+              <b-menu-item>
+                <template #label>
+                  <b-field>
+                    <b-radio
+                      v-model="storeList"
+                      native-value="all"
+                      @input="$store.commit('products/filterByStore', 'all')"
+                      >الكل</b-radio
+                    >
+                  </b-field>
+                </template>
+              </b-menu-item>
+              <b-menu-item v-for="store in stores" :key="store._id">
+                <template #label>
+                  <b-field>
+                    <b-radio
+                      v-model="storeList"
+                      :native-value="store.title"
+                      @input="
+                        $store.commit('products/filterByStore', store.title)
+                      "
+                      >{{ store.title }}</b-radio
+                    >
+                  </b-field>
+                </template>
+              </b-menu-item>
+            </b-menu-item>
+          </b-menu-list>
+        </b-menu>
+      </div>
+    </b-sidebar>
   </div>
 </template>
 
 <script>
 export default {
+  props: {
+    openSidebar: {
+      type: Boolean,
+      default: () => false,
+    },
+  },
   data() {
     return {
+      open: false,
+      storeList: [],
+      sortList: [],
       selectedCategories: [],
       sorting: [
         { name: 'من الأقل سعراً للأعلى', srotName: 'priceFromLowToHigh' },
@@ -137,6 +140,9 @@ export default {
           this.$store.dispatch('categories/setSelectedCategories', val)
         }
       },
+    },
+    openSidebar(val) {
+      this.open = val
     },
   },
   async mounted() {

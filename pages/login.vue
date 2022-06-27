@@ -1,63 +1,62 @@
 <template>
-  <div>
-    <div class="container mx-auto">
-      <div class="hero min-h-screen">
-        <div class="flex-col w-full justify-center hero-content lg:flex-row">
-          <div class="text-center flex-grow lg:text-right">
-            <h1 class="mb-5 text-5xl font-bold">أهلا بيك</h1>
-            <p class="mb-5">اشتري كل احتياجاتك بافضل سعر ف السوق.</p>
-          </div>
-          <div
-            class="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100"
-          >
-            <div class="card-body">
-              <FormulateForm
-                v-slot="{ isLoading }"
-                v-model="user"
-                @submit="userLogin"
-              >
-                <FormulateInput
-                  type="email"
-                  name="email"
-                  label="البريد الإلكتروني"
-                  placeholder="البريد الإلكتروني"
-                  validation="required|email"
-                />
+  <section class="hero is-fullheight">
+    <div class="hero-body">
+      <div class="container">
+        <div class="column is-4 is-offset-4">
+          <h3 class="title has-text-black">تسجيل الدخول</h3>
+          <hr class="login-hr" />
+          <div class="box">
+            <FormulateForm
+              v-slot="{ isLoading }"
+              v-model="user"
+              @submit="userLogin"
+            >
+              <FormulateInput
+                type="email"
+                name="email"
+                label="البريد الإلكتروني"
+                placeholder="البريد الإلكتروني"
+                validation="required|email"
+              />
 
+              <FormulateInput
+                type="password"
+                name="password"
+                label="كلمة المرور"
+                placeholder="كلمة المرور"
+                validation="required"
+              />
+              <div class="mt-4 text-center">
+                <p class="text-sm">
+                  ليس لديك حساب؟
+                  <nuxt-link
+                    to="/sign-up"
+                    class="text-blue-600 hover:underline"
+                  >
+                    أنشئ حسابك.</nuxt-link
+                  >
+                </p>
+              </div>
+              <div class="form-control mt-6">
                 <FormulateInput
-                  type="password"
-                  name="password"
-                  label="كلمة المرور"
-                  placeholder="كلمة المرور"
-                  validation="required"
+                  type="submit"
+                  :wrapper-class="['w-full']"
+                  :input-class="[
+                    'btn-success',
+                    'is-justify-content-center',
+                    'w-full',
+                    'btn',
+                  ]"
+                  :disabled="isLoading || !valid"
+                  :label="isLoading ? 'جاري التسجيل' : 'تسجيل'"
                 />
-                <div class="mt-4 text-center">
-                  <p class="text-sm">
-                    ليس لديك حساب؟
-                    <nuxt-link
-                      to="/sign-up"
-                      class="text-blue-600 hover:underline"
-                    >
-                      أنشئ حسابك.</nuxt-link
-                    >
-                  </p>
-                </div>
-                <div class="form-control mt-6">
-                  <FormulateInput
-                    type="submit"
-                    :wrapper-class="['w-full']"
-                    :input-class="['btn-success', 'w-full', 'btn']"
-                    :disabled="isLoading || !valid"
-                    :label="isLoading ? 'جاري التسجيل' : 'تسجيل'"
-                  />
-                </div>
-              </FormulateForm>
-            </div>
+              </div>
+            </FormulateForm>
           </div>
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
 
 <script lang="ts">
@@ -80,14 +79,14 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-      this.$router.push('/')
+      window.location = '/'
     }
   },
   methods: {
     async userLogin() {
       try {
         await this.$auth.loginWith('local', { data: this.user })
-        this.$router.push('/')
+        window.location = '/'
         this.$store.dispatch('showToast', {
           message: 'تم تسجيل الدخول',
           type: 'success',

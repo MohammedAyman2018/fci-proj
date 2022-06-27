@@ -1,34 +1,25 @@
 <template>
   <div>
-    <div class="filter drawer-content">
-      <!-- Page content here -->
-      <label for="my-drawer-4" class="btn btn-circle drawer-button">
-        <i class="ri-filter-2-line" />
-      </label>
-    </div>
-
-    <categories-menu />
+    <b-button class="filter-btn" rounded @click="openSidebar = true">
+      <b-icon icon="filter" />
+    </b-button>
+    <categories-menu :open-sidebar="openSidebar" @close="openSidebar = false" />
     <section class="container mx-auto">
       <h1 class="text-xl font-bold my-4">تصفح المنتجات</h1>
       <div
         v-if="displayedProducts.length > 0"
-        class="
-          grid
-          justify-items-center
-          grid-cols-1
-          sm:grid-cols-2
-          lg:grid-cols-3
-          xl:grid-cols-4
-        "
+        class="columns is-multiline flex-wrap"
       >
-        <product-card
+        <div
           v-for="product in displayedProducts"
           :key="product._id"
-          :product="product"
-        />
+          class="column is-one-quarter"
+        >
+          <product-card :product="product" />
+        </div>
       </div>
       <div v-else>
-        <p class="text-center">لايوجد منتجات تحت هذه الفئة</p>
+        <p class="has-text-centered">لايوجد منتجات تحت هذه الفئة</p>
       </div>
     </section>
   </div>
@@ -40,6 +31,11 @@ import CategoriesMenu from '~/components/products/CategoriesMenu.vue'
 export default {
   name: 'ProductsPage',
   components: { productCard, CategoriesMenu },
+  data() {
+    return {
+      openSidebar: false,
+    }
+  },
   computed: {
     products() {
       return this.$store.state.products.products
@@ -55,7 +51,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .fadeHeight-enter-active,
 .fadeHeight-leave-active {
@@ -66,5 +61,12 @@ export default {
 .fadeHeight-leave-to {
   opacity: 0;
   max-height: 0px;
+}
+
+.filter-btn {
+  position: fixed;
+  bottom: 10%;
+  z-index: 9999;
+  left: 10%;
 }
 </style>

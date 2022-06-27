@@ -169,7 +169,7 @@ export const rateProduct = async (req, res) => {
     if (req.body.rate > 5) req.body.rate = 5
     if (product) {
       let userRatedBefore = product.rating.find(
-        (rate) => rate.userId === req.body.userId
+        (rate) => String(rate.userId) === req.body.userId
       )
       if (userRatedBefore) {
         userRatedBefore.rate = req.body.rate

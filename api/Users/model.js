@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-
 const Joi = require('joi')
 
 const Schema = new mongoose.Schema({
@@ -47,7 +46,17 @@ const Schema = new mongoose.Schema({
     required: true,
     default: 'client'
   },
-  storeName: String
+  storeName: String,
+  intersts: {
+    type: [
+      {
+        ref: 'categories',
+        type: mongoose.Types.ObjectId,
+        required: true,
+      }
+    ],
+    default: []
+  }
 },
   { timestamps: true })
 
@@ -63,7 +72,8 @@ function validate(user) {
     dob: Joi.date(),
     phone: Joi.string().required(),
     password: Joi.string().required(),
-    storeName: Joi.string()
+    storeName: Joi.string(),
+    intersts: Joi.array(),
   })
 
   return userSchema.validate(user, { abortEarly: false })

@@ -1,8 +1,11 @@
 <template>
   <div class="container mx-auto px-2">
-    <div class="justify-between flex items-center my-3">
-      <h2 class="text-2xl mb-3">كل العملاء</h2>
-      <button
+    <div
+      class="is-justify-content-space-between is-flex is-align-items-center my-3"
+    >
+      <h2 class="is-size-3 has-text-weight-bold">كل الفئات</h2>
+      <b-button
+        type="is-primary"
         class="btn btn-primary btn-sm"
         @click="
           edit = false
@@ -10,7 +13,7 @@
         "
       >
         أضف عميل
-      </button>
+      </b-button>
     </div>
     <vue-good-table
       :columns="[
@@ -38,37 +41,34 @@
       max-height="auto"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'operations'" class="flex">
+        <span v-if="props.column.field == 'operations'" class="is-flex">
           <div data-tip="تعديل" class="tooltip">
-            <button
-              class="btn btn-warning btn-square btn-xs"
+            <b-button
+              icon-left="pen"
+              type="is-warning"
               @click="openModal('edit-user', props.row)"
-            >
-              <i class="ri-pencil-line"></i>
-            </button>
+            />
           </div>
           <div data-tip="تفاصيل أكثر" class="tooltip mx-3">
-            <nuxt-link
+            <b-button
+              tag="router-link"
+              icon-left="dots-horizontal"
+              type="is-ghost"
               :to="`${$route.path}/${props.row._id}`"
-              class="btn btn-danger btn-square btn-xs"
-            >
-              <i class="ri-more-line"></i>
-            </nuxt-link>
+            />
           </div>
           <div data-tip="حذف" class="tooltip">
-            <button
-              class="btn btn-error btn-square btn-xs"
+            <b-button
+              icon-left="delete"
+              type="is-danger"
               @click="openModal('delete-user', props.row)"
-            >
-              <i class="ri-delete-bin-line"></i>
-            </button>
+            />
           </div>
         </span>
       </template>
 
       <div slot="emptystate">لا توجد فئات حتى الآن</div>
     </vue-good-table>
-
 
     <modal name="delete-user" scrollable height="auto">
       <div class="p-4">
@@ -94,86 +94,90 @@
       scrollable
       @closed="closeModal('edit-user')"
     >
-     <vuescroll>
-      <div class="p-4 space-y-1">
-        <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold">{{ edit ? 'تعديل' : 'أضف' }} العميل</h2>
-           <i class="ri-close-fill" @click="closeModal('edit-user')"></i>
-        </div>
-        <FormulateForm
-          v-slot="{ isLoading }"
-          :values="cloneDeep(user)"
-          @submit="!edit ? addUser : editUser"
-        >
+      <vuescroll>
+        <div class="p-4 space-y-1">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xl font-bold">
+              {{ edit ? 'تعديل' : 'أضف' }} العميل
+            </h2>
+            <i class="ri-close-fill" @click="closeModal('edit-user')"></i>
+          </div>
+          <FormulateForm
+            v-slot="{ isLoading }"
+            :values="cloneDeep(user)"
+            @submit="!edit ? addUser : editUser"
+          >
+            <FormulateInput
+              name="name"
+              label="اسم العميل"
+              placeholder="ادخل اسم العميل"
+              validation="required"
+            />
 
-          <FormulateInput
-            name="name"
-            label="اسم العميل"
-            placeholder="ادخل اسم العميل"
-            validation="required"
-          />
+            <FormulateInput
+              name="address"
+              label="عنوان العميل"
+              placeholder="ادخل عنوان العميل"
+              validation="required"
+            />
 
-          <FormulateInput
-            name="address"
-            label="عنوان العميل"
-            placeholder="ادخل عنوان العميل"
-            validation="required"
-          />
+            <FormulateInput
+              type="date"
+              name="dob"
+              label="تاريخ ميلاد العميل"
+              validation="required"
+            />
 
-          <FormulateInput
-            type="date"
-            name="dob"
-            label="تاريخ ميلاد العميل"
-            validation="required"
-          />
+            <FormulateInput
+              name="email"
+              type="email"
+              placeholder="البريد الإلكتروني"
+              label="البريد الإلكتروني"
+              validation="required|email"
+            />
+            <FormulateInput
+              type="password"
+              name="password"
+              placeholder="ادخل كلمة المرور"
+              label="كلمة المرور"
+              validation="required"
+            />
 
-          <FormulateInput
-            name="email"
-            type="email"
-            placeholder="البريد الإلكتروني"
-            label="البريد الإلكتروني"
-            validation="required|email"
-          />
-          <FormulateInput
-            type="password"
-            name="password"
-            placeholder="ادخل كلمة المرور"
-            label="كلمة المرور"
-            validation="required"
-          />
+            <FormulateInput
+              name="phone"
+              type="tel"
+              placeholder="ادخل رقم الجوال"
+              label="رقم الجوال"
+              validation="required"
+            />
 
-          <FormulateInput
-            name="phone"
-            type="tel"
-            placeholder="ادخل رقم الجوال"
-            label="رقم الجوال"
-            validation="required"
-          />
+            <FormulateInput
+              name="role"
+              type="select"
+              placeholder="اختر وظيفة العميل"
+              :options="{ client: 'عميل', admin: 'أدمن' }"
+              label="وظيفة العميل"
+              validation="required"
+            />
 
-          <FormulateInput
-            name="role"
-            type="select"
-            placeholder="اختر وظيفة العميل"
-            :options="{ client: 'عميل', admin: 'أدمن' }"
-            label="وظيفة العميل"
-            validation="required"
-          />
-
-          <div class="flex justify-between items-center mt-4 mb-12">
-             <FormulateInput
+            <div class="flex justify-between items-center mt-4 mb-12">
+              <FormulateInput
                 :wrapper-class="['w-full']"
                 :input-class="['btn-success', 'w-full', 'btn']"
                 :disabled="isLoading || !valid"
                 type="submit"
                 :label="!edit ? 'أضافة' : 'تعديل'"
               />
-            <button class="btn btn-ghost btn-sm" @click="closeModal('edit-user')">
-              إلغاء
-            </button>
-          </div>
-        </FormulateForm>
-      </div>
-     </vuescroll>
+              <button
+                class="btn btn-ghost btn-sm"
+                @click="closeModal('edit-user')"
+              >
+                إلغاء
+              </button>
+            </div>
+          </FormulateForm>
+        </div>
+      </vuescroll>
     </modal>
   </div>
 </template>
@@ -181,14 +185,14 @@
 <script lang="ts">
 import Vue from 'vue'
 import cloneDeep from 'lodash.clonedeep'
-  import vuescroll from 'vuescroll';
+import vuescroll from 'vuescroll'
 import IUser from '@/interfaces/user'
 
 export default Vue.extend({
   name: 'UsersDashBoard',
   components: {
-      vuescroll
-    },
+    vuescroll,
+  },
 
   layout: 'admin',
   data() {
@@ -199,9 +203,9 @@ export default Vue.extend({
       displayedUsers: [] as IUser[],
     }
   },
-  head () {
+  head() {
     return {
-      title: 'العملاء'
+      title: 'العملاء',
     }
   },
   computed: {

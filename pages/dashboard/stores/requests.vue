@@ -1,6 +1,8 @@
 <template>
   <div class="container mx-auto px-2">
-    <div class="justify-between flex items-center my-3">
+    <div
+      class="is-justify-content-space-between is-flex is-align-items-center my-3"
+    >
       <h2 class="text-2xl mb-3">طلبات انشاء متجر</h2>
       <div class="flex justify-between">
         <button class="btn mx-1 btn-primary btn-sm" @click="filter('waiting')">

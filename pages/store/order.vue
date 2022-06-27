@@ -1,70 +1,45 @@
 <template>
   <section class="container mx-auto">
-    <h3 class="my-4 font-bold text-center text-xl">إتمام الطلب</h3>
-    <modal name="complete-profile" scrollable height="auto">
-      <div class="p-4">
-        <h2 class="text-xl font-bold">برجاء إكمال حسابك قبل إنشاء الحساب</h2>
+    <h3 class="my-4 has-text-weight-bold is-size-3">إتمام الطلب</h3>
 
-        <div class="mt-5">
-          <div class="flex justify-between items-center mt-4 mb-12">
-            <button
-              class="btn btn-success btn-sm"
-              @click="$router.push('/profile')"
-            >
-              إكمال
-            </button>
-            <button
-              class="btn btn-ghost btn-sm"
-              @click="closeModal('complete-profile')"
-            >
-              إلغاء
-            </button>
+    <div v-if="cart.length > 0">
+      <div class="columns is-multiline">
+        <div
+          v-for="product in cart"
+          :key="product._id"
+          class="column is-12 mb-3"
+        >
+          <div class="columns box">
+            <div class="column is-3">
+              <img
+                style="width: 100px; height: 100px; border-raduis: 10px"
+                :src="product.images[0]"
+                :alt="product.name"
+              />
+            </div>
+            <div class="column">
+              <h4 class="is-size-4">
+                {{ product.name }}
+                <b-button
+                  type="is-danger"
+                  icon-right="delete"
+                  @click="removeFromCart(product)"
+                />
+              </h4>
+              <p class="is-size-6"></p>
+            </div>
+            <div class="column is-3">
+              <bdi class="is-size-4">
+                {{ product.price }} X {{ product.amount }} =
+                {{ product.price * product.amount }} جنيه
+              </bdi>
+            </div>
           </div>
         </div>
       </div>
-    </modal>
-    <ul v--if="cart && cart.length > 0">
-      <li
-        v-for="(product, index) in cart"
-        :key="product._id"
-        class="flex justify-around items-center my-4"
-        dir="rtl"
-      >
-        <p>
-          <bdi>{{ product.name }}</bdi> {{ product.price }} جنيه
-        </p>
-
-        <div>
-          <p>الكمية:</p>
-          <div class="flex justify-between items-center">
-            <input
-              :value="product.amount"
-              type="number"
-              step="0.5"
-              min="0"
-              @input="updateProductAmount(index, $event)"
-            />
-            <i
-              class="
-                ri-delete-bin-line
-                cursor-pointer
-                mx-2
-                hover:text-red-500
-                ri-2x
-              "
-              @click="removeFromCart(product)"
-            ></i>
-          </div>
-        </div>
-      </li>
-      <hr class="my-4" />
-      <li class="flex justify-around items-center">
-        <p class="font-bold">المجموع</p>
-        <p>{{ total }} جنيه</p>
-      </li>
-    </ul>
+    </div>
     <div class="flex justify-center mt-4">
-      <button class="btn btn-primary" @click="createOrder">إتمام الطلب</button>
+      <b-button type="is-primary" @click="createOrder">إتمام الطلب</b-button>
     </div>
   </section>
 </template>
@@ -74,7 +49,7 @@ export default {
   name: 'OrderPage',
   data() {
     return {
-      payment: '',
+      payment: 'كاش',
     }
   },
   computed: {
@@ -89,11 +64,24 @@ export default {
       return sum
     },
   },
+  mounted() {
+    if (this.cart.length === 0) {
+      window.location = '/'
+    }
+  },
   methods: {
     async createOrder() {
       try {
         if (!this.$auth.user.phone || !this.$auth.user.address) {
-          this.$modal.show('complete-profile')
+          // this.$modal.show('complete-profile')
+          this.$buefy.dialog.confirm({
+            title: 'بيانات ناقصة',
+            message: 'برجاء إكمال حسابك قبل إنشاء الحساب',
+            cancelText: 'إلغاء',
+            confirmText: 'إكمال الحساب',
+            type: 'is-warning',
+            onConfirm: () => this.$router.push('/profile'),
+          })
           return
         }
 
@@ -103,7 +91,9 @@ export default {
               name: prod.name,
               amount: prod.amount,
               price: prod.price,
-              img: prod.img,
+              img: prod.images[0],
+              _id: prod._id,
+              storeName: prod.storeName,
             }
           }),
           user: {
@@ -114,25 +104,33 @@ export default {
           },
           storeName: this.$auth.user.storeName,
         }
-        const res = await this.$axios.post('/orders', order)
-        console.log(res)
+        await this.$axios.post('/orders', order)
+        this.$store.commit('localStorage/emptyCart')
+        this.$store.dispatch('showToast', {
+          message: 'تم استقبال طلبك',
+          type: 'success',
+        })
+        window.location = '/'
       } catch (error) {
-        console.log(error)
+        this.$store.dispatch('showToast', {
+          message: error,
+          type: 'danger',
+        })
       }
     },
     removeFromCart(item) {
-      if (confirm('هل ترغب حقاً في حذف هذا المنتج؟')) {
-        this.$store.commit('localStorage/removeFromCart', item)
-      }
-    },
-    updateProductAmount(idx, e) {
-      if (e.target.value <= 0) e.target.value = 1
-      const amount = e.target.value ? e.target.value : 1
-      this.$store.commit('localStorage/editAmount', { idx, amount })
+      this.$buefy.dialog.confirm({
+        title: 'حذف منتج منتج الطلب',
+        message: 'هل حقاً تريد حذف المنتج من الطلب؟',
+        cancelText: 'إلغاء',
+        confirmText: 'نعم',
+        type: 'is-danger',
+        onConfirm: () =>
+          this.$store.commit('localStorage/removeFromCart', item),
+      })
     },
   },
 }
 </script>
 
-<style>
-</style>
+<style></style>
