@@ -1,6 +1,7 @@
 const path = require('path')
 const cloudinary = require('cloudinary').v2
 const multer = require('multer')
+const sharp = require('sharp')
 require('dotenv').config()
 
 cloudinary.config({
@@ -21,12 +22,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage })
 
 async function uploadImage(req, res) {
-  await cloudinary.uploader.upload(req.file.path,
-    { resource_type: 'auto', folder: 'fci' },
-    function (error, result) {
-      if (error) { return res.status(400).json(error) }
-      return res.status(200).json([{ url: result.secure_url }])
-    })
+  const compressedImage = path.join(__dirname, '../', 'uploads', `compresed-${req.file.originalname}-${new Date().getTime()}.jpeg`)
+  await sharp(req.file.path).jpeg({ quality: 30 }).toFile(compressedImage, async (err, _info) =>{
+    if (err) { return res.status(500).json(err) }
+    await cloudinary.uploader.upload(compressedImage,
+      { resource_type: 'auto', folder: 'fci' },
+      function (error, result) {
+        if (error) { return res.status(500).json(error) }
+        return res.status(200).json([{ url: result.secure_url }])
+      })
+  })
 }
 
 module.exports.cloudinary = cloudinary
