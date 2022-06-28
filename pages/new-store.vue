@@ -1,6 +1,6 @@
 <template>
   <div class="banner">
-    <img class="bg" src="@/assets/topography.svg" alt="" />
+    <!-- <img class="bg" src="@/assets/topography.svg" alt="" /> -->
 
     <Success v-if="storeSuccess" />
 
@@ -11,28 +11,26 @@
 
     <div
       v-if="!showNotReviewedMessage && !storeSuccess"
-      class="flex items-center"
+      class="is-flex items-center"
     >
-      <div
-        class="flex-1 h-full max-w-4xl mx-auto bg-white rounded-lg shadow-xl"
-      >
-        <div class="flex items-center flex-col md:flex-row">
-          <div class="md:h-32 md:w-1/2">
+      <div class="">
+        <div class="columns">
+          <div class="column is-hidden-touch is-6-desktop">
             <video autoplay loop="true" width="100%" height="100%">
               <source src="@/assets/videos/sign up.mp4" type="video/mp4" />
 
               Sorry, your browser doesn't support embedded videos.
             </video>
           </div>
-          <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+          <div
+            class="column is-6-desktop is-flex is-align-items-center is-justify-content-center p-6"
+          >
             <div class="w-full">
-              <h1 class="mb-4 text-2xl font-bold text-center text-gray-700">
-                انشئ متجرك
-              </h1>
+              <h1 class="mb-4 is-size-3 has-text-weight-bold">انشئ متجرك</h1>
               <FormulateForm
                 v-slot="{ isLoading }"
                 v-model="theStore"
-                @submit="createStore"
+                @submit="storeEdit ? updateStore() : createStore()"
               >
                 <FormulateInput
                   name="title"
@@ -77,20 +75,17 @@
                 <FormulateInput
                   type="submit"
                   :wrapper-class="['w-full']"
-                  :input-class="['btn-success', 'w-full', 'btn']"
+                  :input-class="[
+                    'btn-success',
+                    'is-justify-content-center',
+                    'w-full',
+                    'btn',
+                  ]"
                   :disabled="isLoading || !valid"
                   :label="isLoading ? 'جاري التسجيل' : 'تسجيل'"
                 />
                 <!-- class="btn mt-4 btn-success w-full" -->
               </FormulateForm>
-              <div class="mt-4 text-center">
-                <p class="text-sm">
-                  لديك حساب بالفعل?
-                  <nuxt-link to="/login" class="text-blue-600 hover:underline">
-                    سجل دخول.</nuxt-link
-                  >
-                </p>
-              </div>
             </div>
           </div>
         </div>
@@ -98,7 +93,9 @@
     </div>
 
     <div v-else-if="!storeSuccess || showNotReviewedMessage">
-      <p class="text-xl mt-4 text-center">المتجر تحت المراجعة برجاء الانتظار</p>
+      <p class="has-text-centered is-size-3 mt-4">
+        المتجر تحت المراجعة برجاء الانتظار
+      </p>
     </div>
   </div>
 </template>
@@ -162,9 +159,12 @@ export default Vue.extend({
       if (validateStore.reviewed && validateStore.approved) {
         this.theStore = validateStore
         this.$store.commit('stores/setStore', validateStore)
-        if(this.$auth.user.role !== 'owner') {
+        if (this.$auth.user.role !== 'owner') {
           await this.$auth.logout()
-          this.$store.dispatch('showToast', { message: 'تم قبول متجرك رجاء تسجيل الدخول مرة أخرى.', type: 'success' })
+          this.$store.dispatch('showToast', {
+            message: 'تم قبول متجرك رجاء تسجيل الدخول مرة أخرى.',
+            type: 'success',
+          })
         }
         this.storeSuccess = true
       } else if (validateStore.reviewed && !validateStore.approved) {
@@ -184,6 +184,33 @@ export default Vue.extend({
       this.categories = this.categories.map((cat: any) => {
         return { label: cat.name, value: cat._id }
       })
+    },
+    async updateStore(data) {
+      const files: string[] = []
+      data.files.forEach((file: { url: string }[]) => files.push(file[0].url))
+      try {
+        await this.$axios.$patch(`/stores?storeName=${data.title}`, {
+          desc: data.desc,
+          files,
+          location: data.location,
+          workOn: [data.workOn],
+          reviewed: false,
+          rejectMessage: '',
+          approved: false,
+          title: data.title,
+          owner: this.$auth.user!._id,
+        })
+        window.location.reload()
+        this.$store.dispatch('showToast', {
+          message: 'تم استقبال طلبك بنجاح',
+          type: 'success',
+        })
+      } catch (err: any) {
+        this.$store.dispatch('showToast', {
+          message: err.response.data.msg,
+          type: 'error',
+        })
+      }
     },
     async createStore(data) {
       const files: string[] = []

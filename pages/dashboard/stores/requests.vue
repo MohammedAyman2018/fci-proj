@@ -3,21 +3,26 @@
     <div
       class="is-justify-content-space-between is-flex is-align-items-center my-3"
     >
-      <h2 class="text-2xl mb-3">طلبات انشاء متجر</h2>
-      <div class="flex justify-between">
-        <button class="btn mx-1 btn-primary btn-sm" @click="filter('waiting')">
+      <h2 class="is-size-3 has-text-weight-bold">طلبات انشاء متجر</h2>
+      <div class="is-flex is-justify-content-space-between">
+        <b-button
+          type="is-primary"
+          class="btn btn-primary mx-2 btn-sm"
+          @click="filter('waiting')"
+        >
           في الانتظار
-        </button>
-        <button class="btn mx-1 btn-primary btn-sm" @click="filter('rejected')">
+        </b-button>
+        <b-button
+          type="is-primary"
+          class="btn btn-primary btn-sm"
+          @click="filter('rejected')"
+        >
           المرفوضة
-        </button>
+        </b-button>
       </div>
     </div>
 
-    <p
-      v-if="displayedStores.length === 0"
-      class="text-center text-grey-500 text-xl"
-    >
+    <p v-if="displayedStores.length === 0" class="has-text-centered is-size-3">
       لا يوجد تاجر تحت هذه الفلترة
     </p>
     <div
@@ -26,18 +31,23 @@
       :key="oneUser._id"
       class="oneUser"
     >
-      <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg">{{ oneUser.title }}</h3>
+      <div
+        class="is-flex is-justify-content-space-between is-align-content-center mb-4"
+      >
+        <h3 class="is-size-4">{{ oneUser.title }}</h3>
         <div>
-          <button
+          <b-button
+            type="is-primary"
             class="btn btn-primary btn-sm"
             @click="openModal('validate-store', oneUser)"
           >
             إظهار التفاصيل
-          </button>
+          </b-button>
         </div>
       </div>
-      <div class="flex justify-between items-center text-xs">
+      <div
+        class="is-flex is-justify-content-space-between is-align-content-center is-size-6"
+      >
         <p>العنوان: {{ oneUser.location.name }}</p>
       </div>
     </div>
@@ -48,24 +58,35 @@
         <div class="images flex h-12 w-12" v-viewer="{ movable: false }">
           <img
             v-for="src in store.files"
-            class="inline-block mx-3"
+            class="is-inline-block mx-3"
+            width="150px"
+            height="150px"
             :src="src"
             :key="src"
           />
         </div>
         <div class="mt-5">
-          <button class="btn btn-error btn-sm" @click="approved(true)">
+          <b-button
+            type="is-primary"
+            class="btn btn-primary btn-sm"
+            @click="approved(true)"
+          >
             تفعيل
-          </button>
-          <button class="btn btn-error btn-sm" @click="approved(false)">
+          </b-button>
+          <b-button
+            type="is-primary"
+            class="btn btn-primary btn-sm"
+            @click="approved(false)"
+          >
             حذف
-          </button>
-          <button
-            class="btn btn-error btn-sm"
+          </b-button>
+          <b-button
+            type="is-danger"
+            class="btn btn-primary btn-sm"
             @click="closeModal('validate-store')"
           >
             إلغاء
-          </button>
+          </b-button>
         </div>
       </div>
     </modal>
