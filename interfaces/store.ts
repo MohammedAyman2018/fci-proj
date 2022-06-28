@@ -27,5 +27,5 @@ export default interface IStore {
   } | null
   reviewed: boolean
   approved: boolean
-  files: { files: [] }
+  files: []
 }

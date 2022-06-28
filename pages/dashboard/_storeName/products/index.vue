@@ -64,12 +64,32 @@
     <vue-good-table
       :columns="[
         { label: 'اسم المنتج', field: 'name' },
-        { label: 'السعر', field: 'price', type: 'number' },
-        { label: 'لديه عرض', field: 'hasOffer', type: 'boolean' },
-        { label: 'نسبة العرض', field: 'offerAmount', type: 'number' },
+        {
+          label: 'السعر',
+          field: 'price',
+          type: 'number',
+          formatFn: (val) => `${val} جنيه`,
+        },
+        {
+          label: 'لديه عرض',
+          field: 'hasOffer',
+          type: 'boolean',
+          formatFn: (val) => (val ? 'نعم' : 'لا'),
+        },
+        {
+          label: 'نسبة العرض',
+          field: 'offerAmount',
+          type: 'number',
+          formatFn: (val) => `${val}%`,
+        },
         { label: 'عدد الطلبات', field: 'ordered', type: 'number' },
         { label: 'عدد الزيارات', field: 'views', type: 'number' },
-        { label: 'الكمية المتاحة', field: 'amount.available', type: 'number' },
+        {
+          label: 'الكمية المتاحة',
+          field: 'amount.available',
+          type: 'number',
+          formatFn: (val) => `${val} قطعة`,
+        },
         {
           label: 'تاريخ الانشاء',
           field: 'createdAt',
@@ -98,16 +118,7 @@
       @on-selected-rows-change="selectionChanged"
     >
       <template slot="table-row" slot-scope="props">
-        <span v-if="props.column.field == 'price'">
-          <span>{{ props.row.price }} جنيه</span>
-        </span>
-        <span v-else-if="props.column.field == 'hasOffer'">
-          <span>{{ props.row.hasOffer ? 'نعم' : 'لا' }} </span>
-        </span>
-        <span v-else-if="props.column.field == 'amount.available'">
-          <span>{{ props.row.amount.available }} قطعة</span>
-        </span>
-        <span v-else-if="props.column.field == 'createdAt'">
+        <span v-if="props.column.field == 'createdAt'">
           <span>{{ props.row.createdAt.substr(0, 10) }}</span>
         </span>
         <span v-if="props.column.field == 'operations'" class="flex">

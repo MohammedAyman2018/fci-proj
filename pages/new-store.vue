@@ -27,65 +27,13 @@
           >
             <div class="w-full">
               <h1 class="mb-4 is-size-3 has-text-weight-bold">انشئ متجرك</h1>
-              <FormulateForm
-                v-slot="{ isLoading }"
-                v-model="theStore"
-                @submit="storeEdit ? updateStore() : createStore()"
-              >
-                <FormulateInput
-                  name="title"
-                  label="اسم المتجر"
-                  placeholder="اسم المتجر"
-                  validation="required"
-                />
 
-                <FormulateInput
-                  name="workOn"
-                  type="select"
-                  :options="categories"
-                  label="ما هو مجال عملك الأساسي"
-                  placeholder="اختر مجال عملك الرئيسي"
-                  validation="required"
-                />
-
-                <FormulateInput
-                  type="textarea"
-                  name="desc"
-                  label="نبذة مختصرة عن المتجر"
-                />
-                <FormulateInput
-                  name="location"
-                  type="select"
-                  :options="locations"
-                  label="عنوان المتجر"
-                  placeholder="عنوان المتجر"
-                  validation="required"
-                />
-
-                <FormulateInput
-                  type="image"
-                  name="files"
-                  label="ملفات إثبات الهوية"
-                  help="برجاء رفع صور من الملفات الاتية صورة البطاقة, السجل التجاري, فيش "
-                  validation="mime:image/jpeg,image/png,image/gif,application/pdf"
-                  multiple
-                  :uploader="uploader"
-                  upload-behavior="delayed"
-                />
-                <FormulateInput
-                  type="submit"
-                  :wrapper-class="['w-full']"
-                  :input-class="[
-                    'btn-success',
-                    'is-justify-content-center',
-                    'w-full',
-                    'btn',
-                  ]"
-                  :disabled="isLoading || !valid"
-                  :label="isLoading ? 'جاري التسجيل' : 'تسجيل'"
-                />
-                <!-- class="btn mt-4 btn-success w-full" -->
-              </FormulateForm>
+              <new-store-form
+                :show-not-reviewed-message="showNotReviewedMessage"
+                :store-success="storeSuccess"
+                :store-edit="storeEdit"
+                :the-store="theStore"
+              />
             </div>
           </div>
         </div>
@@ -102,9 +50,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import IStore from '~/interfaces/store'
 import Success from '@/components/NewStore/success.vue'
-import uploader from '~/utils/uploader'
 
 export default Vue.extend({
   name: 'CreateStore',
@@ -114,14 +60,7 @@ export default Vue.extend({
   data() {
     return {
       showNotReviewedMessage: false,
-      categories: [] as any[],
-      locations: [],
-      theStore: {
-        title: '',
-        desc: '',
-        location: '',
-        files: { files: [] },
-      } as IStore,
+      theStore: null,
       storeSuccess: false,
       storeEdit: false,
     }
@@ -131,111 +70,26 @@ export default Vue.extend({
       title: 'إنشئ متجرك',
     }
   },
-  computed: {
-    valid(): boolean {
-      return (
-        !!this.theStore.title &&
-        !!this.theStore.desc &&
-        !!this.theStore.location &&
-        this.theStore.files.files! &&
-        this.theStore.files.files!.length >= 3
-      )
-    },
-    filesError(): boolean {
-      return false
-    },
-  },
   async mounted() {
-    if (this.$auth.loggedIn) {
-      const locations = await this.$axios.get('/locations')
-      this.getCategories()
-      this.locations = locations.data.map((x) => {
-        return { label: x.name, value: x._id }
-      })
-      const validateStore: IStore = await this.$axios.$get(
-        '/stores/check-if-validate'
-      )
-      if (validateStore === null) return
-      if (validateStore.reviewed && validateStore.approved) {
-        this.theStore = validateStore
-        this.$store.commit('stores/setStore', validateStore)
-        if (this.$auth.user.role !== 'owner') {
-          await this.$auth.logout()
-          this.$store.dispatch('showToast', {
-            message: 'تم قبول متجرك رجاء تسجيل الدخول مرة أخرى.',
-            type: 'success',
-          })
-        }
-        this.storeSuccess = true
-      } else if (validateStore.reviewed && !validateStore.approved) {
-        this.theStore = validateStore
-        this.storeEdit = true
-      } else if (!validateStore.reviewed) {
-        this.showNotReviewedMessage = true
+    const validateStore = await this.$axios.$get('/stores/check-if-validate')
+    if (validateStore === null) return
+    if (validateStore.reviewed && validateStore.approved) {
+      this.theStore = validateStore
+      this.$store.commit('stores/setStore', validateStore)
+      if (this.$auth.user.role !== 'owner') {
+        await this.$auth.logout()
+        this.$store.dispatch('showToast', {
+          message: 'تم قبول متجرك رجاء تسجيل الدخول مرة أخرى.',
+          type: 'success',
+        })
       }
+      this.storeSuccess = true
+    } else if (validateStore.reviewed && !validateStore.approved) {
+      this.theStore = validateStore
+      this.storeEdit = true
+    } else if (!validateStore.reviewed) {
+      this.showNotReviewedMessage = true
     }
-  },
-  methods: {
-    uploader,
-    async getCategories() {
-      this.categories = await this.$axios.$get('/categories').catch((err) => {
-        this.$store.dispatch('showToast', { message: err, type: 'error' })
-      })
-      this.categories = this.categories.map((cat: any) => {
-        return { label: cat.name, value: cat._id }
-      })
-    },
-    async updateStore(data) {
-      const files: string[] = []
-      data.files.forEach((file: { url: string }[]) => files.push(file[0].url))
-      try {
-        await this.$axios.$patch(`/stores?storeName=${data.title}`, {
-          desc: data.desc,
-          files,
-          location: data.location,
-          workOn: [data.workOn],
-          reviewed: false,
-          rejectMessage: '',
-          approved: false,
-          title: data.title,
-          owner: this.$auth.user!._id,
-        })
-        window.location.reload()
-        this.$store.dispatch('showToast', {
-          message: 'تم استقبال طلبك بنجاح',
-          type: 'success',
-        })
-      } catch (err: any) {
-        this.$store.dispatch('showToast', {
-          message: err.response.data.msg,
-          type: 'error',
-        })
-      }
-    },
-    async createStore(data) {
-      const files: string[] = []
-      data.files.forEach((file: { url: string }[]) => files.push(file[0].url))
-      try {
-        await this.$axios.$post('/stores', {
-          desc: data.desc,
-          files,
-          location: data.location,
-          workOn: [data.workOn],
-          title: data.title,
-          owner: this.$auth.user!._id,
-        })
-        window.location.reload()
-        this.$store.dispatch('showToast', {
-          message: 'تم استقبال طلبك بنجاح',
-          type: 'success',
-        })
-      } catch (err: any) {
-        this.$store.dispatch('showToast', {
-          message: err.response.data.msg,
-          type: 'error',
-        })
-      }
-    },
   },
 })
 </script>

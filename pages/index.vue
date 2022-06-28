@@ -178,14 +178,12 @@ export default {
       return this.$store.state.categories.categories
     },
   },
-  async created() {
+  async mounted() {
     try {
-      await this.$store.dispatch('categories/getCategories')
+      await this.$store.$dispatch('categories/getCategories')
     } catch (error) {
       console.log(error)
     }
-  },
-  mounted() {
     this.$nextTick(() => {
       // eslint-disable-next-line no-new
       new Typewriter('#typewriter', {
