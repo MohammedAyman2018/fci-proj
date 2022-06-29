@@ -149,6 +149,7 @@ export default Vue.extend({
 <style scoped>
 .card {
   position: relative;
+  overflow: hidden;
 }
 .card .tag {
   position: absolute;
