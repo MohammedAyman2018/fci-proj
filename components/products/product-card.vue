@@ -116,7 +116,10 @@ export default Vue.extend({
   },
   methods: {
     addToCart(item) {
-      this.$store.commit('localStorage/addToCart', { ...item, amount: 1 })
+      this.$store.commit('localStorage/addToCart', {
+        ...item,
+        orderedAmount: 1,
+      })
       this.$store.dispatch('showToast', {
         message: 'تمت الإضافة للسلة',
         type: 'success',

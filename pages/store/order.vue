@@ -11,27 +11,24 @@
         >
           <div class="columns box">
             <div class="column is-3">
+              <b-button size="is-small" @click="removeFromCart(product)">
+                x
+              </b-button>
               <img
-                style="width: 100px; height: 100px; border-raduis: 10px"
+                style="width: 50px; height: 50px; border-raduis: 10px"
                 :src="product.images[0]"
                 :alt="product.name"
               />
             </div>
             <div class="column">
-              <h4 class="is-size-4">
+              <h4 class="is-size-5">
                 {{ product.name }}
-                <b-button
-                  type="is-danger"
-                  icon-right="delete"
-                  @click="removeFromCart(product)"
-                />
               </h4>
-              <p class="is-size-6"></p>
             </div>
             <div class="column is-3">
-              <bdi class="is-size-4">
-                {{ product.price }} X {{ product.amount }} =
-                {{ product.price * product.amount }} جنيه
+              <bdi class="is-size-5">
+                {{ product.price }} X {{ product.orderedAmount }} =
+                {{ product.price * product.orderedAmount }} جنيه
               </bdi>
             </div>
           </div>
@@ -39,7 +36,12 @@
       </div>
     </div>
     <div class="flex justify-center mt-4">
-      <b-button type="is-primary" @click="createOrder">إتمام الطلب</b-button>
+      <b-button
+        type="is-primary"
+        :disabled="cart.length === 0"
+        @click="createOrder"
+        >إتمام الطلب</b-button
+      >
     </div>
   </section>
 </template>
@@ -59,7 +61,7 @@ export default {
     total() {
       let sum = 0
       this.$store.state.localStorage.cart.forEach((product) => {
-        sum += Number(product.price) * Number(product.amount)
+        sum += Number(product.price) * Number(product.orderedAmount)
       })
       return sum
     },
@@ -89,7 +91,7 @@ export default {
           items: this.cart.map((prod) => {
             return {
               name: prod.name,
-              amount: prod.amount,
+              amount: prod.orderedAmount,
               price: prod.price,
               img: prod.images[0],
               _id: prod._id,

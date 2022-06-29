@@ -76,6 +76,7 @@
         <b-button
           class="mb-4"
           type="is-success"
+          :disabled="amount > product.amount.available"
           @click="
             inCart(product) ? removeFromCart(product) : addToCart(product)
           "
@@ -233,7 +234,7 @@ export default {
     addToCart(item) {
       this.$store.commit('localStorage/addToCart', {
         ...item,
-        amount: this.amount,
+        orderedAmount: this.amount,
       })
       this.$store.dispatch('showToast', {
         message: 'تمت الإضافة للسلة',
