@@ -12,13 +12,13 @@ export const mutations = {
     state.cart.push(item)
   },
   removeFromCart(state, item) {
-    const idx = state.cart.findIndex(x => x._id === item._id)
+    const idx = state.cart.findIndex((x) => x._id === item._id)
     if (idx !== -1) state.cart.splice(idx, 1)
   },
   editAmount(state, { idx, amount }) {
-    state.cart[idx].amount = amount
+    state.cart[idx].orderedAmount = amount
   },
   emptyCart(state) {
     state.cart = []
-  }
+  },
 }
