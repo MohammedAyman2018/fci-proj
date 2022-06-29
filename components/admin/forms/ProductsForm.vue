@@ -6,8 +6,9 @@
       class="login-form"
       @submit="oldProduct ? editProduct($event) : addProduct($event)"
     >
-      <div class="grid grid-cols-1 lg:grid-cols-3">
+      <div class="columns is-multiline">
         <FormulateInput
+          class="column is-3-desktop"
           v-if="!oldProduct"
           type="image"
           name="files"
@@ -20,6 +21,7 @@
         <FormulateInput
           name="name"
           type="text"
+          class="column is-3-desktop"
           label="اسم المنتج"
           placeholder="اسم المنتج"
           validation="required"
@@ -27,6 +29,7 @@
 
         <FormulateInput
           name="url"
+          class="column is-3-desktop"
           type="text"
           label="رابط المنتج"
           help="ادخل رابط خاص للمنتج للمساعدة في ظهوره بشكل اكبر في محركات البحث"
@@ -37,6 +40,7 @@
         <FormulateInput
           name="desc"
           type="textarea"
+          class="column is-3-desktop"
           label="وصف المنتج"
           placeholder="وصف المنتج"
           validation="required"
@@ -45,6 +49,7 @@
         <FormulateInput
           name="price"
           type="number"
+          class="column is-3-desktop"
           label="سعر المنتج"
           placeholder="سعر المنتج"
           validation="required"
@@ -52,6 +57,7 @@
 
         <FormulateInput
           v-if="store && store.workOn"
+          class="column is-3-desktop"
           name="selectedCategories"
           type="select"
           :options="
@@ -66,6 +72,7 @@
 
         <FormulateInput
           name="amountType"
+          class="column is-3-desktop"
           type="select"
           :options="{ limited: 'منتج', unlimited: 'خدمة' }"
           label="نوع المنتج"
@@ -75,6 +82,7 @@
 
         <FormulateInput
           v-if="!!formValues.amountType && formValues.amountType === 'limited'"
+          class="column is-3-desktop"
           name="available"
           type="number"
           label="الكمية المتاحة"
@@ -83,15 +91,18 @@
         />
         <div
           v-if="!!formValues.amountType && formValues.amountType === 'limited'"
+          class="column is-3-desktop"
         >
           <FormulateInput
             name="alarm"
+            class="column"
             type="checkbox"
             label="هل تريد إشعار عند قرب انتهاء مدة المنتج؟"
           />
 
           <FormulateInput
             v-if="formValues.alarm"
+            class="column"
             name="alarmAmount"
             type="number"
             label="الكمية المتاحة"
@@ -100,7 +111,7 @@
           />
         </div>
 
-        <div class="overflow-hidden w-full">
+        <div class="overflow-hidden w-full column is-3-desktop">
           <h4 class="text-md my-3">أين تريد أن يظهر هذا المنتج؟</h4>
           <FormulateInput
             class="inline"
