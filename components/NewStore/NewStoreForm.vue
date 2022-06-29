@@ -37,8 +37,8 @@
         </option>
       </b-select>
     </b-field>
-    <!-- <b-field>
-      <b-upload v-model="theStore.files"  multiple drag-drop>
+    <b-field>
+      <b-upload v-model="theStore.files" multiple drag-drop>
         <section class="section">
           <div class="content has-text-centered">
             <p>
@@ -64,7 +64,7 @@
           @click="theStore.files.splice(index, 1)"
         ></button>
       </span>
-    </div> -->
+    </div>
     <b-button
       native-type="button"
       @click="storeEdit ? updateStore() : createStore()"
@@ -75,7 +75,7 @@
 </template>
 
 <script>
-// import { compress, compressAccurately } from 'image-conversion'
+import { compress } from 'image-conversion'
 
 export default {
   props: {
@@ -131,13 +131,11 @@ export default {
     },
   },
   async mounted() {
-    if (this.$auth.loggedIn) {
-      const locations = await this.$axios.get('/locations')
-      this.getCategories()
-      this.locations = locations.data.map((x) => {
-        return { label: x.name, value: x._id }
-      })
-    }
+    const locations = await this.$axios.get('/locations')
+    this.getCategories()
+    this.locations = locations.data.map((x) => {
+      return { label: x.name, value: x._id }
+    })
   },
   methods: {
     async getCategories() {
@@ -186,7 +184,16 @@ export default {
         const file = this.theStore.files[i]
         console.log('Before ', file.size)
         await compress(file, 0.75).then((result) => {
-          compressedFiles.push(result)
+          if (!(result instanceof Blob)) {
+            compressedFiles.push(result)
+          } else {
+            compressedFiles.push(
+              new File([result], file.name, {
+                type: file.type,
+                endings: file.endings,
+              })
+            )
+          }
         })
       }
 
@@ -197,7 +204,7 @@ export default {
         const formData = new FormData()
         formData.append('file', file)
         const res = await this.$axios.post('/image', formData)
-        files.push(res.data[0].url)
+        files.push(res.data.result)
       }
       console.log('uploaded ', files)
       return files
@@ -205,16 +212,12 @@ export default {
     async createStore() {
       this.isLoading = true
 
-      // const files = await this.uploadImages()
+      const files = await this.uploadImages()
       try {
         await this.$axios.$post('/stores', {
           ...this.theStore,
           workOn: [this.theStore.workOn],
-          files: [
-            'https://res.cloudinary.com/accsys/image/upload/v1656452529/fci/gko930rfhfv5yf6xmkwi.jpg',
-            'https://res.cloudinary.com/accsys/image/upload/v1656452529/fci/gko930rfhfv5yf6xmkwi.jpg',
-            'https://res.cloudinary.com/accsys/image/upload/v1656452529/fci/gko930rfhfv5yf6xmkwi.jpg',
-          ],
+          files,
           owner: this.$auth.user._id,
         })
         window.location.reload()

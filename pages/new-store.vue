@@ -71,6 +71,7 @@ export default Vue.extend({
     }
   },
   async mounted() {
+    if (!this.$auth.loggedIn) return this.$router.push('/login')
     const validateStore = await this.$axios.$get('/stores/check-if-validate')
     if (validateStore === null) return
     if (validateStore.reviewed && validateStore.approved) {
