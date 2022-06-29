@@ -107,7 +107,9 @@ exports.addStore = async (req, res) => {
       contacts: { phone: user.phone },
       owner: req.user.id,
     })
-    await store.save().then((result) => res.status(200).json(result))
+    store.save()
+      .then((result) => res.status(200).json(result))
+      .catch((err) => res.status(500).json(err))
   } catch (err) {
     res.status(400).json({ msg: err.message })
   }
