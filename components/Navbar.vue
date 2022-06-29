@@ -23,13 +23,14 @@
           $auth.loggedIn &&
           ['owner', 'admin'].includes($auth.user.role)
         "
+        collapsible
         label="لوحة التحكم"
       >
         <span v-for="link in adminLinks" :key="link.link" class="is-flex">
           <b-navbar-item
             v-if="link.display"
             tag="router-link"
-            class="flex-grow"
+            class="is-flex-grow-1"
             :to="link.link"
             v-text="link.text"
           />
