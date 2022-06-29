@@ -21,7 +21,15 @@
                 >
                   تصفح المنتجات
                 </b-button>
-                <b-button tag="router-link" to="/new-store" class="button"
+                <b-button
+                  v-if="
+                    !$auth.loggedIn ||
+                    ($auth.loggedIn &&
+                      !['owner', 'admin'].includes($auth.user.role))
+                  "
+                  tag="router-link"
+                  to="/new-store"
+                  class="button"
                   >انضم لمتاجرنا</b-button
                 >
               </div>
