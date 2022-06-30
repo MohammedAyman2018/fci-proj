@@ -133,6 +133,7 @@ export default Vue.extend({
           message = prompt('ما هو سبب الرفض؟')
         }
       }
+      if (message === null) return
       try {
         await this.$axios.$post(`/stores/validate/${this.store._id}`, {
           approved,

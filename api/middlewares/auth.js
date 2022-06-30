@@ -1,9 +1,7 @@
-
 const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
 export default function AdminAuth(req, res, next) {
-
   try {
     const token = req.header('x-auth-token').split(',')[1]
     if (!token) {
@@ -21,7 +19,6 @@ export default function AdminAuth(req, res, next) {
 }
 
 export function clientAuth(req, res, next) {
-
   try {
     const token = req.header('x-auth-token').split(',')[1]
     if (!token) {
@@ -31,6 +28,6 @@ export function clientAuth(req, res, next) {
     req.user = decoded
     next()
   } catch (ex) {
-    res.status(400).send('Invalid token.')
+    return res.status(400).send('Invalid token.')
   }
 }

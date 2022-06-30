@@ -75,7 +75,7 @@
 </template>
 
 <script>
-import { compress } from 'image-conversion'
+import uploader from '~/utils/uploader'
 
 export default {
   props: {
@@ -148,7 +148,7 @@ export default {
     },
     async updateStore(data) {
       this.isLoading = true
-      const files = await this.uploadImages()
+      const files = await this.uploader(this.theStore.files)
 
       try {
         await this.$axios.$patch(`/stores?storeName=${data.title}`, {
@@ -175,44 +175,11 @@ export default {
       }
       this.isLoading = false
     },
-    async uploadImages() {
-      const files = []
-
-      const compressedFiles = []
-      console.log('compressing')
-      for (let i = 0; i < this.theStore.files.length; i++) {
-        const file = this.theStore.files[i]
-        console.log('Before ', file.size)
-        await compress(file, 0.75).then((result) => {
-          if (!(result instanceof Blob)) {
-            compressedFiles.push(result)
-          } else {
-            compressedFiles.push(
-              new File([result], file.name, {
-                type: file.type,
-                endings: file.endings,
-              })
-            )
-          }
-        })
-      }
-
-      console.log('uploading ', compressedFiles)
-      for (let i = 0; i < compressedFiles.length; i++) {
-        const file = compressedFiles[i]
-
-        const formData = new FormData()
-        formData.append('file', file)
-        const res = await this.$axios.post('/image', formData)
-        files.push(res.data.result)
-      }
-      console.log('uploaded ', files)
-      return files
-    },
+    uploader,
     async createStore() {
       this.isLoading = true
 
-      const files = await this.uploadImages()
+      const files = await this.uploader(this.theStore.files)
       try {
         await this.$axios.$post('/stores', {
           ...this.theStore,
@@ -227,7 +194,7 @@ export default {
         })
       } catch (err) {
         this.$store.dispatch('showToast', {
-          message: err.response.data.msg,
+          message: err,
           type: 'error',
         })
       }

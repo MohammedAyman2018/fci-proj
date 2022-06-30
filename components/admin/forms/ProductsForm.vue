@@ -7,17 +7,34 @@
       @submit="oldProduct ? editProduct($event) : addProduct($event)"
     >
       <div class="columns is-multiline">
-        <FormulateInput
-          class="column is-3-desktop"
-          v-if="!oldProduct"
-          type="image"
-          name="files"
-          label="صور المنتج"
-          validation="mime:image/jpeg,image/png,image/gif"
-          multiple
-          :uploader="uploader"
-          upload-behavior="delayed"
-        />
+        <div v-if="!oldProduct" class="column is-3-desktop">
+          <b-field label="صور المنتج">
+            <b-upload v-model="images" multiple drag-drop>
+              <section class="section">
+                <div class="content has-text-centered">
+                  <p>
+                    <b-icon icon="upload" size="is-large"> </b-icon>
+                  </p>
+                  <p>اسحب صور المنتج هنا</p>
+                </div>
+              </section>
+            </b-upload>
+          </b-field>
+          <div class="tags">
+            <span
+              v-for="(file, index) in images"
+              :key="index"
+              class="tag is-primary"
+            >
+              {{ file.name }}
+              <button
+                class="delete is-small"
+                type="button"
+                @click="theStore.files.splice(index, 1)"
+              ></button>
+            </span>
+          </div>
+        </div>
         <FormulateInput
           name="name"
           type="text"
@@ -130,6 +147,7 @@
       <!-- <button class="btn btn-primary btn-sm" @click="addProduct">أضف</button> -->
       <FormulateInput type="submit" :label="oldProduct ? 'تعديل' : 'أضف'" />
     </FormulateForm>
+    <b-loading v-model="isLoading" :can-cancel="false" is-full-page />
   </div>
 </template>
 
@@ -149,6 +167,7 @@ export default Vue.extend({
   data() {
     return {
       store: {},
+      isLoading: false,
       images: [] as string[],
       product: {} as IProduct,
       formValues: {} as any,
@@ -194,6 +213,7 @@ export default Vue.extend({
     reset() {
       this.formValues = {}
       this.product = {} as IProduct
+      this.images = []
     },
     async getStore() {
       const res = await this.$axios.get(
@@ -201,13 +221,8 @@ export default Vue.extend({
       )
       this.store = res.data.store
     },
-    createProduct(data) {
-      const images: string[] = []
-      if (!this.oldProduct) {
-        data.files.forEach((x: { name: string; url: string }[]) => {
-          images.push(x[0].url)
-        })
-      }
+    async createProduct(data) {
+      const images: any = await this.uploader(this.images)
       return {
         images: !this.oldProduct ? images : this.oldProduct.images,
         name: data.name,
@@ -230,7 +245,9 @@ export default Vue.extend({
     },
     async addProduct(data) {
       try {
-        const product = this.createProduct(data)
+        this.isLoading = true
+
+        const product = await this.createProduct(data)
         await this.$axios.$post('/products', product)
         this.reset()
         this.$store.dispatch('showToast', {
@@ -243,10 +260,12 @@ export default Vue.extend({
           type: 'error',
         })
       }
+      this.isLoading = false
     },
     async editProduct(data) {
       try {
-        const product = this.createProduct(data)
+        this.isLoading = true
+        const product = await this.createProduct(data)
         await this.$axios.$patch(`/products/${this.$route.params.id}`, product)
         this.reset()
         this.$store.dispatch('showToast', {
@@ -260,6 +279,7 @@ export default Vue.extend({
           type: 'error',
         })
       }
+      this.isLoading = false
     },
     async getCategories() {
       this.categories = await this.$axios

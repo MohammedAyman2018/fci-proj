@@ -127,9 +127,16 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/toast',
     '@nuxtjs/auth-next',
+    '@nuxtjs/cloudinary',
     ['nuxt-buefy', { css: false }],
   ],
-
+  cloudinary: {
+    // Cloudinary configuration options
+    cloudName: 'accsys',
+    apiKey: '883697127412943',
+    apiSecret: 'po_h5QP8qw5STvb2MEimi2pFyEQ',
+    secure: true,
+  },
   // Axios module configuration: https://go.nuxtjs.dev/config-axios
   axios: {
     baseUrl: '/api',

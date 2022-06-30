@@ -206,6 +206,7 @@ import Vue from 'vue'
 import clonDeep from 'lodash.clonedeep'
 import IProduct from '@/interfaces/product'
 import Uploader from '~/components/utils/Uploader.vue'
+import uploadImages from '~/utils/uploader'
 export default Vue.extend({
   components: { Uploader },
   name: 'ProductPage',
@@ -318,29 +319,23 @@ export default Vue.extend({
       this.edit = true
       this.$modal.hide(modalName)
     },
-    async uploadImages() {
-      const files: string[] = []
-
-      for (let i = 0; i < this.productImage.length; i++) {
-        const file = this.productImage[i]
-
-        const formData = new FormData()
-        formData.append('file', file)
-        const res = await this.$axios.post('/image', formData)
-        files.push(res.data[0].url)
-      }
-      return files
-    },
+    uploadImages,
     async editProductImages() {
       try {
-        const images = await this.uploadImages()
-        const res = await this.$axios.patch(
-          `/products/images/edit/${this.product._id}`,
-          images
-        )
-        console.log(res)
+        const images = await this.uploadImages(this.productImage)
+        await this.$axios.patch(`/products/images/edit/${this.product._id}`, {
+          images,
+        })
+        this.closeModal('edit-product-images')
+        return this.$store.dispatch('showToast', {
+          message: 'تم تعديل الصور بنجاح',
+          type: 'success',
+        })
       } catch (error) {
-        console.log(error)
+        return this.$store.dispatch('showToast', {
+          message: error,
+          type: 'error',
+        })
       }
     },
   },

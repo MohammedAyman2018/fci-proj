@@ -6,27 +6,30 @@ require('dotenv').config()
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET
+  api_secret: process.env.CLOUDINARY_SECRET,
 })
 
 const storage = multer.diskStorage({
-  destination(_req, _file, cb) {
-    cb(null, path.join(__dirname, '../uploads'))
+  async destination(_req, _file, cb) {
+    await cb(null, path.join(__dirname, '../uploads'))
   },
-  filename(_req, file, cb) {
-    cb(null, file.originalname + '-' + Date.now() + '.jpg')
-  }
+  async filename(_req, _file, cb) {
+    await cb(null, Date.now() + '.jpg')
+  },
+  // file.originalname + '-' +
 })
 
 const upload = multer({ storage })
 
-async function uploadImage(req, res) {
-  await cloudinary.uploader.upload(req.file.path,
-    { resource_type: 'auto', folder: 'fci' },
+async function uploadImage(req, _res) {
+  console.log(req.file)
+  await cloudinary.uploader.upload(
+    req.file.path,
+    { resource_type: 'auto', folder: 'fci_test' },
     function (error, result) {
-      if (error) { return res.status(400).json({error}) }
-      return res.status(200).json({result})
-    })
+      console.log({ error, result })
+    }
+  )
 }
 
 module.exports.cloudinary = cloudinary

@@ -1,9 +1,14 @@
 <template>
   <div class="container mx-auto">
     <section v-if="store && store._id">
-      <h1 class="is-size-4 has-text-weight-bold my-4">
-        متجر {{ $route.params.storeName }}
-      </h1>
+      <div
+        class="is-flex is-justify-content-space-between is-align-items-center"
+      >
+        <h1 class="is-size-4 has-text-weight-bold my-4">
+          متجر {{ $route.params.storeName }}
+        </h1>
+        <b-button type="is-primary" size="is-small"> تقييم المتجر </b-button>
+      </div>
       <p class="my-2">{{ store.desc }}</p>
       <div class="columns is-multiline">
         <ul class="column is-12-mobile is-6-tablet is-4-desktop">

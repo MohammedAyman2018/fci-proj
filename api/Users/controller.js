@@ -149,7 +149,7 @@ exports.updateUser = async (req, res) => {
       .compare(user.oldPassword, userInDB.password)
       .then(async (isMatch) => {
         if (!isMatch) {
-          return res.status(400).json({ msg: 'Please validate your inputs' })
+          return res.json({ msg: 'Please validate your inputs' })
         }
 
         const salt = await bcrypt.genSalt(10)
@@ -163,8 +163,12 @@ exports.updateUser = async (req, res) => {
   delete req.body.oldPassword
   delete req.body.orders
   delete req.body.createdAt
-  await User.updateOne({ _id: req.params.id }, req.body)
-  res.status(200).json(user)
+  try {
+    await User.updateOne({ _id: req.params.id }, req.body)
+    return res.json(user)
+  } catch (error) {
+    return res.json(error)
+  }
 }
 
 /**

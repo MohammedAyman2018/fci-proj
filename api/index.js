@@ -6,7 +6,7 @@ const xss = require('xss-clean')
 const logger = require('morgan')
 const helmet = require('helmet')
 const cors = require('cors')
-const { clientAuth } = require('./middlewares/auth')
+// const { clientAuth } = require('./middlewares/auth')
 const { multer, uploadImage } = require('./middlewares/handleImages')
 
 require('dotenv')
@@ -39,7 +39,7 @@ async function db() {
 db()
 
 /** Upload Image */
-app.post('/image', clientAuth, multer.single('file'), uploadImage)
+app.post('/image', multer.single('file'), uploadImage)
 
 // Require API routes
 const users = require('./Users/routes')

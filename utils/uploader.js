@@ -1,11 +1,62 @@
-export default async function uploader(file, progress, error, options) {
+import { compress } from 'image-conversion'
+
+export default async function uploader(theFiles) {
   try {
-    const formData = new FormData()
-    formData.append('file', file)
-    const result = await this.$axios.post(options.uploadUrl, formData)
-    progress(100) // (native fetch doesn’t support progress updates)
-    return await Promise.resolve(result.data)
+    const files = []
+    // console.log(theFiles)
+
+    const compressedFiles = []
+    console.log('compressing')
+    for (let i = 0; i < theFiles.length; i++) {
+      const file = theFiles[i]
+      console.log('Before ', file.size)
+      await compress(file, 0.55).then((result) => {
+        if (!(result instanceof Blob)) {
+          compressedFiles.push(result)
+        } else {
+          compressedFiles.push(
+            new File([result], file.name, {
+              type: file.type,
+              endings: file.endings,
+            })
+          )
+        }
+      })
+    }
+
+    console.log('uploading ', compressedFiles)
+    for (let i = 0; i < compressedFiles.length; i++) {
+      const file = compressedFiles[i]
+
+      /* Make sure file exists */
+      if (!file) return
+
+      /* create a reader */
+      const readData = (f) =>
+        new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.readAsDataURL(f)
+        })
+
+      /* Read data */
+      const data = await readData(file)
+
+      /* upload the converted data */
+      const res = await this.$cloudinary.upload(
+        data,
+        {
+          api_key: this.$config.apiKey,
+          upload_preset: 'zcoyesqo',
+          folder: 'fci',
+        },
+        (result, error) => console.log(result, error)
+      )
+      files.push(res.secure_url)
+    }
+    console.log('uploaded ', files)
+    return files
   } catch (err) {
-    error('Unable to upload file')
+    console.log(err)
   }
 }
