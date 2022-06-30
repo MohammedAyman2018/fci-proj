@@ -1,17 +1,19 @@
 <template>
   <div class="container mx-auto">
     <section v-if="store && store._id">
-      <h1 class="text-xl font-bold my-4">متجر {{ $route.params.storeName }}</h1>
+      <h1 class="is-size-4 has-text-weight-bold my-4">
+        متجر {{ $route.params.storeName }}
+      </h1>
       <p class="my-2">{{ store.desc }}</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <ul>
-          <p class="font-bold">وسائل التواصل</p>
+      <div class="columns is-multiline">
+        <ul class="column is-12-mobile is-6-tablet is-4-desktop">
+          <p class="has-text-weight-bold">وسائل التواصل</p>
           <li v-for="link in socialr" :key="link.key">
             <div v-if="store.social[link.key]">
               <i v-if="link.key !== 'tiktok'" :class="[`ri-${link.icon}`]"></i>
               <img
                 v-else
-                class="inline"
+                class="is-inline"
                 width="18px"
                 src="@/assets/tik-tok.png"
               />
@@ -22,8 +24,8 @@
           </li>
         </ul>
 
-        <ul>
-          <p class="font-bold">يعمل في</p>
+        <ul class="column is-12-mobile is-6-tablet is-4-desktop">
+          <p class="has-text-weight-bold">يعمل في</p>
           <li v-for="link in store.workOn" :key="link">
             <nuxt-link :to="`/store/category/${link.name}`">{{
               link.name

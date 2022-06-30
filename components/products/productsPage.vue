@@ -5,7 +5,7 @@
     </b-button>
     <categories-menu :open-sidebar="openSidebar" @close="openSidebar = false" />
     <section class="container mx-auto">
-      <h1 class="text-xl font-bold my-4">تصفح المنتجات</h1>
+      <h1 class="is-size-4 has-text-weight-bold my-4">تصفح المنتجات</h1>
       <div
         v-if="displayedProducts.length > 0"
         class="columns is-multiline flex-wrap"
