@@ -41,6 +41,15 @@
         class="column is-3-desktop is-12-touch"
         name="tel"
         label="رقم تليفون"
+        validation="required|validNumber"
+        :validation-rules="{
+          validNumber: ({ value }) => value.length === 11,
+          startsWith01: ({ value }) => value.startsWith('01'),
+        }"
+        :validation-messages="{
+          startsWith01: 'يجب أن يبدأ الرقم ب 01',
+          validNumber: 'يجب ان يتكون من 11 رقم',
+        }"
         placeholder="رقم تليفون"
       />
 
@@ -58,6 +67,15 @@
         name="whats"
         class="column is-3-desktop is-12-touch"
         label="رقم واتس اب"
+        validation="required|validNumber"
+        :validation-rules="{
+          validNumber: ({ value }) => value.length === 11,
+          startsWith01: ({ value }) => value.startsWith('01'),
+        }"
+        :validation-messages="{
+          startsWith01: 'يجب أن يبدأ الرقم ب 01',
+          validNumber: 'يجب ان يتكون من 11 رقم',
+        }"
         placeholder="رقم واتس اب"
       />
       <FormulateInput
@@ -66,6 +84,15 @@
         name="phone"
         class="column is-3-desktop is-12-touch"
         label="رقم جوال"
+        validation="required|validNumber"
+        :validation-rules="{
+          validNumber: ({ value }) => value.length === 11,
+          startsWith01: ({ value }) => value.startsWith('01'),
+        }"
+        :validation-messages="{
+          startsWith01: 'يجب أن يبدأ الرقم ب 01',
+          validNumber: 'يجب ان يتكون من 11 رقم',
+        }"
         placeholder="رقم جوال"
       />
       <FormulateInput
@@ -83,7 +110,10 @@
         name="email"
         label="بريد الكتروني"
         placeholder="بريد الكتروني"
-        validations="email"
+        validation="email"
+        :validation-messages="{
+          email: 'برجاء إدخال بريد صحيح',
+        }"
       />
     </div>
 
@@ -95,6 +125,10 @@
         class="column is-3-desktop is-12-touch"
         name="insta"
         label="حساب انستاجرام"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="حساب انستاجرام"
       />
       <FormulateInput
@@ -103,6 +137,10 @@
         name="twitter"
         class="column is-3-desktop is-12-touch"
         label="حساب تويتر"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="حساب تويتر"
       />
       <FormulateInput
@@ -111,6 +149,10 @@
         name="fb"
         class="column is-3-desktop is-12-touch"
         label="حساب فيس بوك"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="حساب فيس بوك"
       />
       <FormulateInput
@@ -119,6 +161,10 @@
         name="yt"
         class="column is-3-desktop is-12-touch"
         label="حساب يوتيوب"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="حساب يوتيوب"
       />
       <FormulateInput
@@ -127,6 +173,10 @@
         name="snap"
         class="column is-3-desktop is-12-touch"
         label="حساب سناب تيوب"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="حساب سناب تيوب"
       />
       <FormulateInput
@@ -135,6 +185,10 @@
         name="tiktok"
         class="column is-3-desktop is-12-touch"
         label="حساب تيك توك"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="حساب تيك توك"
       />
     </div>
@@ -146,6 +200,10 @@
         name="link"
         class="column is-3-desktop is-12-touch"
         label="رابط هام"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="رابط هام"
       />
       <FormulateInput
@@ -154,6 +212,10 @@
         name="tiktok"
         class="column is-3-desktop is-12-touch"
         label="رابط تطبيق اندرويد"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="رابط تطبيق اندرويد"
       />
       <FormulateInput
@@ -162,6 +224,10 @@
         name="apple"
         class="column is-3-desktop is-12-touch"
         label="رابط تطبيق IOS"
+        validation="url"
+        :validation-messages="{
+          url: 'برجاء إدخال رابط صحيح',
+        }"
         placeholder="رابط تطبيق IOS"
       />
     </div>
