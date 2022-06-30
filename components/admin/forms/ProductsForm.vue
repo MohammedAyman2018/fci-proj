@@ -203,11 +203,13 @@ export default Vue.extend({
     },
     createProduct(data) {
       const images: string[] = []
-      data.files.forEach((x: { name: string; url: string }[]) => {
-        images.push(x[0].url)
-      })
+      if (!this.oldProduct) {
+        data.files.forEach((x: { name: string; url: string }[]) => {
+          images.push(x[0].url)
+        })
+      }
       return {
-        images,
+        images: !this.oldProduct ? images : this.oldProduct.images,
         name: data.name,
         desc: data.desc,
         price: data.price,
@@ -251,9 +253,10 @@ export default Vue.extend({
           message: 'تم تعديل المنتج بنجاح',
           type: 'success',
         })
+        this.$router.push(`/dashboard/${this.$route.params.storeName}/products`)
       } catch (error: any) {
         this.$store.dispatch('showToast', {
-          message: error.response.data.msg,
+          message: error,
           type: 'error',
         })
       }

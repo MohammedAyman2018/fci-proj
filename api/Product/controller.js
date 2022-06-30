@@ -81,7 +81,16 @@ export const getOneProduct = async (req, res) => {
 export const editProduct = async (req, res) => {
   delete req.body._id
   delete req.body.createdAt
+  delete req.body.images
   const product = await Product.updateOne({ _id: req.params.id }, req.body)
+  return res.status(200).json(product)
+}
+
+export const editProductImages = async (req, res) => {
+  const product = await Product.updateOne(
+    { _id: req.params.id },
+    { images: req.body.images }
+  )
   return res.status(200).json(product)
 }
 

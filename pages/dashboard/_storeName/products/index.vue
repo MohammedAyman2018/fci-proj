@@ -16,7 +16,7 @@
     </div>
     <modal name="offer-modal" scrollable height="auto">
       <div class="p-4">
-        <h2 class="text-xl font-bold">إضافة عرض</h2>
+        <h2 class="mb-3 has-text-weight-bold is-size-4">إضافة عرض</h2>
 
         <FormulateForm @submit="makeOffer">
           <FormulateInput
@@ -28,35 +28,62 @@
             label="نسبة العرض"
           />
 
-          <div class="mt-5">
+          <div
+            class="is-flex is-justify-content-space-between is-align-items-center mt-5"
+          >
             <FormulateInput type="submit" label="أنشئ" />
-            <button
-              class="btn btn-error btn-sm"
-              type="button"
+            <b-button
+              type="is-ghost"
+              size="is-small"
               @click="closeModal('offer-modal')"
             >
               إلغاء
-            </button>
+            </b-button>
           </div>
         </FormulateForm>
       </div>
     </modal>
 
+    <modal name="edit-product-images" scrollable height="auto">
+      <div class="p-4">
+        <h2 class="mb-3 has-text-weight-bold is-size-4">تعديل صور المنتج</h2>
+
+        <uploader @filesAdded="productImage = $event" />
+
+        <div
+          class="is-flex is-justify-content-space-between is-align-items-center mt-5"
+        >
+          <b-button type="is-danger" size="is-small" @click="editProductImages">
+            نعم
+          </b-button>
+          <b-button
+            type="is-ghost"
+            size="is-small"
+            @click="closeModal('edit-product-images')"
+          >
+            إلغاء
+          </b-button>
+        </div>
+      </div>
+    </modal>
     <modal name="delete-product" scrollable height="auto">
       <div class="p-4">
-        <h2 class="text-xl font-bold">حذف المنتج</h2>
+        <h2 class="has-text-weight-bold is-size-4">حذف المنتج</h2>
         <p>هل انت واثق انك تريد حذف المنتج؟</p>
 
-        <div class="mt-5">
-          <button class="btn btn-error btn-sm" @click="removeProduct">
+        <div
+          class="is-flex is-justify-content-space-between is-align-items-center mt-5"
+        >
+          <b-button type="is-danger" size="is-small" @click="removeProduct">
             نعم
-          </button>
-          <button
-            class="btn btn-error btn-sm"
+          </b-button>
+          <b-button
+            type="is-ghost"
+            size="is-small"
             @click="closeModal('delete-product')"
           >
             إلغاء
-          </button>
+          </b-button>
         </div>
       </div>
     </modal>
@@ -125,6 +152,7 @@
           <b-tooltip label="تعديل">
             <b-button
               icon-left="pen"
+              size="is-small"
               type="is-warning"
               @click="
                 $router.push(
@@ -134,9 +162,19 @@
             />
           </b-tooltip>
 
+          <b-tooltip label="تعديل الصور">
+            <b-button
+              icon-left="image"
+              size="is-small"
+              type="is-warning"
+              @click="openModal('edit-product-images', props.row)"
+            />
+          </b-tooltip>
+
           <b-tooltip label="حذف">
             <b-button
               icon-left="delete"
+              size="is-small"
               type="is-danger"
               @click="openModal('delete-product', props.row)"
             />
@@ -147,15 +185,16 @@
         </span>
       </template>
       <div slot="selected-row-actions">
-        <button
-          class="btn btn-primary btn-sm"
+        <b-button
+          type="is-ghost"
+          size="is-small"
           @click="$modal.show('offer-modal')"
         >
           انشئ عرض بالمنتجات المختارة
-        </button>
-        <button class="btn btn-error btn-sm" @click="removeOffer">
+        </b-button>
+        <b-button type="is-ghost" size="is-small" @click="removeOffer">
           حذف العرض من المنتجات المختارة
-        </button>
+        </b-button>
       </div>
       <div slot="emptystate">لا توجد فئات حتى الآن</div>
     </vue-good-table>
@@ -166,7 +205,9 @@
 import Vue from 'vue'
 import clonDeep from 'lodash.clonedeep'
 import IProduct from '@/interfaces/product'
+import Uploader from '~/components/utils/Uploader.vue'
 export default Vue.extend({
+  components: { Uploader },
   name: 'ProductPage',
   layout: 'admin',
   data() {
@@ -174,6 +215,7 @@ export default Vue.extend({
       product: {} as IProduct,
       edit: false,
       products: [],
+      productImage: [],
       selectedRows: [],
     }
   },
@@ -275,6 +317,31 @@ export default Vue.extend({
       this.product = {} as IProduct
       this.edit = true
       this.$modal.hide(modalName)
+    },
+    async uploadImages() {
+      const files: string[] = []
+
+      for (let i = 0; i < this.productImage.length; i++) {
+        const file = this.productImage[i]
+
+        const formData = new FormData()
+        formData.append('file', file)
+        const res = await this.$axios.post('/image', formData)
+        files.push(res.data[0].url)
+      }
+      return files
+    },
+    async editProductImages() {
+      try {
+        const images = await this.uploadImages()
+        const res = await this.$axios.patch(
+          `/products/images/edit/${this.product._id}`,
+          images
+        )
+        console.log(res)
+      } catch (error) {
+        console.log(error)
+      }
     },
   },
 })

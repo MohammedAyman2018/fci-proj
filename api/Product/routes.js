@@ -12,15 +12,13 @@ const {
   getAllProductsForAllStores,
   getProductsByCategoryForAll,
   getProductsSorted,
-  rateProduct
+  editProductImages,
+  rateProduct,
 } = require('./controller')
 
 const router = Router()
 
-router
-  .route('/products')
-  .get(getAllProducts)
-  .post(auth, addProduct)
+router.route('/products').get(getAllProducts).post(auth, addProduct)
 
 router.get('/products/all/stores', getAllProductsForAllStores)
 
@@ -30,8 +28,12 @@ router
   .patch(auth, editProduct)
   .delete(auth, deleteProduct)
 
+router.patch('/products/images/edit/:id', auth, editProductImages)
 router.get('/products/filter/home', getProductsSorted)
-router.get('/products/filter/all-category/:categoryName', getProductsByCategoryForAll)
+router.get(
+  '/products/filter/all-category/:categoryName',
+  getProductsByCategoryForAll
+)
 router.get('/products/filter/category', getProductsByCategory)
 router.get('/products/filter/name', searchProductsName)
 router.post('/products/rate/:id', clientAuth, rateProduct)
