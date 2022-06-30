@@ -1,6 +1,6 @@
 <template>
   <section class="container mx-auto">
-    <div class="shadow">
+    <div v-if="user.name" class="shadow">
       <header class="user-header">
         <span>العميل</span>
         <span>{{ user.name }}</span>
@@ -50,6 +50,7 @@ import Vue from 'vue'
 import IUser from '~/interfaces/user'
 
 export default Vue.extend({
+  name: 'SingleUserProfile',
   layout: 'admin',
   data() {
     return {
@@ -58,10 +59,11 @@ export default Vue.extend({
   },
   async mounted() {
     try {
-      this.user = await this.$axios.$get(`/users/one/${this.$route.params.id}`)
+      const res = await this.$axios.get(`/users/one/${this.$route.params.id}`)
+      this.user = res.data
     } catch (error: any) {
       this.$store.dispatch('showToast', {
-        message: error.response.data.msg,
+        message: error,
         type: 'error',
       })
     }
@@ -70,7 +72,7 @@ export default Vue.extend({
 </script>
 
 <style scoped>
-i {
+/* i {
   @apply mx-1;
 }
 
@@ -92,5 +94,5 @@ i {
 
 p span:last-child {
   @apply inline-block mr-auto;
-}
+} */
 </style>

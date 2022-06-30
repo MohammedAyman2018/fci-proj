@@ -42,28 +42,28 @@
     >
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'operations'" class="is-flex">
-          <div data-tip="تعديل" class="tooltip">
+          <b-tooltip label="تعديل" class="mx-3">
             <b-button
               icon-left="pen"
               type="is-warning"
               @click="openModal('edit-user', props.row)"
             />
-          </div>
-          <div data-tip="تفاصيل أكثر" class="tooltip mx-3">
+          </b-tooltip>
+          <!-- <b-tooltip label="تفاصيل أكثر" class="mx-3">
             <b-button
               tag="router-link"
               icon-left="dots-horizontal"
               type="is-ghost"
               :to="`${$route.path}/${props.row._id}`"
             />
-          </div>
-          <div data-tip="حذف" class="tooltip">
+          </b-tooltip> -->
+          <b-tooltip label="حذف">
             <b-button
               icon-left="delete"
               type="is-danger"
               @click="openModal('delete-user', props.row)"
             />
-          </div>
+          </b-tooltip>
         </span>
       </template>
 
@@ -72,17 +72,20 @@
 
     <modal name="delete-user" scrollable height="auto">
       <div class="p-4">
-        <h2 class="text-xl font-bold">حذف العميل</h2>
+        <h2 class="is-size-4 has-text-weight-bold">حذف العميل</h2>
         <p>هل انت واثق انك تريد حذف العميل؟</p>
 
         <div class="mt-5">
-          <button class="btn btn-error btn-sm" @click="removeUser">نعم</button>
-          <button
-            class="btn btn-error btn-sm"
+          <b-button type="is-danger" size="is-small" @click="removeUser"
+            >نعم</b-button
+          >
+          <b-button
+            type="is-ghost"
+            size="is-small"
             @click="closeModal('delete-user')"
           >
             إلغاء
-          </button>
+          </b-button>
         </div>
       </div>
     </modal>
@@ -95,17 +98,19 @@
       @closed="closeModal('edit-user')"
     >
       <vuescroll>
-        <div class="p-4 space-y-1">
-          <div class="flex justify-between items-center">
-            <h2 class="text-xl font-bold">
+        <div class="edit-user-modal p-4 space-y-1">
+          <div
+            class="is-flex is-justify-content-space-between is-align-items-center mb-1"
+          >
+            <h2 class="is-size-4 has-text-weight-bold">
               {{ edit ? 'تعديل' : 'أضف' }} العميل
             </h2>
             <i class="ri-close-fill" @click="closeModal('edit-user')"></i>
           </div>
           <FormulateForm
             v-slot="{ isLoading }"
-            :values="cloneDeep(user)"
-            @submit="!edit ? addUser : editUser"
+            v-model="user"
+            @submit="!edit ? addUser() : editUser()"
           >
             <FormulateInput
               name="name"
@@ -133,6 +138,9 @@
               type="email"
               placeholder="البريد الإلكتروني"
               label="البريد الإلكتروني"
+              :validation-messages="{
+                email: 'أدخل بريد الكتروني صحيح',
+              }"
               validation="required|email"
             />
             <FormulateInput
@@ -148,7 +156,15 @@
               type="tel"
               placeholder="ادخل رقم الجوال"
               label="رقم الجوال"
-              validation="required"
+              validation="required|validNumber"
+              :validation-rules="{
+                validNumber: ({ value }) => value.length === 11,
+                startsWith01: ({ value }) => value.startsWith('01'),
+              }"
+              :validation-messages="{
+                startsWith01: 'يجب أن يبدأ الرقم ب 01',
+                validNumber: 'يجب ان يتكون من 11 رقم',
+              }"
             />
 
             <FormulateInput
@@ -160,20 +176,23 @@
               validation="required"
             />
 
-            <div class="flex justify-between items-center mt-4 mb-12">
+            <div
+              class="is-flex is-justify-content-space-between is-align-items-center mt-4 mb-12"
+            >
               <FormulateInput
                 :wrapper-class="['w-full']"
-                :input-class="['btn-success', 'w-full', 'btn']"
-                :disabled="isLoading || !valid"
+                :input-class="[
+                  'btn-success',
+                  'is-justify-content-center',
+                  'btn',
+                ]"
+                :disabled="isLoading"
                 type="submit"
                 :label="!edit ? 'أضافة' : 'تعديل'"
               />
-              <button
-                class="btn btn-ghost btn-sm"
-                @click="closeModal('edit-user')"
-              >
+              <b-button type="is-ghost" @click="closeModal('edit-user')">
                 إلغاء
-              </button>
+              </b-button>
             </div>
           </FormulateForm>
         </div>
