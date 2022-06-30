@@ -170,15 +170,6 @@ export default {
   head() {
     return {
       title: 'الرئيسية',
-      link: [
-        { rel: 'stylesheet', href: 'https://unpkg.com/aos@next/dist/aos.css' },
-      ],
-      script: [
-        {
-          src: 'https://cdnjs.cloudflare.com/ajax/libs/TypewriterJS/2.13.1/core.min.js',
-        },
-        { src: 'https://unpkg.com/aos@next/dist/aos.js' },
-      ],
     }
   },
   computed: {
@@ -188,9 +179,12 @@ export default {
   },
   async mounted() {
     try {
-      await this.$store.$dispatch('categories/getCategories')
+      await this.$store.dispatch('categories/getCategories')
     } catch (error) {
-      console.log(error)
+      this.$store.dispatch('showToast', {
+        message: error,
+        type: 'danger',
+      })
     }
     this.$nextTick(() => {
       // eslint-disable-next-line no-new

@@ -20,6 +20,7 @@ export default {
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [
+      { rel: 'stylesheet', href: '/css/aos.css' },
       {
         rel: 'apple-touch-icon',
         sizes: '57x57',
@@ -91,6 +92,7 @@ export default {
       },
       { rel: 'manifest', href: '/favicons/manifest.json' },
     ],
+    script: [{ src: '/js/typewriter.js' }, { src: '/js/aos.js' }],
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
