@@ -115,3 +115,6 @@ button.w-full {
 .edit-user-modal .formulate-input-element {
   max-width: 100% !important;
 }
+.hooper {
+  height: auto !important;
+}

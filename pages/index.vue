@@ -107,7 +107,10 @@
         </div>
       </div>
     </section>
-
+    <our-carousel title="المنتجات الأكثر مشاهدة" :items="mostViewedProducts" />
+    <our-carousel title="المنتجات الأكثر طلباً" :items="mostOrderedProducts" />
+    <our-carousel title="المنتجات الأعلى تقييماً" :items="mostRatedProducts" />
+    <our-carousel title="المنتجات المفضلة" :items="mostLovedProducts" />
     <section class="hero is-medium has-text-centered">
       <div class="hero-body">
         <div class="container">
@@ -125,6 +128,7 @@
         </div>
       </div>
     </section>
+
     <b-modal
       v-model="isComponentModalActive"
       has-modal-card
@@ -159,12 +163,18 @@
 </template>
 
 <script>
+import OurCarousel from '~/components/OurCarousel.vue'
 export default {
+  components: { OurCarousel },
   name: 'HomePage',
   data() {
     return {
       intersts: [],
       isComponentModalActive: false,
+      mostOrderedProducts: [],
+      mostViewedProducts: [],
+      mostRatedProducts: [],
+      mostLovedProducts: [],
     }
   },
   head() {
@@ -186,6 +196,7 @@ export default {
         type: 'danger',
       })
     }
+    await this.getHomeProducts()
     this.$nextTick(() => {
       // eslint-disable-next-line no-new
       new Typewriter('#typewriter', {
@@ -225,6 +236,19 @@ export default {
         this.isComponentModalActive = false
       } catch (error) {
         this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    },
+    async getHomeProducts() {
+      try {
+        const res = await this.$axios.get('/home', {
+          headers: { device: 'web' },
+        })
+        this.mostViewedProducts = res.data.mostViewedProducts
+        this.mostOrderedProducts = res.data.mostOrderedProducts
+        this.mostRatedProducts = res.data.mostRatedProducts
+        this.mostLovedProducts = res.data.mostLovedProducts
+      } catch (error) {
+        console.log(error)
       }
     },
   },

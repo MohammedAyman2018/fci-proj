@@ -28,6 +28,7 @@
     "express": "^4.17.1",
     "express-mongo-sanitize": "^2.1.0",
     "helmet": "^4.6.0",
+    "hooper": "^0.3.4",
     "image-conversion": "^2.1.1",
     "joi": "^17.5.0",
     "jsonwebtoken": "^8.5.1",
@@ -44,6 +45,7 @@
     "v-viewer": "^1.6.4",
     "vue-good-table": "^2.21.11",
     "vue-js-modal": "^2.0.1",
+    "vue-owl-carousel": "^2.0.3",
     "vuelidate": "^0.7.6",
     "vuescroll": "^4.17.3",
     "xss-clean": "^0.1.1"

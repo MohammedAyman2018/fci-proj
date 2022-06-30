@@ -4,7 +4,7 @@
       <bdi>-{{ product.offerAmount }}% </bdi>
     </b-tag>
     <div class="card-image">
-      <b-carousel :autoplay="false">
+      <b-carousel :autoplay="false" :arrow="false" :indicator="false">
         <b-carousel-item v-for="(item, i) in product.images" :key="i">
           <b-image lazy ratio="1by1" :src="item" />
         </b-carousel-item>
