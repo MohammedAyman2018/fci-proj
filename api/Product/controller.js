@@ -14,6 +14,8 @@ export const getProductsSorted = async (req, res) => {
       sortQuery = { ordered: -1 }
     } else if (sortInReq === 'mostRatedProducts') {
       sortQuery = { actualRating: -1 }
+    } else if (sortInReq === 'mostLovedProducts') {
+      sortQuery = { inFav: -1 }
     }
     const products = await Product.find(query, productProjection)
       .sort(sortQuery)

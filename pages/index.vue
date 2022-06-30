@@ -107,10 +107,26 @@
         </div>
       </div>
     </section>
-    <our-carousel title="المنتجات الأكثر مشاهدة" :items="mostViewedProducts" />
-    <our-carousel title="المنتجات الأكثر طلباً" :items="mostOrderedProducts" />
-    <our-carousel title="المنتجات الأعلى تقييماً" :items="mostRatedProducts" />
-    <our-carousel title="المنتجات المفضلة" :items="mostLovedProducts" />
+    <our-carousel
+      title="المنتجات الأكثر مشاهدة"
+      :items="mostViewedProducts"
+      link="/store/sorted-products?sort=mostViewedProducts"
+    />
+    <our-carousel
+      title="المنتجات الأكثر طلباً"
+      :items="mostOrderedProducts"
+      link="/store/sorted-products?sort=mostOrderedProducts"
+    />
+    <our-carousel
+      title="المنتجات الأعلى تقييماً"
+      :items="mostRatedProducts"
+      link="/store/sorted-products?sort=mostRatedProducts"
+    />
+    <our-carousel
+      title="المنتجات المفضلة"
+      :items="mostLovedProducts"
+      link="/store/sorted-products?sort=mostLovedProducts"
+    />
     <section class="hero is-medium has-text-centered">
       <div class="hero-body">
         <div class="container">

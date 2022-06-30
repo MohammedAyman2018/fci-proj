@@ -13,7 +13,11 @@
     <div class="card-content">
       <div class="media">
         <div class="media-content">
-          <p class="title is-4" style="cursor: pointer" @click="goToProduct">
+          <p
+            class="has-text-weight-semibold is-size-6 trauncate-text"
+            style="cursor: pointer"
+            @click="goToProduct"
+          >
             {{ product.name }}
           </p>
           <p class="subtitle is-6">
@@ -31,7 +35,7 @@
             <nuxt-link :to="`/store/category/${product.category.name}`">
               {{ product.category.name }}
             </nuxt-link>
-            <p>
+            <p class="is-size-6-tablet">
               {{
                 product.hasOffer
                   ? Math.ceil(
@@ -44,7 +48,11 @@
             </p>
           </div>
           <div>
-            <b-rate :value="product.actualRating" disabled></b-rate>
+            <b-rate
+              size="is-small"
+              :value="product.actualRating"
+              disabled
+            ></b-rate>
             <div class="is-flex is-justify-content-end is-align-items-center">
               <b-tooltip
                 :label="
@@ -171,5 +179,12 @@ export default Vue.extend({
 .card-content .subtitle a {
   color: gray;
   font-size: 12px;
+}
+
+.trauncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  width: 60%;
+  text-overflow: ellipsis;
 }
 </style>

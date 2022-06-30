@@ -8,6 +8,18 @@ export const actions = {
     commit('setDisplayedProducts', [])
     commit('setProducts', [])
   },
+
+  async getSortedProducts({ dispatch, commit }, sort) {
+    try {
+      const res = await this.$axios.get(`/products/filter/home?sort=${sort}`, {
+        headers: { device: 'web' },
+      })
+      commit('setProducts', res.data)
+      commit('setDisplayedProducts', res.data)
+    } catch (error) {
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
+    }
+  },
   async getProducts({ dispatch, commit }) {
     try {
       const res = await this.$axios.get('/products/all/stores')
@@ -27,7 +39,9 @@ export const actions = {
   },
   async getCategoryProducts({ dispatch, commit }, categoryName) {
     try {
-      const res = await this.$axios.get(`/products/filter/all-category/${categoryName}`)
+      const res = await this.$axios.get(
+        `/products/filter/all-category/${categoryName}`
+      )
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
     } catch (error) {
@@ -47,22 +61,31 @@ export const actions = {
     try {
       if (this.$auth.loggedIn) {
         await this.$axios.post('/users/fav/', { productId })
-        dispatch('showToast', { message: 'تم بنجاح', type: 'success' }, { root: true })
+        dispatch(
+          'showToast',
+          { message: 'تم بنجاح', type: 'success' },
+          { root: true }
+        )
 
         this.$auth.fetchUser()
       } else {
-        dispatch('showToast', { message: 'سجل دخول أولاً', type: 'error' }, { root: true })
+        dispatch(
+          'showToast',
+          { message: 'سجل دخول أولاً', type: 'error' },
+          { root: true }
+        )
       }
     } catch (error) {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
   },
   filterProducts({ commit, state }, categories) {
-    const productsWithFilter = categories.length > 0
-      ? state.products.filter((x) => categories.includes(x.category._id))
-      : state.products
+    const productsWithFilter =
+      categories.length > 0
+        ? state.products.filter((x) => categories.includes(x.category._id))
+        : state.products
     commit('setDisplayedProducts', productsWithFilter)
-  }
+  },
 }
 
 export const mutations = {
@@ -81,7 +104,10 @@ export const mutations = {
     }
   },
   filterByStore(state, storeName) {
-    state.displayedProducts = storeName !== 'all' ? state.products.filter(prod => prod.storeName === storeName) : state.products
+    state.displayedProducts =
+      storeName !== 'all'
+        ? state.products.filter((prod) => prod.storeName === storeName)
+        : state.products
   },
   // filterByName(state, name) {
   //   state.displayedProducts = name.length > 0 ? state.displayedProducts.filter(prod => prod.name.includes(name)) : state.displayedProducts
@@ -90,4 +116,3 @@ export const mutations = {
     state.products = products
   },
 }
-

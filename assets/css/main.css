@@ -118,3 +118,8 @@ button.w-full {
 .hooper {
   height: auto !important;
 }
+
+.hooper-next,
+.hooper-prev {
+  background-color: #f4f4f4 !important;
+}

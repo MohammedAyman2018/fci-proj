@@ -1,23 +1,35 @@
 <template>
-  <div>
-    <h3 class="is-size-4 has-text-weight-bold">
-      {{ title }}
-    </h3>
+  <div class="my-3">
+    <div
+      class="is-flex is-justify-content-space-between is-align-items-center mb-3"
+    >
+      <h3 class="is-size-4 has-text-weight-bold">
+        {{ title }}
+      </h3>
+      <b-button tag="router-link" type="is-ghost" size="is-small" :to="link">
+        مشاهدة المزيد
+      </b-button>
+    </div>
     <hooper :settings="hooperSettings">
-      <slide v-for="list in items" :key="list._id">
+      <slide v-for="list in items" :key="list._id" class="mb-2">
         <product-card class="mx-4" :product="list" />
       </slide>
+      <hooper-navigation slot="hooper-addons"></hooper-navigation>
     </hooper>
   </div>
 </template>
 
 <script>
-import { Hooper, Slide } from 'hooper'
+import { Hooper, Slide, Navigation as HooperNavigation } from 'hooper'
 import productCard from './products/product-card.vue'
 import 'hooper/dist/hooper.css'
 export default {
-  components: { productCard, Hooper, Slide },
+  components: { productCard, Hooper, Slide, HooperNavigation },
   props: {
+    link: {
+      type: String,
+      default: () => '',
+    },
     title: {
       type: String,
       default: () => '',
@@ -32,6 +44,9 @@ export default {
       hooperSettings: {
         rtl: true,
         centerMode: false,
+        mouseDrag: false,
+        wheelControl: false,
+        trimWhiteSpace: true,
         breakpoints: {
           767: {
             itemsToShow: 1,
