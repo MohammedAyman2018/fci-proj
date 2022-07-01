@@ -197,7 +197,44 @@ export const rateProduct = async (req, res) => {
     res.status(400).json({ msg: error.message })
   }
 }
+export const productRecommendation = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id)
+    const productsFromSameCategory = await Product.find({
+      category: product.category,
+      actualRating: {
+        $gt: product.actualRating - 1,
+        $lt: product.actualRating + 1,
+      },
+    })
+      .sort({ actualRating: -1, hasOffer: -1 })
+      .limit(10)
 
+    const productsFromSameProvider = await Product.find({
+      category: product.category,
+      storeName: product.storeName,
+    })
+      .sort({ actualRating: -1, hasOffer: -1 })
+      .limit(10)
+
+    const usersAlsoWatched = await Product.find({
+      category: product.category,
+      views: product.views,
+    })
+      .sort({ views: -1, hasOffer: -1 })
+      .limit(10)
+
+    return res
+      .status(200)
+      .json({
+        productsFromSameCategory,
+        productsFromSameProvider,
+        usersAlsoWatched,
+      })
+  } catch (error) {
+    res.status(400).json({ msg: err.message })
+  }
+}
 function calcRating(rating) {
   let sd = 0
   rating.forEach((el) => {

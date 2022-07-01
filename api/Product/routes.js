@@ -14,6 +14,7 @@ const {
   getProductsSorted,
   editProductImages,
   rateProduct,
+  productRecommendation,
 } = require('./controller')
 
 const router = Router()
@@ -30,6 +31,7 @@ router
 
 router.patch('/products/images/edit/:id', auth, editProductImages)
 router.get('/products/filter/home', getProductsSorted)
+router.get('/products/recommendation/:id', productRecommendation)
 router.get(
   '/products/filter/all-category/:categoryName',
   getProductsByCategoryForAll

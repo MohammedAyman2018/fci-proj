@@ -105,7 +105,6 @@
             </div>
           </div>
         </b-collapse>
-
         <h3>التعليقات:</h3>
         <article
           v-for="coment in product.rating"
@@ -178,6 +177,23 @@
         </article>
       </div>
     </div>
+    <div>
+      <OurCarousel
+        v-if="usersAlsoWatched.length > 0"
+        :items="usersAlsoWatched"
+        title="شاهد العملاء أيضًا"
+      />
+      <OurCarousel
+        v-if="productsFromSameCategory.length > 0"
+        :items="productsFromSameCategory"
+        title="قد يعجبك ايضا"
+      />
+      <OurCarousel
+        v-if="productsFromSameProvider.length > 0"
+        :items="productsFromSameProvider"
+        title="مزيد من المنتجات من هذا البائع"
+      />
+    </div>
   </div>
 </template>
 
@@ -188,6 +204,9 @@ export default {
     return {
       product: {},
       amount: 1,
+      productsFromSameCategory: [],
+      productsFromSameProvider: [],
+      usersAlsoWatched: [],
       productRate: 1,
       comment: '',
     }
@@ -222,6 +241,7 @@ export default {
   },
   async beforeMount() {
     await this.getProduct()
+    await this.getRecommendation()
   },
   methods: {
     async getProduct() {
@@ -230,6 +250,22 @@ export default {
         this.singleProductId
       )
       this.product = product
+    },
+    async getRecommendation() {
+      const items = await this.$axios.get(
+        `products/recommendation/${this.singleProductId}`
+      )
+      this.productsFromSameCategory =
+        items.data.productsFromSameCategory.filter(
+          (x) => x._id !== this.singleProductId
+        )
+      this.productsFromSameProvider =
+        items.data.productsFromSameProvider.filter(
+          (x) => x._id !== this.singleProductId
+        )
+      this.usersAlsoWatched = items.data.usersAlsoWatched.filter(
+        (x) => x._id !== this.singleProductId
+      )
     },
     addToCart(item) {
       this.$store.commit('localStorage/addToCart', {

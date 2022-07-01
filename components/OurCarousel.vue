@@ -6,7 +6,13 @@
       <h3 class="is-size-4 has-text-weight-bold">
         {{ title }}
       </h3>
-      <b-button tag="router-link" type="is-ghost" size="is-small" :to="link">
+      <b-button
+        v-if="link.length > 0"
+        tag="router-link"
+        type="is-ghost"
+        size="is-small"
+        :to="link"
+      >
         مشاهدة المزيد
       </b-button>
     </div>
