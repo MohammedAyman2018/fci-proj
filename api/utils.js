@@ -17,9 +17,7 @@ export const productProjection = {
   'amount.alarm': 0,
   'amount.alarmAmount': 0,
   'amount._id': 0,
-  views: 0,
   __v: 0,
-  ordered: 0,
 }
 
 export const storeProjection = {
@@ -29,5 +27,6 @@ export const storeProjection = {
   location: 1,
   otherLinks: 1,
   social: 1,
+  actualRating: 1,
   workOn: 1,
 }
