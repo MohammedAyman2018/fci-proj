@@ -57,16 +57,15 @@
         </div>
       </template>
     </b-modal>
-    <!-- <modal name="edit-user" scrollable height="auto">
-    </modal> -->
 
-    <h3 v-if="$auth.user" class="my-3 font-bold text-xl">
+    <h3 v-if="$auth.user" class="my-3 has-text-weight-bold is-size-4">
       مرحباً
       <bdi>{{ $auth.user.name }}</bdi>
-
-      <sup class="cursor-pointer" @click="isComponentModalActive = true">
-        <i class="ri-pencil-line"> </i>
-      </sup>
+      <b-tooltip label="تعديل الملف الشخصي">
+        <sup style="cursor: pointer" @click="isComponentModalActive = true">
+          <i class="ri-pencil-line"> </i>
+        </sup>
+      </b-tooltip>
     </h3>
 
     <div v-if="$auth.user" class="columns is-multiline is-mobile">
@@ -97,115 +96,13 @@
       </p>
     </div>
 
-    <div class="my-6">
-      <h3 class="my-3 font-bold text-xl">المفضلة:</h3>
-      <div v-if="fav.length > 0">
-        <div class="columns is-multiline">
-          <div
-            v-for="product in fav"
-            :key="product._id"
-            class="column is-one-quarter"
-          >
-            <product-card :product="product" />
-          </div>
-        </div>
-      </div>
-      <div v-else class="flex flex-col justify-center items-center">
-        <p class="font-semibold mb-4 text-center">
-          لا يوجد منتجات في المفضلة بعد
-        </p>
-        <nuxt-link class="btn btn-primary" to="/store/products">
-          تصفح منتجاتنا
-        </nuxt-link>
-      </div>
-    </div>
+    <OurCarousel title="المفضلة" :items="fav" />
 
-    <div class="my-6">
-      <h3 class="my-3 font-bold text-xl">الطلبات:</h3>
-      <div v-if="orders.length > 0">
-        <div class="columns is-multiline">
-          <div
-            v-for="order in orders"
-            :key="order._id"
-            class="column is-6-desktop is-4-fullhd"
-          >
-            <div class="box">
-              <ul>
-                <h2 class="is-size-3 is-bold">تفاصيل المستخدم</h2>
-                <li>
-                  <span>الاسم:</span>
-                  <span>{{ order.user.name }}</span>
-                </li>
-                <li>
-                  <span>الموبايل:</span>
-                  <span>{{ order.user.tel }}</span>
-                </li>
-                <li>
-                  <span>العنوان:</span>
-                  <span>{{ order.user.address }}</span>
-                </li>
-                <li>
-                  <span>طريقة الدفع:</span>
-                  <span>{{ order.user.payment }}</span>
-                </li>
-              </ul>
-              <hr />
-              <ul>
-                <b-collapse :open="false" :aria-id="order._id">
-                  <template #trigger>
-                    <h3
-                      class="mb-4 is-size-3 has-text-weight-bold is-flex is-justify-content-space-between is-align-items-center"
-                    >
-                      تفاصيل الطلب
-                      <b-icon icon="menu-down" />
-                    </h3>
-                  </template>
-                  <li>
-                    <span>تاريخ الطلب:</span>
-                    <span>{{ order.createdAt.substr(0, 10) }}</span>
-                  </li>
-                  <li>
-                    <span>المتجر:</span>
-                    <span>{{ order.storeName }}</span>
-                  </li>
-                  <li>
-                    <span>حالة الطلب:</span>
-                    <span>{{ order.state }}</span>
-                  </li>
-                  <hr />
-                  <div
-                    v-for="product in order.items"
-                    :key="product._id"
-                    class="columns"
-                  >
-                    <div class="column is-3">
-                      <img
-                        style="width: 100px; height: 100px; border-raduis: 10px"
-                        :src="product.img"
-                        :alt="product.name"
-                      />
-                    </div>
-                    <div class="column">
-                      <h4 class="is-size-4">{{ product.name }}</h4>
-                      <p class="is-size-6">الكمية: {{ product.amount }} قطع</p>
-                    </div>
-                    <div class="column is-3">
-                      <h4 class="is-size-4">{{ product.price }} جنيه</h4>
-                    </div>
-                  </div>
-                </b-collapse>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-else class="flex flex-col justify-center items-center">
-        <p class="font-semibold mb-4 text-center">لا يوجد طلبات حتى الآن</p>
-        <nuxt-link class="btn btn-primary" to="/store/products">
-          تصفح منتجاتنا
-        </nuxt-link>
-      </div>
-    </div>
+    <section class="my-4">
+      <h3 class="is-size-4 has-text-weight-bold">الطلبيات</h3>
+
+      <orders-table :orders="orders" />
+    </section>
   </main>
 </template>
 
@@ -213,9 +110,7 @@
 import Vue from 'vue'
 import clonDeep from 'lodash.clonedeep'
 import { format } from 'date-fns'
-import productCard from '~/components/products/product-card.vue'
 export default Vue.extend({
-  components: { productCard },
   data() {
     return {
       fav: [],

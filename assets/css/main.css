@@ -123,3 +123,7 @@ button.w-full {
 .hooper-prev {
   background-color: #f4f4f4 !important;
 }
+.pagination .pagination-next,
+.pagination .pagination-previous {
+  transform: rotate(180deg);
+}
