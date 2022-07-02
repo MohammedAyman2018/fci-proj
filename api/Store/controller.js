@@ -51,7 +51,7 @@ exports.getStore = async (req, res) => {
 
     return res.status(200).json({ store, products })
   } catch (error) {
-    return res.status(500).json({ msg: err.message, err })
+    return res.status(500).json({ msg: error.message, error })
   }
 }
 
@@ -107,7 +107,8 @@ exports.addStore = async (req, res) => {
       contacts: { phone: user.phone },
       owner: req.user.id,
     })
-    store.save()
+    store
+      .save()
       .then((result) => res.status(200).json(result))
       .catch((err) => res.status(500).json(err))
   } catch (err) {
