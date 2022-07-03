@@ -94,11 +94,6 @@
               </span>
             </div>
           </div>
-          <div class="level-right">
-            <small class="level-item" style="color: var(--textLight)">
-              &copy; Super Cool Website. All Rights Reserved.
-            </small>
-          </div>
         </nav>
       </div>
     </div>
@@ -133,8 +128,7 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-            this.$router.push('/')
-
+      this.$router.push('/')
     }
   },
   methods: {
