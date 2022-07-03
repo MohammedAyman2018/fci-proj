@@ -32,7 +32,10 @@ router.get('/dashboadrd/:storeName', async (req, res) => {
     const productsPerCategoryCount = {}
     for (let i = 0; i < store.workOn.length; i++) {
       const category = store.workOn[i]
-      const num = await Product.countDocuments({ category: category._id })
+      const num = await Product.countDocuments({
+        storeName: req.params.storeName,
+        category: category._id,
+      })
       productsPerCategoryCount[category.name] = num
     }
 
