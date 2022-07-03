@@ -33,6 +33,17 @@
       </span>
     </b-table-column>
 
+    <b-table-column v-slot="props" label="العمليات المتاحة">
+      <b-button
+        type="is-danger"
+        size="is-small"
+        :disabled="props.row.state !== 'بانتظار المراجعة'"
+        @click="cancleOrder(props.row._id)"
+      >
+        إلغاء الطلب
+      </b-button>
+    </b-table-column>
+
     <template #detail="props">
       <article
         v-for="product in props.row.items"
@@ -67,6 +78,21 @@ export default {
     orders: {
       type: Array,
       default: () => [],
+    },
+  },
+  methods: {
+    async cancleOrder(id) {
+      try {
+        // TODO: show confirmatin first
+        await this.$axios.$patch(`/orders/${id}`, { state: 'ملغي' })
+        this.$emit('updateOrders')
+        this.$store.dispatch('showToast', {
+          message: 'تم إلغاء الطلبية',
+          type: 'success',
+        })
+      } catch (error) {
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
     },
   },
 }
