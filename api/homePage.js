@@ -3,7 +3,7 @@ const { Router } = require('express')
 const { Category } = require('./Category/model')
 const { Order } = require('./Orders/model')
 const { User } = require('./Users/model')
-const { productProjection } = require('./utils')
+const { productProjection, getDeviceType } = require('./utils')
 const { Store } = require('./Store/model')
 const { Product } = require('./Product/model')
 const { clientAuth } = require('./middlewares/auth')
@@ -85,7 +85,7 @@ router.get('/dashboadrd/:storeName', async (req, res) => {
     const productsAboutToFinish = await Product.aggregate([
       {
         $match: {
-          storeName: 'عصير الكتب',
+          storeName: req.params.storeName,
           'amount.amountType': 'limited',
           'amount.alarm': true,
         },
