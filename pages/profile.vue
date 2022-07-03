@@ -103,6 +103,11 @@
 
       <orders-table :orders="orders" @updateOrders="getOrders" />
     </section>
+    <section class="my-4">
+      <h3 class="is-size-4 has-text-weight-bold">الشكاوى</h3>
+
+      <complains-table :rates="rates" @updateOrders="updateComplains" />
+    </section>
   </main>
 </template>
 
@@ -110,10 +115,14 @@
 import Vue from 'vue'
 import clonDeep from 'lodash.clonedeep'
 import { format } from 'date-fns'
+import OrdersTable from '~/components/tables/OrdersTable.vue'
+import ComplainsTable from '~/components/tables/ComplainsTable.vue'
 export default Vue.extend({
+  components: { OrdersTable, ComplainsTable },
   data() {
     return {
       fav: [],
+      rates: [],
       orders: [],
       editObj: {},
       isComponentModalActive: false,
@@ -126,12 +135,20 @@ export default Vue.extend({
   },
   async mounted() {
     try {
-      await Promise.all([this.getFav(), this.getOrders()])
+      await Promise.all([this.getFav(), this.getOrders(), this.getComplains()])
     } catch (error) {
       this.$store.dispatch('showToast', { message: error, type: 'error' })
     }
   },
   methods: {
+    async getComplains() {
+      try {
+        const res = await this.$axios.get(`/contactUs/${this.$auth.user._id}`)
+        this.rates = res.data
+      } catch (error) {
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    },
     async getFav() {
       try {
         const res = await this.$axios.get('/users/all/fav/')

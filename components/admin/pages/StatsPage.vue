@@ -156,7 +156,7 @@
 
 <script lang="ts">
 import Vue from 'vue'
-import RatesTable from '~/components/RatesTable.vue'
+import RatesTable from '~/components/tables/RatesTable.vue'
 
 export default Vue.extend({
   components: { RatesTable },
