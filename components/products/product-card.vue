@@ -4,9 +4,19 @@
       <bdi>-{{ product.offerAmount }}% </bdi>
     </b-tag>
     <div class="card-image">
-      <b-carousel :autoplay="false" :arrow="false" :indicator="false">
+      <b-carousel
+        v-if="product.category"
+        :autoplay="false"
+        :arrow="false"
+        :indicator="false"
+      >
         <b-carousel-item v-for="(item, i) in product.images" :key="i">
           <b-image lazy ratio="1by1" :src="item" />
+        </b-carousel-item>
+      </b-carousel>
+      <b-carousel v-else :autoplay="false" :arrow="false" :indicator="false">
+        <b-carousel-item>
+          <b-image lazy ratio="1by1" :src="product.img" />
         </b-carousel-item>
       </b-carousel>
     </div>
@@ -14,8 +24,9 @@
       <div class="media">
         <div class="media-content">
           <p
-            class="has-text-weight-semibold is-size-6 trauncate-text"
+            class="has-text-weight-semibold is-size-6"
             style="cursor: pointer"
+            :class="{ 'trauncate-text': !!product.category }"
             @click="goToProduct"
           >
             {{ product.name }}
@@ -31,7 +42,7 @@
 
       <div class="content">
         <div class="product-card--info-footer">
-          <div>
+          <div v-if="product.category">
             <nuxt-link :to="`/store/category/${product.category.name}`">
               {{ product.category.name }}
             </nuxt-link>
@@ -47,7 +58,7 @@
               جنيه
             </p>
           </div>
-          <div>
+          <div v-if="product.category">
             <b-rate
               size="is-small"
               :value="product.actualRating"

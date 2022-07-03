@@ -1,30 +1,34 @@
 <template>
   <div v-if="order" class="container mx-auto my-3">
     <section>
-      <h3 class="text-xl font-bold">تفاصيل الطلب:</h3>
-      <p>
-        <span>الحالة:</span>
-        <span>{{ order.state }}</span>
-      </p>
+      <h2 class="is-size-3 has-text-weight-bold">تفاصيل الطلب</h2>
 
       <div>
-        <select id="editSate" v-model="newState" class="p-2 mx-2 bordered rounded border-gray-400">
-          <option
-            v-for="state in orderStates"
-            :key="state"
-            :value="state"
-            v-text="state"
-          />
-        </select>
-        <button class="btn btn-primary" :disabled="newState === order.state" @click="updateState">
+        <b-field label="الحالة">
+          <b-select v-model="newState" expanded>
+            <option v-for="option in orderStates" :key="option" :value="option">
+              {{ option }}
+            </option>
+          </b-select>
+        </b-field>
+
+        <b-button
+          type="is-primary"
+          class="btn btn-primary"
+          :disabled="newState === order.state"
+          @click="updateState"
+        >
           تعديل الطلب
-        </button>
+        </b-button>
       </div>
     </section>
 
     <section v-if="order && order.user">
-      <h4 class="text-lg font-bold mt-3">العميل:</h4>
-      <div class="flex flex-col lg:flex-row justify-between lg:items-center">
+      <h4 class="is-size-4 has-text-weight-bold mt-3">العميل:</h4>
+
+      <div
+        class="is-flex is-flex-wrap-wrap is-flex-direction-col is-flex-direction-col-desktop is-justify-content-space-between is-align-items-cnter-desktop"
+      >
         <div>
           <p>الاسم: {{ order.user.name }}</p>
         </div>
@@ -40,30 +44,7 @@
       </div>
     </section>
     <section v-if="order && order.items">
-      <h4 class="text-lg font-bold mt-3">المنتجات:</h4>
-      <div v-for="product in order.items" :key="product._id">
-        <div class="product-card">
-          <div class="product-card--image">
-            <img :src="product.img" :alt="product.name" />
-          </div>
-          <section class="product-card--info">
-            <div class="product-card--info--header">
-              <h2 class="cursor-pointer">{{ product.name }}</h2>
-              <nuxt-link :to="`/store/${product.storeName}/products`">
-                <i class="ri-store-fill ri-1x" />
-                {{ product.storeName }}
-              </nuxt-link>
-            </div>
-            <!-- Add Link To One Store In Here -->
-
-            <div class="product-card--info-footer">
-              <div>
-                <p>{{ product.price }} جنيه</p>
-              </div>
-            </div>
-          </section>
-        </div>
-      </div>
+      <our-carousel title="المنتجات" :items="order.items" />
     </section>
   </div>
 </template>

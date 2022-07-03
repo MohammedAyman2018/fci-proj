@@ -1,6 +1,8 @@
 <template>
-  <div class="container">
-    <h1 class="my-3 text-2xl font-bold">طلبياتك:</h1>
+  <div class="container mx-auto px-2">
+    <div class="my-3">
+      <h2 class="is-size-3 has-text-weight-bold">كل الطلبيات</h2>
+    </div>
     <vue-good-table
       :columns="[
         { label: 'حالة الطلب', field: 'state' },
@@ -30,8 +32,9 @@
       <template slot="table-row" slot-scope="props">
         <span v-if="props.column.field == 'operations'" class="flex">
           <b-tooltip label="التفاصيل" class="mx-1">
-            <button
-              class="btn btn-warning btn-square btn-xs"
+            <b-button
+              type="is-warning"
+              size="is-small"
               @click="
                 $router.push(
                   `/dashboard/${$route.params.storeName}/orders/one/${props.row._id}`
@@ -39,7 +42,7 @@
               "
             >
               <i class="ri-file-chart-line"></i>
-            </button>
+            </b-button>
           </b-tooltip>
         </span>
       </template>
