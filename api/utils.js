@@ -24,6 +24,7 @@ export const storeProjection = {
   contacts: 1,
   createdAt: 1,
   desc: 1,
+  views: 1,
   location: 1,
   otherLinks: 1,
   social: 1,

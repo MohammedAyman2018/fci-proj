@@ -51,13 +51,18 @@ exports.getStore = async (req, res) => {
     )
       .populate('workOn')
       .populate('location')
-
+    if (store.views) {
+      store.views++
+    } else {
+      store.views = 1
+    }
     const query = getDeviceType(req, res)
     const products = await Product.find(
       { ...query, storeName: req.params.storeName },
       req.get('admin') ? {} : productProjection
     ).populate('category')
 
+    await store.save()
     return res.status(200).json({ store, products })
   } catch (error) {
     return res.status(500).json({ msg: error.message, error })

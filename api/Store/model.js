@@ -9,6 +9,7 @@ const Schema = new mongoose.Schema(
       required: true,
     },
     logo: String,
+    views: { type: Number, default: 0 },
     rating: {
       type: [
         {
@@ -149,6 +150,7 @@ function validate(store) {
       msg: Joi.string(),
       rate: Joi.number(),
     },
+    views: Joi.number(),
     actualRating: Joi.number(),
   })
 

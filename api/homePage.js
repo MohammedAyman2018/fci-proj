@@ -29,13 +29,6 @@ router.get('/dashboadrd/:storeName', async (req, res) => {
     const store = await Store.findOne({ title: req.params.storeName }).populate(
       'workOn'
     )
-    // if (req.user.role !== 'admin') {
-    /**
-       * {
-  _id: '$storeName',
-  totalViews: { $sum: '$views' },
-}
-       */
     const productsPerCategoryCount = {}
     for (let i = 0; i < store.workOn.length; i++) {
       const category = store.workOn[i]
