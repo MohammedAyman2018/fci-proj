@@ -3,7 +3,7 @@
     <div
       class="is-justify-content-space-between is-flex is-align-items-center my-3"
     >
-      <h2 class="is-size-3 has-text-weight-bold">كل الفئات</h2>
+      <h2 class="is-size-3 has-text-weight-bold">كل المنتجات</h2>
       <b-button
         type="is-primary"
         class="btn btn-primary btn-sm"
