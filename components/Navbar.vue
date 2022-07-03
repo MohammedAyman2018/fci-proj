@@ -124,6 +124,11 @@ export default Vue.extend({
           link: `/dashboard/categories/`,
           display: auth && admin,
         },
+        {
+          text: 'شكاوى العملاء',
+          link: `/dashboard/user-contacts/`,
+          display: auth && admin,
+        },
       ]
     },
   },

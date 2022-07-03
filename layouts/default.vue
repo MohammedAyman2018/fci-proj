@@ -4,9 +4,7 @@
       <Navbar />
     </client-only>
     <Nuxt />
-    <!-- <client-only>
-      <side-bar />
-    </client-only> -->
+    <nuxt-link to="/contact-us"> تواصل معنا </nuxt-link>
   </div>
 </template>
 
