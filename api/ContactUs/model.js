@@ -18,6 +18,12 @@ const Schema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    state: {
+      type: String,
+      enum: ['بانتظار المراجعة', 'تم الرد'],
+      default: 'بانتظار المراجعة',
+    },
+    userId: { ref: 'users', type: mongoose.Types.ObjectId },
   },
   { timestamps: true }
 )
