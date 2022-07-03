@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto px-2">
-    <h2 class="is-size-5 has-text-weight-bold">كل الفئات</h2>
+    <h2 class="is-size-4 mb-3 has-text-weight-bold">تعديل المتجر</h2>
     <div v-if="store" class="columns">
       <FormulateInput
         v-model="store.title"
