@@ -101,7 +101,7 @@
     <section class="my-4">
       <h3 class="is-size-4 has-text-weight-bold">الطلبيات</h3>
 
-      <orders-table :orders="orders" />
+      <orders-table :orders="orders" @updateOrders="getOrders" />
     </section>
   </main>
 </template>
@@ -126,20 +126,35 @@ export default Vue.extend({
   },
   async mounted() {
     try {
-      const res = await Promise.all([
-        this.$axios.get('/users/all/fav/'),
-        this.$axios.get('/users/all/orders/'),
-      ])
-      this.fav = res[0].data
-      this.orders = res[1].data
+      await Promise.all([this.getFav(), this.getOrders()])
     } catch (error) {
       this.$store.dispatch('showToast', { message: error, type: 'error' })
     }
   },
   methods: {
+    async getFav() {
+      try {
+        const res = await this.$axios.get('/users/all/fav/')
+        this.fav = res.data
+      } catch (error) {
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    },
+    async getOrders() {
+      try {
+        const res = await this.$axios.get('/users/all/orders/')
+        this.orders = res.data
+      } catch (error) {
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    },
     prepareUser(): any {
       const clonedUser = clonDeep(this.$auth.user)
-      clonedUser.dob = format(new Date(clonedUser.dob), 'yyyy-MM-dd')
+      if (clonedUser.dob) {
+        clonedUser.dob = format(new Date(clonedUser.dob), 'yyyy-MM-dd')
+      } else {
+        clonedUser.dob = format(new Date(), 'yyyy-MM-dd')
+      }
       return clonedUser
     },
     async editUser(editObj) {
