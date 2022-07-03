@@ -122,7 +122,7 @@ exports.authenticate = async (req, res) => {
       }
 
       jwt.sign(
-        { id: user._id, role: user.role, restaurantId: user.restaurantId },
+        { id: user._id, role: user.role, storeName: user.storeName },
         process.env.jwtSecret,
         // { expiresIn: 36000 },
         (err, token) => {
