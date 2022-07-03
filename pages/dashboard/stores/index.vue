@@ -60,14 +60,25 @@
           <b-tooltip label="تعديل">
             <b-button
               tag="router-link"
+              size="is-small"
               icon-left="pen"
               type="is-warning"
               :to="`/dashboard/${props.row.title}/edit`"
             />
           </b-tooltip>
+          <b-tooltip label="إحصائيات المتجر">
+            <b-button
+              tag="router-link"
+              size="is-small"
+              icon-left="pen"
+              type="is-warning"
+              :to="`/dashboard/${props.row.title}`"
+            />
+          </b-tooltip>
           <b-tooltip label="حذف">
             <b-button
               icon-left="delete"
+              size="is-small"
               type="is-danger"
               @click="openModal('delete-store', props.row)"
             />
