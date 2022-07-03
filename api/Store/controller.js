@@ -22,8 +22,17 @@ exports.getAllStores = async (req, res) => {
 
 exports.getStoreForEditAdmin = async (req, res) => {
   try {
-    const store = await Store.findOne({ title: req.params.storeName })
-    return res.status(200).json(store)
+    if (
+      req.user.role === 'admin' ||
+      (req.user.role === 'owner' && req.user.storeName === req.params.storeName)
+    ) {
+      const store = await Store.findOne({
+        title: req.params.storeName,
+      }).populate('rating.userId')
+      return res.status(200).json(store)
+    } else {
+      return res.status(403).json('Access Denied')
+    }
   } catch (error) {
     res.status(500).json({ msg: err.message, err })
   }
