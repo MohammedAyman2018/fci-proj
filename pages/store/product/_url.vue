@@ -15,7 +15,7 @@
         <div
           class="is-flex is-justify-content-space-between is-align-items-center"
         >
-          <h1 v-text="product.name" />
+          <h1 class="is-size-4" v-text="product.name" />
           <b-tooltip
             :label="checkInFav(product._id) ? 'حذف من المفضلة' : 'أضف للمفضلة'"
           >
