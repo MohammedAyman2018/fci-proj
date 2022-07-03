@@ -1,5 +1,53 @@
 <template>
   <div class="container mx-auto">
+    <b-modal
+      v-model="isComponentModalActive"
+      style="z-index: 9999999"
+      has-modal-card
+      trap-focus
+      :destroy-on-hide="false"
+      aria-role="dialog"
+      aria-label="تقييم المتجر"
+      close-button-aria-label="Close"
+      aria-modal
+    >
+      <template #default="props">
+        <div class="modal-card" style="width: auto">
+          <header class="modal-card-head">
+            <p class="modal-card-title">تقييم المتجر</p>
+            <button type="button" class="delete" @click="props.close" />
+          </header>
+          <section class="modal-card-body">
+            <div class="p-4">
+              <b-field label="ماهو تقييمك للمتجر">
+                <b-rate v-model="rate" :rtl="true" />
+              </b-field>
+              <b-field label="رسالتك">
+                <b-input
+                  v-model="comment"
+                  maxlength="200"
+                  type="textarea"
+                ></b-input>
+              </b-field>
+              <div
+                class="is-flex is-justify-content-space-between is-align-items-center"
+              >
+                <b-button type="is-primary" size="is-small" @click="rateStore">
+                  تقييم
+                </b-button>
+                <b-button
+                  type="is-ghost"
+                  size="is-small"
+                  @click="isComponentModalActive = false"
+                >
+                  إلغاء
+                </b-button>
+              </div>
+            </div>
+          </section>
+        </div>
+      </template>
+    </b-modal>
     <section v-if="store && store._id">
       <div
         class="is-flex is-justify-content-space-between is-align-items-center"
@@ -7,7 +55,14 @@
         <h1 class="is-size-4 has-text-weight-bold my-4">
           متجر {{ $route.params.storeName }}
         </h1>
-        <b-button type="is-primary" size="is-small"> تقييم المتجر </b-button>
+        <b-button
+          v-if="$auth.loggedIn"
+          type="is-primary"
+          size="is-small"
+          @click="isComponentModalActive = true"
+        >
+          تقييم المتجر
+        </b-button>
       </div>
       <p class="my-2">{{ store.desc }}</p>
       <div class="columns is-multiline">
@@ -50,6 +105,9 @@ export default {
   components: { productsPage },
   data() {
     return {
+      rate: 0,
+      comment: '',
+      isComponentModalActive: false,
       socialr: [
         { key: 'fb', name: 'فيس بوك', icon: 'facebook-circle-line' },
         { key: 'insta', name: 'انستجرام', icon: 'instagram-line' },
@@ -88,6 +146,27 @@ export default {
       getStore: 'stores/getStore',
       getStoreCategory: 'categories/getStoreCategory',
     }),
+    async rateStore() {
+      try {
+        await this.$axios.patch(`/stores/rate/${this.store._id}`, {
+          rate: this.rate,
+          userId: this.$auth.user._id,
+          comment: this.comment,
+        })
+        this.isComponentModalActive = false
+        this.rate = 0
+        this.comment = ''
+        this.$store.dispatch('showToast', {
+          message: 'تم تقييم المتجر بنجاح',
+          type: 'success',
+        })
+      } catch (error) {
+        this.$store.dispatch('showToast', {
+          message: error,
+          type: 'error',
+        })
+      }
+    },
   },
 }
 </script>
