@@ -16,12 +16,13 @@
         مشاهدة المزيد
       </b-button>
     </div>
-    <hooper :settings="hooperSettings">
+    <hooper v-if="items.length > 0" :settings="hooperSettings">
       <slide v-for="list in items" :key="list._id" class="mb-2">
         <product-card class="mx-4" :product="list" />
       </slide>
       <hooper-navigation slot="hooper-addons"></hooper-navigation>
     </hooper>
+    <p v-else class="has-text-weight-bold has-text-centered">لا يوجد منتجات</p>
   </div>
 </template>
 
