@@ -86,7 +86,7 @@
 
         <ul class="column is-12-mobile is-6-tablet is-4-desktop">
           <p class="has-text-weight-bold">يعمل في</p>
-          <li v-for="link in store.workOn" :key="link">
+          <li v-for="link in store.workOn" :key="link.name">
             <nuxt-link :to="`/store/category/${link.name}`">{{
               link.name
             }}</nuxt-link>
