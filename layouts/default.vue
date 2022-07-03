@@ -4,7 +4,9 @@
       <Navbar />
     </client-only>
     <Nuxt />
-    <nuxt-link to="/contact-us"> تواصل معنا </nuxt-link>
+    <nuxt-link class="contact-us" to="/contact-us">
+      <img width="50px" src="@/assets/support.png" alt="تواصل معنا" />
+    </nuxt-link>
   </div>
 </template>
 
@@ -12,3 +14,11 @@
 import 'remixicon/fonts/remixicon.css'
 export default {}
 </script>
+
+<style scoped>
+.contact-us {
+  position: fixed;
+  bottom: 10px;
+  right: 5%;
+}
+</style>
