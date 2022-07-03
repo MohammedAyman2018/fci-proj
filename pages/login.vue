@@ -79,14 +79,15 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-      window.location = '/'
+      this.$router.push('/')
     }
   },
   methods: {
     async userLogin() {
       try {
         await this.$auth.loginWith('local', { data: this.user })
-        window.location = '/'
+        this.$router.push('/')
+
         this.$store.dispatch('showToast', {
           message: 'تم تسجيل الدخول',
           type: 'success',

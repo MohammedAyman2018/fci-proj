@@ -133,7 +133,8 @@ export default Vue.extend({
   },
   created() {
     if (this.$auth.loggedIn) {
-      window.location = '/'
+            this.$router.push('/')
+
     }
   },
   methods: {

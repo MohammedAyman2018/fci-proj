@@ -68,7 +68,7 @@ export default {
   },
   mounted() {
     if (this.cart.length === 0) {
-      window.location = '/'
+      this.$router.push('/')
     }
   },
   methods: {
@@ -112,7 +112,7 @@ export default {
           message: 'تم استقبال طلبك',
           type: 'success',
         })
-        window.location = '/'
+        this.$router.push('/')
       } catch (error) {
         this.$store.dispatch('showToast', {
           message: error,
