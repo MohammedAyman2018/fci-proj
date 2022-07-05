@@ -24,7 +24,7 @@ export default {
   },
   methods: {
     ...mapActions({
-      getAllProducts: 'products/getProducts',
+      getAllProducts: 'products/getSortedProducts',
       getAllCategory: 'categories/getCategories',
     }),
   },
