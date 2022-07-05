@@ -108,6 +108,11 @@
       </div>
     </section>
     <our-carousel
+      title="منتجات مقترحة"
+      :items="recomended"
+      link="/store/for-me"
+    />
+    <our-carousel
       title="المنتجات الأكثر مشاهدة"
       :items="mostViewedProducts"
       link="/store/sorted-products?sort=mostViewedProducts"
@@ -148,7 +153,6 @@
     <b-modal
       v-model="isComponentModalActive"
       has-modal-card
-      full-screen
       :can-cancel="false"
       custom-class="force-overflow"
     >
@@ -157,16 +161,22 @@
           <header class="modal-card-head">
             <p class="modal-card-title">أختر اهتماماتك</p>
           </header>
-          <div class="my-2 columns is-multiline">
-            <b-field
-              v-for="cat in categories"
-              :key="cat._id"
-              v-model="intersts"
-              class="column is-2-mobile is-4-tablet"
-            >
-              <b-checkbox>{{ cat.name }}</b-checkbox>
-            </b-field>
-          </div>
+          <section class="modal-card-body">
+            <p class="has-text-weight-bold">
+              لتجربة مستخدم أفضل.. اختر اهتماماتك
+            </p>
+            <div class="my-2 columns is-multiline">
+              <b-field
+                v-for="cat in categories"
+                :key="cat._id"
+                class="column is-2-mobile is-4-tablet"
+              >
+                <b-checkbox v-model="intersts" :native-value="cat._id">{{
+                  cat.name
+                }}</b-checkbox>
+              </b-field>
+            </div>
+          </section>
 
           <footer class="modal-card-foot">
             <b-button label="ليس الآن" @click="props.close()" />
@@ -181,8 +191,8 @@
 <script>
 import OurCarousel from '~/components/OurCarousel.vue'
 export default {
-  components: { OurCarousel },
   name: 'HomePage',
+  components: { OurCarousel },
   data() {
     return {
       intersts: [],
@@ -191,6 +201,7 @@ export default {
       mostViewedProducts: [],
       mostRatedProducts: [],
       mostLovedProducts: [],
+      recomended: [],
     }
   },
   head() {
@@ -206,6 +217,12 @@ export default {
   async mounted() {
     try {
       await this.$store.dispatch('categories/getCategories')
+      if (this.$auth.loggedIn) {
+        this.intersts = this.$auth.user.intersts
+      }
+      if (this.$auth.loggedIn && this.$auth.user.intersts.length === 0) {
+        this.isComponentModalActive = true
+      }
     } catch (error) {
       this.$store.dispatch('showToast', {
         message: error,
@@ -213,6 +230,7 @@ export default {
       })
     }
     await this.getHomeProducts()
+    await this.getRecommended()
     this.$nextTick(() => {
       // eslint-disable-next-line no-new
       new Typewriter('#typewriter', {
@@ -264,7 +282,22 @@ export default {
         this.mostRatedProducts = res.data.mostRatedProducts
         this.mostLovedProducts = res.data.mostLovedProducts
       } catch (error) {
-        console.log(error)
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    },
+    async getRecommended() {
+      try {
+        if (this.$auth.loggedIn) {
+          const res = await this.$axios.get('/home/recommended?page=home', {
+            headers: { device: 'web' },
+          })
+          this.recomended = res.data
+        }
+      } catch (error) {
+        this.$store.dispatch('showToast', {
+          message: error,
+          type: 'danger',
+        })
       }
     },
   },
