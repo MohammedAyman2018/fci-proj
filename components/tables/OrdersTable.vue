@@ -81,14 +81,22 @@ export default {
     },
   },
   methods: {
-    async cancleOrder(id) {
+    cancleOrder(id) {
       try {
-        // TODO: show confirmatin first
-        await this.$axios.$patch(`/orders/${id}`, { state: 'ملغي' })
-        this.$emit('updateOrders')
-        this.$store.dispatch('showToast', {
-          message: 'تم إلغاء الطلبية',
-          type: 'success',
+        this.$buefy.dialog.confirm({
+          title: 'إلغاء الطلب',
+          message: `هل تريد فعلاً إلغاء الطلب`,
+          cancelText: 'لا',
+          confirmText: 'نعم، الغي الطلب',
+          type: 'is-danger',
+          onConfirm: async () => {
+            await this.$axios.$patch(`/orders/${id}`, { state: 'ملغي' })
+            this.$emit('updateOrders')
+            this.$store.dispatch('showToast', {
+              message: 'تم إلغاء الطلبية',
+              type: 'success',
+            })
+          },
         })
       } catch (error) {
         this.$store.dispatch('showToast', { message: error, type: 'error' })
