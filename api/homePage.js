@@ -150,7 +150,10 @@ router.get('/home/recommended', clientAuth, async (req, res) => {
   const currentUser = await User.findById(req.user.id)
   if (currentUser) {
     const recommendedToU = await User.find(
-      { intersts: { $in: currentUser.intersts } },
+      {
+        intersts: { $in: currentUser.intersts },
+        _id: { $nin: [currentUser._id] },
+      },
       { orders: 1 }
     ).populate({
       path: 'orders',
@@ -168,11 +171,24 @@ router.get('/home/recommended', clientAuth, async (req, res) => {
       const orders = recommendedToU[i].orders
       for (let j = 0; j < orders.length; j++) {
         const order = orders[j]
-        items.push(...order.items)
+        items.push(
+          ...order.items.filter((prod) =>
+            currentUser.intersts.includes(prod._id.category)
+          )
+        )
       }
     }
+
     const result = items.map((x) => x._id)
-    return res.json(result)
+    const uniqueAddresses = Array.from(new Set(result.map((a) => a._id))).map(
+      (id) => {
+        return result.find((a) => a._id === id)
+      }
+    )
+
+    return res.json(
+      req.query.page === 'home' ? uniqueAddresses.splice(0, 9) : uniqueAddresses
+    )
   }
 })
 module.exports = router
