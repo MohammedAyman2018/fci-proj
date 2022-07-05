@@ -25,7 +25,7 @@
       {{ props.row.msg }}
     </b-table-column>
     <b-table-column
-      v-if="$auth.user.role === 'admin'"
+      v-if="$auth && $auth.loggedIn && $auth.user.role === 'admin'"
       v-slot="props"
       field="msg"
       label="العمليات المتاحة"
