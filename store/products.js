@@ -8,7 +8,19 @@ export const actions = {
     commit('setDisplayedProducts', [])
     commit('setProducts', [])
   },
-
+  async getRecommmendedProducts({ dispatch, commit }) {
+    try {
+      const res = await this.$axios.get('/home/recommended', {
+        headers: { device: 'web' },
+      })
+      // this.recomended = res.data
+      commit('setProducts', res.data)
+      commit('setDisplayedProducts', res.data)
+      commit('paginate', { toPage: 1 })
+    } catch (error) {
+      dispatch('showToast', { message: error, type: 'error' }, { root: true })
+    }
+  },
   async getSortedProducts({ dispatch, commit }, sort) {
     try {
       const res = await this.$axios.get(`/products/filter/home?sort=${sort}`, {
@@ -16,6 +28,7 @@ export const actions = {
       })
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
+      commit('paginate', { toPage: 1 })
     } catch (error) {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
@@ -25,6 +38,7 @@ export const actions = {
       const res = await this.$axios.get('/products/all/stores')
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
+      commit('paginate', { toPage: 1 })
     } catch (error) {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
@@ -44,6 +58,7 @@ export const actions = {
       )
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
+      commit('paginate', { toPage: 1 })
     } catch (error) {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
@@ -53,6 +68,7 @@ export const actions = {
       const res = await this.$axios.get(`/products?storeName=${storeName}`)
       commit('setProducts', res.data)
       commit('setDisplayedProducts', res.data)
+      commit('paginate', { toPage: 1 })
     } catch (error) {
       dispatch('showToast', { message: error, type: 'error' }, { root: true })
     }
@@ -91,6 +107,13 @@ export const actions = {
 export const mutations = {
   setDisplayedProducts(state, products) {
     state.displayedProducts = products
+  },
+  paginate(state, info) {
+    const perPage = 10
+    const { toPage } = info
+    const startPos = toPage * perPage - perPage
+    const endPos = toPage * perPage
+    state.displayedProducts = state.products.slice(startPos, endPos)
   },
   sortProducts(state, sortName) {
     if (sortName === 'priceFromLowToHigh') {
