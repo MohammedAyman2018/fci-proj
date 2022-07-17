@@ -1,6 +1,41 @@
 <template>
   <main class="container mx-auto">
     <b-modal
+      v-model="interstsModalState"
+      has-modal-card
+      :can-cancel="false"
+      custom-class="force-overflow"
+    >
+      <template #default="props">
+        <div class="modal-card" style="width: auto">
+          <header class="modal-card-head">
+            <p class="modal-card-title">أختر اهتماماتك</p>
+          </header>
+          <section class="modal-card-body">
+            <p class="has-text-weight-bold">
+              لتجربة مستخدم أفضل.. اختر اهتماماتك
+            </p>
+            <div class="my-2 columns is-multiline">
+              <b-field
+                v-for="cat in categories"
+                :key="cat._id"
+                class="column is-2-mobile is-4-tablet"
+              >
+                <b-checkbox v-model="intersts" :native-value="cat._id">{{
+                  cat.name
+                }}</b-checkbox>
+              </b-field>
+            </div>
+          </section>
+
+          <footer class="modal-card-foot">
+            <b-button label="ليس الآن" @click="props.close()" />
+            <b-button label="تم" type="is-primary" @click="editUser" />
+          </footer>
+        </div>
+      </template>
+    </b-modal>
+    <b-modal
       v-model="isComponentModalActive"
       style="z-index: 9999999"
       has-modal-card
@@ -58,15 +93,26 @@
       </template>
     </b-modal>
 
-    <h3 v-if="$auth.user" class="my-3 has-text-weight-bold is-size-4">
-      مرحباً
-      <bdi>{{ $auth.user.name }}</bdi>
-      <b-tooltip label="تعديل الملف الشخصي">
-        <sup style="cursor: pointer" @click="isComponentModalActive = true">
-          <i class="ri-pencil-line"> </i>
-        </sup>
-      </b-tooltip>
-    </h3>
+    <div
+      class="is-flex is-justify-content-space-between is-align-items-center has-text-weight-bold"
+    >
+      <h3 v-if="$auth.user" class="my-3 is-size-4">
+        مرحباً
+        <bdi>{{ $auth.user.name }}</bdi>
+        <b-tooltip label="تعديل الملف الشخصي">
+          <sup style="cursor: pointer" @click="isComponentModalActive = true">
+            <i class="ri-pencil-line"> </i>
+          </sup>
+        </b-tooltip>
+      </h3>
+      <b-button
+        size="is-small"
+        type="is-primary"
+        @click="interstsModalState = true"
+      >
+        تعديل اهتماماتك
+      </b-button>
+    </div>
 
     <div v-if="$auth.user" class="columns is-multiline is-mobile">
       <p class="column is-one-quarter-tablet is-12-mobile">
@@ -124,8 +170,11 @@ export default Vue.extend({
       fav: [],
       rates: [],
       orders: [],
+      intersts: [],
+
       editObj: {},
       isComponentModalActive: false,
+      interstsModalState: false,
     }
   },
   head() {
@@ -133,14 +182,51 @@ export default Vue.extend({
       title: 'ملفك الشخصي',
     }
   },
+  computed: {
+    categories() {
+      return this.$store.state.categories.categories
+    },
+  },
+
   async mounted() {
     try {
-      await Promise.all([this.getFav(), this.getOrders(), this.getComplains()])
+      await Promise.all([
+        this.getFav(),
+        this.$store.dispatch('categories/getCategories'),
+        this.getOrders(),
+        this.getComplains(),
+      ])
+      if (this.$auth.loggedIn) {
+        this.intersts = this.$auth.user.intersts
+      }
     } catch (error) {
       this.$store.dispatch('showToast', { message: error, type: 'error' })
     }
   },
   methods: {
+    removeFromIntersts(id) {
+      const idx = this.intersts.indexOf(id)
+      if (idx !== -1) {
+        this.intersts.splice(idx, 1)
+      }
+    },
+    async editUser() {
+      try {
+        await this.$axios.$patch(`/users/${this.$auth.user._id}`, {
+          intersts: this.intersts,
+        })
+        await this.$auth.fetchUser()
+        await this.$auth.refreshTokens()
+        // this.$modal.
+        this.$store.dispatch('showToast', {
+          message: 'تم التعديل بنجاح',
+          type: 'success',
+        })
+        this.isComponentModalActive = false
+      } catch (error) {
+        this.$store.dispatch('showToast', { message: error, type: 'error' })
+      }
+    },
     async getComplains() {
       try {
         const res = await this.$axios.get(`/contactUs/${this.$auth.user._id}`)
@@ -184,7 +270,7 @@ export default Vue.extend({
           message: 'تم التعديل بنجاح',
           type: 'success',
         })
-        this.isComponentModalActive = false
+        this.interstsModalState = false
       } catch (error) {
         this.$store.dispatch('showToast', { message: error, type: 'error' })
       }
