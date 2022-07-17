@@ -106,57 +106,59 @@
           </div>
         </b-collapse>
         <h3>التعليقات:</h3>
-        <article
-          v-for="coment in product.rating"
-          :key="coment._id"
-          class="media"
-        >
-          <div class="media-content">
-            <div class="content">
-              <p>
-                <span
-                  class="is-flex is-justify-content-space-between is-align-items-center"
-                >
-                  <strong>{{ coment.userId.name }}</strong>
-                  <b-icon
-                    v-if="coment.msg === 1"
-                    icon="thumb-up"
-                    type="is-primary"
-                  />
-                  <b-icon
-                    v-else-if="coment.msg === -1"
-                    icon="thumb-down"
-                    type="is-danger"
-                  />
-                </span>
-                <small>
-                  <b-rate v-model="coment.rate" :rtl="true" disabled />
-                </small>
-                <br />
-                {{ coment.comment }}
-              </p>
-            </div>
-            <nav class="level is-mobile">
-              <div class="level-left">
-                <a class="level-item">
-                  <span class="icon is-small"
-                    ><i class="fas fa-reply"></i
-                  ></span>
-                </a>
-                <a class="level-item">
-                  <span class="icon is-small"
-                    ><i class="fas fa-retweet"></i
-                  ></span>
-                </a>
-                <a class="level-item">
-                  <span class="icon is-small"
-                    ><i class="fas fa-heart"></i
-                  ></span>
-                </a>
+        <div v-if="product.rating">
+          <article
+            v-for="coment in product.rating"
+            :key="coment._id"
+            class="media"
+          >
+            <div class="media-content">
+              <div class="content">
+                <p>
+                  <span
+                    class="is-flex is-justify-content-space-between is-align-items-center"
+                  >
+                    <strong>{{ coment.userId.name }}</strong>
+                    <b-icon
+                      v-if="coment.msg === 1"
+                      icon="thumb-up"
+                      type="is-primary"
+                    />
+                    <b-icon
+                      v-else-if="coment.msg === -1"
+                      icon="thumb-down"
+                      type="is-danger"
+                    />
+                  </span>
+                  <small>
+                    <b-rate v-model="coment.rate" :rtl="true" disabled />
+                  </small>
+                  <br />
+                  {{ coment.comment }}
+                </p>
               </div>
-            </nav>
-          </div>
-        </article>
+              <nav class="level is-mobile">
+                <div class="level-left">
+                  <a class="level-item">
+                    <span class="icon is-small"
+                      ><i class="fas fa-reply"></i
+                    ></span>
+                  </a>
+                  <a class="level-item">
+                    <span class="icon is-small"
+                      ><i class="fas fa-retweet"></i
+                    ></span>
+                  </a>
+                  <a class="level-item">
+                    <span class="icon is-small"
+                      ><i class="fas fa-heart"></i
+                    ></span>
+                  </a>
+                </div>
+              </nav>
+            </div>
+          </article>
+        </div>
 
         <article class="media">
           <div class="media-content">
@@ -324,7 +326,8 @@ export default {
           userId: this.$auth.user._id,
           comment: this.comment,
         })
-        this.getProduct()
+        await this.getProduct()
+        await this.analyseComments()
         this.productRate = this.product.actualRating
         this.comment = ''
         this.$store.dispatch('showToast', {
