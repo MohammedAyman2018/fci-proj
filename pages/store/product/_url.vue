@@ -114,7 +114,21 @@
           <div class="media-content">
             <div class="content">
               <p>
-                <strong>{{ coment.userId.name }}</strong>
+                <span
+                  class="is-flex is-justify-content-space-between is-align-items-center"
+                >
+                  <strong>{{ coment.userId.name }}</strong>
+                  <b-icon
+                    v-if="coment.msg === 1"
+                    icon="thumb-up"
+                    type="is-primary"
+                  />
+                  <b-icon
+                    v-else-if="coment.msg === -1"
+                    icon="thumb-down"
+                    type="is-danger"
+                  />
+                </span>
                 <small>
                   <b-rate v-model="coment.rate" :rtl="true" disabled />
                 </small>
@@ -242,8 +256,17 @@ export default {
   async beforeMount() {
     await this.getProduct()
     await this.getRecommendation()
+    await this.analyseComments()
   },
   methods: {
+    async analyseComments() {
+      const we = await this.$axios.post(
+        'https://aqueous-retreat-48897.herokuapp.com',
+        this.product.rating,
+        { headers: { 'Access-Control-Allow-Origin': '*' } }
+      )
+      this.product.rating = we.data
+    },
     async getProduct() {
       const product = await this.$store.dispatch(
         'products/getProduct',
