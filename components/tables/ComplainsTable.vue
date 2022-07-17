@@ -9,6 +9,9 @@
     aria-page-label="صفحة"
     aria-current-label="الصفحة الحالية"
   >
+    <template #empty>
+      <div class="has-text-centered">لا يوجد شكاوى او مقترحات بعد</div>
+    </template>
     <b-table-column v-slot="props" field="msgType" sortable label="نوع الرسالة">
       {{ props.row.msgType }}
     </b-table-column>

@@ -9,6 +9,9 @@
     aria-page-label="صفحة"
     aria-current-label="الصفحة الحالية"
   >
+    <template #empty>
+      <div class="has-text-centered">لا يوجد تقيمات بعد</div>
+    </template>
     <b-table-column v-slot="props" field="userId.name" label="اسم العميل">
       {{ props.row.userId.name }}
     </b-table-column>

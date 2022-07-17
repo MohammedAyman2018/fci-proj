@@ -11,6 +11,9 @@
     aria-page-label="صفحة"
     aria-current-label="الصفحة الحالية"
   >
+    <template #empty>
+      <div class="has-text-centered">لا يوجد اوردرات</div>
+    </template>
     <b-table-column v-slot="props" field="statr" label="حالة الأوردر" sortable>
       {{ props.row.state }}
     </b-table-column>
